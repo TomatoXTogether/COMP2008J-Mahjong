@@ -1,5 +1,1 @@
-# COMP2008J-Majong
-111
-222
-333
-444
+Majong
