@@ -13,11 +13,14 @@ public class Player extends User{
     public boolean isKong;
     public boolean isChi;
     public boolean isPong;
+    //public String position;
 
-    public Player(String name, ArrayList<MahjongTile> tiles) {
+    public Player(String name, ArrayList<MahjongTile> tiles, String position) {
         this.name = name;
         this.score = 0;
         this.tiles = tiles;
+        this.position = position;
+        this.isTurn = false;
     }
 
     @Override

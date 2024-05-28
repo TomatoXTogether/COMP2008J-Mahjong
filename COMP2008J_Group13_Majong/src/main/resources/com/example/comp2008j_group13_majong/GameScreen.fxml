@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
 
 <AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.comp2008j_group13_majong.GameScreenController">
-
+   <children>
+      <Text layoutX="367.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dealer:" />
+      <Text fx:id="dealerLabel" layoutX="420.0" layoutY="242.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="62.5" />
+   </children>
 </AnchorPane>

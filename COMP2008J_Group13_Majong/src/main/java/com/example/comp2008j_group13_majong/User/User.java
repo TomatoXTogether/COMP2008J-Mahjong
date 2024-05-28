@@ -5,6 +5,8 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import java.util.ArrayList;
 
 public abstract class User {
+    protected String position;
+    protected boolean isTurn;
 
     abstract int getScore();
 
@@ -21,4 +23,21 @@ public abstract class User {
     abstract boolean ifKong();
 
     abstract boolean ifWin();
+
+    public String getPosition() {
+        return position;
+    }
+
+    // 添加设置玩家位置的方法
+    public void setPosition(String position) {
+        this.position = position;
+    }
+    public boolean isTurn() {
+        return isTurn;
+    }
+
+    // 设置是否是玩家的回合的方法
+    public void setTurn(boolean turn) {
+        isTurn = turn;
+    }
 }

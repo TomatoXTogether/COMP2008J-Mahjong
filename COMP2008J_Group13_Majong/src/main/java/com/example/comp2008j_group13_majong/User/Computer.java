@@ -14,11 +14,14 @@ public class Computer extends User {
     public boolean isKong;
     public boolean isChi;
     public boolean isPong;
+    //public String position;
 
-    public Computer(String name, ArrayList<MahjongTile> tiles) {
+    public Computer(String name, ArrayList<MahjongTile> tiles, String position) {
         this.name = name;
         this.score = 0;
         this.tiles = tiles;
+        this.position = position;
+        this.isTurn = false;
     }
 
     @Override
