@@ -8,21 +8,18 @@ public class Player extends User{
     public String name;
     public int score;
     public ArrayList<MahjongTile> tiles;
-    private ArrayList<MahjongTile> hand;
     public boolean isTurn;
     public boolean isWin;
     public boolean isKong;
     public boolean isChi;
     public boolean isPong;
-    //public String position;
 
     public Player(String name, ArrayList<MahjongTile> tiles, String position) {
         this.name = name;
         this.score = 0;
-        this.tiles = tiles;
         this.position = position;
         this.isTurn = false;
-        this.hand = hand != null ? hand : new ArrayList<>();
+        this.tiles = tiles != null ? tiles : new ArrayList<>();
     }
 
     @Override
@@ -80,15 +77,6 @@ public class Player extends User{
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public ArrayList<MahjongTile> getHand() {
-        return hand;
-    }
-    @Override
-    public void setHand(ArrayList<MahjongTile> hand) {
-        this.hand = hand;
     }
 
 
