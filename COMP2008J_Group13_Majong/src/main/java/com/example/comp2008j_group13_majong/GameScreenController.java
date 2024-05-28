@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javax.swing.*;
 import java.awt.event.MouseListener;
 
+
 public class GameScreenController extends JLabel {
     private String name;
 
