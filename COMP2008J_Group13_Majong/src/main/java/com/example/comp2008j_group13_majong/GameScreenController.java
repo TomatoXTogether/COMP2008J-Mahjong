@@ -18,6 +18,10 @@ public class GameScreenController extends JLabel {
 
     private boolean isClicked=false;
 
+    public GameScreenController() {
+
+    }
+
     public GameScreenController(String name, int value, boolean up) {
         this.name = name;
         this.value = value;
