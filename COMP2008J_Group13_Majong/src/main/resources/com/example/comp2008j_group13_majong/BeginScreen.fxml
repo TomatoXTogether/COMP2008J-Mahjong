@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.comp2008j_group13_majong.GameScreenController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-    <Label fx:id="welcomeText"/>
-</VBox>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.comp2008j_group13_majong.BeginScreenController">
+   <children>
+      <ImageView fitHeight="679.0" fitWidth="1102.0" layoutX="-46.0" layoutY="-21.0">
+         <image>
+            <Image url="@../../../images/微信图片_20240528111734.png" />
+         </image>
+         <effect>
+            <BoxBlur height="10.0" iterations="3" width="15.0" />
+         </effect>
+      </ImageView>
+      <Button fx:id="newGame" layoutX="358.0" layoutY="362.0" mnemonicParsing="false" onAction="#newGameBottonAction" prefHeight="56.0" prefWidth="284.0" style="-fx-background-color: #ffffff;" text="Start a New Game">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="28.0" />
+         </font>
+      </Button>
+      <Button fx:id="exit" layoutX="358.0" layoutY="464.0" mnemonicParsing="false" onAction="#exitBottonAction" prefHeight="56.0" prefWidth="284.0" style="-fx-background-color: #ffffff;" text="Exit">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="28.0" />
+         </font>
+      </Button>
+      <Text layoutX="235.0" layoutY="221.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="3.0" text="Mahjong Game" wrappingWidth="542.2401428222656">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="75.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
