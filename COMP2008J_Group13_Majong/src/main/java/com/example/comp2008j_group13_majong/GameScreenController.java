@@ -1,8 +1,8 @@
 package com.example.comp2008j_group13_majong;
 
+//import com.example.comp2008j_group13_majong.Tile.TilesDisplay;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
-import com.example.comp2008j_group13_majong.Tile.TilesDisplay;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,7 +48,7 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane westHandPile;
 
-    public ObservableList<TilesDisplay> tileDisplays = FXCollections.observableArrayList();
+    //public ObservableList<TilesDisplay> tileDisplays = FXCollections.observableArrayList();
 
 
     public GameScreenController() {
