@@ -27,7 +27,7 @@ public class MahjongTile {
 
     public String toString() {
         if (value != null) {
-            return value + " " + suit;
+            return value + suit;
         } else {
             return String.valueOf(suit);
         }
