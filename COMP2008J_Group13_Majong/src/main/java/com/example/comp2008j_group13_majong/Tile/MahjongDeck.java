@@ -43,7 +43,7 @@ public class MahjongDeck {
 
     // 把牌按照花色和大小自动排序
     public void sortTiles(List<MahjongTile> hand) {
-        Collections.sort(hand, new MahjongTileComparator());
+        hand.sort(new MahjongTileComparator());
     }
 
 
