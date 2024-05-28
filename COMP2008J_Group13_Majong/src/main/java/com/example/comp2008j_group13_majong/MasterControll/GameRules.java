@@ -15,9 +15,13 @@ public class GameRules {
     private Player player;
     private List<User> players;
     private User dealer;
+    private MahjongDeck deck;
 
     public GameRules() {
+        deck = new MahjongDeck();
         initializePlayers();
+        dealTiles();
+        printPlayerHands();
     }
 
     private void initializePlayers() {
@@ -48,6 +52,28 @@ public class GameRules {
 
         // 输出庄家信息
         System.out.println( "庄家是：" + dealer.getPosition());
+    }
+
+    private void dealTiles() {
+        // 打乱牌堆中的牌的顺序
+        deck.shuffle();
+
+        // 给每个玩家发放14张随机的牌
+        for (User player : players) {
+            List<MahjongTile> hand = player.getHand();
+            for (int i = 0; i < 14; i++) {
+                MahjongTile tile = deck.drawTile();
+                hand.add(tile);
+            }
+        }
+    }
+
+
+    private void printPlayerHands() {
+        // 打印每个玩家的手牌
+        for (User player : players) {
+            System.out.println(player.getName() + " (" + player.getPosition() + ") 的手牌: " + player.getHand());
+        }
     }
 
     public String getDealerPosition() {

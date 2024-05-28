@@ -24,6 +24,10 @@ public abstract class User {
 
     abstract boolean ifWin();
 
+    public abstract String getName();
+
+    public abstract ArrayList<MahjongTile> getHand();
+
     public String getPosition() {
         return position;
     }

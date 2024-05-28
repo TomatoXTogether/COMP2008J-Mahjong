@@ -14,6 +14,7 @@ public class Computer extends User {
     public boolean isKong;
     public boolean isChi;
     public boolean isPong;
+    private ArrayList<MahjongTile> hand;
     //public String position;
 
     public Computer(String name, ArrayList<MahjongTile> tiles, String position) {
@@ -22,6 +23,7 @@ public class Computer extends User {
         this.tiles = tiles;
         this.position = position;
         this.isTurn = false;
+        this.hand = hand != null ? hand : new ArrayList<>();
     }
 
     @Override
@@ -77,5 +79,14 @@ public class Computer extends User {
     @Override
     boolean ifWin() {
         return false;
+    }
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public ArrayList<MahjongTile> getHand() {
+        return hand;
     }
 }
