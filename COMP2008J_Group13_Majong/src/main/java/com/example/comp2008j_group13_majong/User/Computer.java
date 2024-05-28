@@ -3,6 +3,7 @@ package com.example.comp2008j_group13_majong.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Computer extends User {
     public String name;
@@ -14,24 +15,45 @@ public class Computer extends User {
     public boolean isChi;
     public boolean isPong;
 
+    public Computer(String name, ArrayList<MahjongTile> tiles) {
+        this.name = name;
+        this.score = 0;
+        this.tiles = tiles;
+    }
+
     @Override
     int getScore() {
-        return 0;
+        if (isKong){
+            score += 30;
+            isKong = false;
+        }
+        if (isChi){
+            score += 10;
+            isChi = false;
+        }
+        if (isPong){
+            score += 10;
+            isPong = false;
+        }
+        return score;
     }
 
     @Override
     ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
-        return null;
+        tiles.remove(tile);
+        return tiles;
     }
 
     @Override
     void addTile(MahjongTile tile) {
-
+        tiles.add(tile);
     }
 
     @Override
     MahjongTile selectTiles(MahjongTile tile) {
-        return null;
+        Random random = new Random();
+        int randomIndex = random.nextInt(tiles.size());
+        return tiles.get(randomIndex);
     }
 
     @Override
