@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.User;
 
+import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
 import java.util.ArrayList;
@@ -7,7 +8,14 @@ import java.util.ArrayList;
 public abstract class User {
     protected String position;
     protected boolean isTurn;
-    private ArrayList<MahjongTile> hand;
+    public ArrayList<MahjongTile> hand;
+    public String name;
+    public int score;
+    public ArrayList<MahjongTile> tiles;
+    public boolean isWin;
+    public boolean isKong;
+    public boolean isChi;
+    public boolean isPong;
 
     abstract int getScore();
 
@@ -17,17 +25,34 @@ public abstract class User {
 
     abstract MahjongTile selectTiles(MahjongTile tile);
 
-    abstract boolean ifChi();
+    public boolean ifChi(MahjongTile tile){
+        return false;
+    }
 
-    abstract boolean ifPong();
+    public boolean ifPong(MahjongTile tile){
+        if (getTile(tile) == 2){
+            return true;
+        }
+        return false;
+    }
 
-    abstract boolean ifKong();
+    public boolean ifKong(MahjongTile tile){
+        if (getTile(tile) == 3){
+            return true;
+        }
+        return false;
+    }
 
-    abstract boolean ifWin();
+    public boolean ifWin(){
+        return getHand().size() == 0;
+    }
 
     public abstract String getName();
 
-    public abstract ArrayList<MahjongTile> getHand();
+    public ArrayList<MahjongTile> getHand(){
+        return hand;
+    }
+
     public void setHand(ArrayList<MahjongTile> hand) {
         this.hand = hand;
     }
@@ -47,5 +72,21 @@ public abstract class User {
     // 设置是否是玩家的回合的方法
     public void setTurn(boolean turn) {
         isTurn = turn;
+    }
+
+    public int getTile(MahjongTile tile) {
+        int num = 0;
+        for (int i = 0; i < tiles.size(); i++){
+            if (tiles.get(i).getValue().equals(tile.getValue())){
+                if (tiles.get(i).getSuit().equals(tile.getSuit())){
+                    num ++;
+                }
+            }
+        }
+        return num;
+    }
+
+    public ArrayList<MahjongTile> getTiles(){
+        return tiles;
     }
 }

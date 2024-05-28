@@ -6,16 +6,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Computer extends User {
-    public String name;
-    public int score;
-    public ArrayList<MahjongTile> tiles;
-    public boolean isTurn;
-    public boolean isWin;
-    public boolean isKong;
-    public boolean isChi;
-    public boolean isPong;
-    private ArrayList<MahjongTile> hand;
-    //public String position;
 
     public Computer(String name,ArrayList<MahjongTile> tiles,String position) {
         this.name = name;
@@ -62,35 +52,12 @@ public class Computer extends User {
     }
 
     @Override
-    boolean ifChi() {
-        return false;
-    }
-
-    @Override
-    boolean ifPong() {
-        return false;
-    }
-
-    @Override
-    boolean ifKong() {
-        return false;
-    }
-
-    @Override
-    boolean ifWin() {
-        return false;
-    }
-    @Override
     public String getName() {
         return name;
     }
 
     @Override
-    public ArrayList<MahjongTile> getHand() {
-        return hand;
-    }
-    @Override
-    public void setHand(ArrayList<MahjongTile> hand) {
-        this.hand = hand;
+    public int getTile(MahjongTile tile) {
+        return 0;
     }
 }
