@@ -41,6 +41,10 @@ public class MahjongDeck {
         }
     }
 
+    public List<MahjongTile> getAllTiles() {
+        return tiles;
+    }
+
     // 把牌按照花色和大小自动排序
     public void sortTiles(List<MahjongTile> hand) {
         hand.sort(new MahjongTileComparator());
