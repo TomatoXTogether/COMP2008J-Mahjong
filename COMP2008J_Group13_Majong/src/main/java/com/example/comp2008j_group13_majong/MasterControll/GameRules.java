@@ -16,10 +16,10 @@ public class GameRules {
     private User dealer;
     private MahjongDeck deck;
 
-    private ArrayList<MahjongTile> humanPlayerHand;
-    private ArrayList<MahjongTile> computer1Hand;
-    private ArrayList<MahjongTile> computer2Hand;
-    private ArrayList<MahjongTile> computer3Hand;
+    public ArrayList<MahjongTile> humanPlayerHand;
+    public ArrayList<MahjongTile> computer1Hand;
+    public ArrayList<MahjongTile> computer2Hand;
+    public ArrayList<MahjongTile> computer3Hand;
 
     public GameRules() {
         deck = new MahjongDeck();
