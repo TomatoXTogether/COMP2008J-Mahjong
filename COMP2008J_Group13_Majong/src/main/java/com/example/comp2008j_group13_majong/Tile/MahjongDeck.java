@@ -45,6 +45,16 @@ public class MahjongDeck {
     public void sortTiles(List<MahjongTile> hand) {
         hand.sort(new MahjongTileComparator());
     }
+    public void shuffle() {
+        Collections.shuffle(tiles);
+    }
+
+    public MahjongTile drawTile() {
+        if (!tiles.isEmpty()) {
+            return tiles.remove(0);
+        }
+        return null; // If no tiles are left, return null
+    }
 
 
 }

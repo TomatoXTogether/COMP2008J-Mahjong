@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public abstract class User {
     protected String position;
     protected boolean isTurn;
+    private ArrayList<MahjongTile> hand;
 
     abstract int getScore();
 
@@ -23,6 +24,13 @@ public abstract class User {
     abstract boolean ifKong();
 
     abstract boolean ifWin();
+
+    public abstract String getName();
+
+    public abstract ArrayList<MahjongTile> getHand();
+    public void setHand(ArrayList<MahjongTile> hand) {
+        this.hand = hand;
+    }
 
     public String getPosition() {
         return position;

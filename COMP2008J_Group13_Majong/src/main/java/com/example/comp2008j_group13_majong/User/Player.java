@@ -8,6 +8,7 @@ public class Player extends User{
     public String name;
     public int score;
     public ArrayList<MahjongTile> tiles;
+    private ArrayList<MahjongTile> hand;
     public boolean isTurn;
     public boolean isWin;
     public boolean isKong;
@@ -21,6 +22,7 @@ public class Player extends User{
         this.tiles = tiles;
         this.position = position;
         this.isTurn = false;
+        this.hand = hand != null ? hand : new ArrayList<>();
     }
 
     @Override
@@ -73,5 +75,30 @@ public class Player extends User{
     @Override
     boolean ifWin() {
         return false;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public ArrayList<MahjongTile> getHand() {
+        return hand;
+    }
+    @Override
+    public void setHand(ArrayList<MahjongTile> hand) {
+        this.hand = hand;
+    }
+
+
+    @Override
+    public String getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setTurn(boolean turn) {
+        // 实现设置是否是当前玩家的逻辑
     }
 }
