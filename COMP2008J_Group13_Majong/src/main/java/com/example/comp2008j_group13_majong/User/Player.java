@@ -86,6 +86,11 @@ public class Player extends User{
     public ArrayList<MahjongTile> getHand() {
         return hand;
     }
+    @Override
+    public void setHand(ArrayList<MahjongTile> hand) {
+        this.hand = hand;
+    }
+
 
     @Override
     public String getPosition() {

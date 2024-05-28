@@ -17,7 +17,7 @@ public class Computer extends User {
     private ArrayList<MahjongTile> hand;
     //public String position;
 
-    public Computer(String name, ArrayList<MahjongTile> tiles, String position) {
+    public Computer(String name,ArrayList<MahjongTile> tiles,String position) {
         this.name = name;
         this.score = 0;
         this.tiles = tiles;
@@ -88,5 +88,9 @@ public class Computer extends User {
     @Override
     public ArrayList<MahjongTile> getHand() {
         return hand;
+    }
+    @Override
+    public void setHand(ArrayList<MahjongTile> hand) {
+        this.hand = hand;
     }
 }
