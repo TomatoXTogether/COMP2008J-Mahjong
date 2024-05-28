@@ -17,13 +17,21 @@ public abstract class User {
     public boolean isChi;
     public boolean isPong;
 
-    abstract int getScore();
-
-    abstract ArrayList<MahjongTile> removeTiles(MahjongTile tile);
-
-    abstract void addTile(MahjongTile tile);
-
-    abstract MahjongTile selectTiles(MahjongTile tile);
+    public int getScore(){
+        if (isKong){
+            score += 30;
+            isKong = false;
+        }
+        if (isChi){
+            score += 10;
+            isChi = false;
+        }
+        if (isPong){
+            score += 10;
+            isPong = false;
+        }
+        return score;
+    }
 
     public boolean ifChi(MahjongTile tile){
         return false;
@@ -89,4 +97,10 @@ public abstract class User {
     public ArrayList<MahjongTile> getTiles(){
         return tiles;
     }
+
+    abstract ArrayList<MahjongTile> removeTiles(MahjongTile tile);
+
+    abstract void addTile(MahjongTile tile);
+
+    abstract MahjongTile selectTiles(MahjongTile tile);
 }

@@ -18,22 +18,6 @@ public class Player extends User{
     }
 
     @Override
-    int getScore() {
-        if (isKong){
-            score += 30;
-            isKong = false;
-        }
-        if (isChi){
-            score += 10;
-            isChi = false;
-        }
-        if (isPong){
-            score += 10;
-            isPong = false;
-        }
-        return score;
-    }
-    @Override
     ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
         tiles.remove(tile);
         return tiles;
