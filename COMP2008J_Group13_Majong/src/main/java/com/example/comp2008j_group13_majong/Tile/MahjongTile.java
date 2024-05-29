@@ -1,11 +1,10 @@
 package com.example.comp2008j_group13_majong.Tile;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MahjongTile extends JLabel implements MouseListener {
+public class MahjongTile implements MouseListener {
     public enum Suit {
         万, 条, 饼, 风, 发财, 白板
     }
@@ -25,13 +24,13 @@ public class MahjongTile extends JLabel implements MouseListener {
         this.suit = suit;
         this.value = value;
         this.up = false;
-        setTileAppearance();
-        // 给每一张牌添加鼠标监听
-        this.addMouseListener(this);
-        // 设置牌的宽高大小
-        this.setSize(71, 96);
-        // 显示牌
-        this.setVisible(true);
+//        setTileAppearance();
+//        // 给每一张牌添加鼠标监听
+//        this.addMouseListener(this);
+//        // 设置牌的宽高大小
+//        this.setSize(71, 96);
+//        // 显示牌
+//        this.setVisible(true);
     }
 
     public MahjongTile(Suit suit) {
@@ -39,29 +38,29 @@ public class MahjongTile extends JLabel implements MouseListener {
     }
 
     // 根据牌的状态（正面或背面）设置外观
-    private void setTileAppearance() {
-        if (this.up) {
-            this.turnFront();
-        } else {
-            this.turnRear();
-        }
-    }
+//    private void setTileAppearance() {
+//        if (this.up) {
+//            this.turnFront();
+//        } else {
+//            this.turnRear();
+//        }
+//    }
 
     // 显示正面
-    public void turnFront() {
-        if (value != null) {
-            this.setIcon(new ImageIcon("path_to_images/" + suit + "_" + value + ".png"));
-        } else {
-            this.setIcon(new ImageIcon("path_to_images/" + suit + ".png"));
-        }
-        this.up = true;
-    }
+//    public void turnFront() {
+//        if (value != null) {
+//            this.setIcon(new ImageIcon("path_to_images/" + suit + "_" + value + ".png"));
+//        } else {
+//            this.setIcon(new ImageIcon("path_to_images/" + suit + ".png"));
+//        }
+//        this.up = true;
+//    }
 
     // 显示背面
-    public void turnRear() {
-        this.setIcon(new ImageIcon("path_to_images/rear.png")); // 修改图片路径
-        this.up = false;
-    }
+//    public void turnRear() {
+//        this.setIcon(new ImageIcon("path_to_images/rear.png")); // 修改图片路径
+//        this.up = false;
+//    }
 
     public Suit getSuit() {
         return suit;
@@ -75,10 +74,10 @@ public class MahjongTile extends JLabel implements MouseListener {
         return up;
     }
 
-    public void setUp(boolean up) {
-        this.up = up;
-        setTileAppearance();
-    }
+//    public void setUp(boolean up) {
+//        this.up = up;
+//        setTileAppearance();
+//    }
 
     public boolean isCanClick() {
         return canClick;
@@ -111,7 +110,7 @@ public class MahjongTile extends JLabel implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (canClick) {
-            Point from = this.getLocation();
+            //Point from = this.getLocation();
             int step;
             if (clicked) {
                 step = 20;
@@ -119,9 +118,10 @@ public class MahjongTile extends JLabel implements MouseListener {
                 step = -20;
             }
             clicked = !clicked;
-            Point to = new Point(from.x, from.y + step);
-            this.setLocation(to);
+            //Point to = new Point(from.x, from.y + step);
+            //this.setLocation(to);
         }
+        //return false;
     }
 
     @Override
