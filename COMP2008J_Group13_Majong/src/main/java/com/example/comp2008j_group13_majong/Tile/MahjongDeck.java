@@ -13,31 +13,28 @@ public class MahjongDeck {
     }
 
     private void initializeDeck() {
-        // 定义花色和对应的值
-        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         // 添加万、条、饼的牌
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.万 || suit == MahjongTile.Suit.条 || suit == MahjongTile.Suit.饼) {
-                for (String value : numberValues) {
+                for (int number = 1; number < 10; number++) {
                     for (int i = 0; i < 4; i++) {
-                        tiles.add(new MahjongTile(suit, value));
+                        tiles.add(new MahjongTile(suit, number));
                     }
                 }
             }
         }
 
         // 添加风牌
-        String[] fengValues = {"东", "南", "西", "北", "中"};
-        for (String value : fengValues) {
+        for (int number = 10; number < 15; number++) {
             for (int i = 0; i < 4; i++) {
-                tiles.add(new MahjongTile(MahjongTile.Suit.风, value));
+                tiles.add(new MahjongTile(MahjongTile.Suit.风, number));
             }
         }
 
         // 添加发财和白板
         for (int i = 0; i < 4; i++) {
-            tiles.add(new MahjongTile(MahjongTile.Suit.发财));
-            tiles.add(new MahjongTile(MahjongTile.Suit.白板));
+            tiles.add(new MahjongTile(MahjongTile.Suit.发财, 15));
+            tiles.add(new MahjongTile(MahjongTile.Suit.白板, 16));
         }
     }
 
