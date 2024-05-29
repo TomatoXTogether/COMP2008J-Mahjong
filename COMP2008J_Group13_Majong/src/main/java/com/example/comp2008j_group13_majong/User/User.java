@@ -9,7 +9,7 @@ public abstract class User {
     public String position;
     public String name;
     public int score;
-    public ArrayList<ArrayList<MahjongTile>> inOrderTiles; // tiles in order
+    public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
     public ArrayList<MahjongTile> handTiles; // tiles in hand
     public boolean isTurn;
     public boolean isKong;
@@ -65,34 +65,53 @@ public abstract class User {
         }
     }
 
-    public boolean ifPong(MahjongTile tile){
+    public MahjongTile[] ifPong(MahjongTile tile){
+        MahjongTile[] pongzi = new MahjongTile[3];
         if (getTile(tile) == 2){
-            ArrayList<MahjongTile> pongzi = new ArrayList<>();
+            int i = 0;
             for (MahjongTile t : handTiles){
                 if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
-                    handTiles.remove(t);
-                    pongzi.add(t);
-                    inOrderTiles.add(pongzi);
+                    pongzi[i] = t;
+                    i ++;
                 }
             }
-            return isPong = true;
+            isPong = true;
+        }else {
+            isPong = false;
         }
-        return isPong = false;
+        return pongzi;
     }
 
-    public boolean ifKong(MahjongTile tile){
+    public void peng(MahjongTile[] pongzi) {
+        for (MahjongTile t : pongzi){
+            handTiles.remove(t);
+        }
+        inOrderTiles.add(pongzi);
+    }
+
+    public MahjongTile[] ifKong(MahjongTile tile){
+        MahjongTile[] kongzi = new MahjongTile[4];
         if (getTile(tile) == 3){
-            ArrayList<MahjongTile> kongzi = new ArrayList<>();
+            int i = 0;
             for (MahjongTile t : handTiles){
                 if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
-                    handTiles.remove(t);
-                    kongzi.add(t);
-                    inOrderTiles.add(kongzi);
+                    kongzi[i] = t;
+                    i ++;
                 }
             }
-            return isKong = true;
+            isKong = true;
+        }else {
+            isKong = false;
         }
-        return isKong = false;
+        return null;
+    }
+
+    public void kong(MahjongTile[] kongzi) {
+        for (MahjongTile t : kongzi){
+            handTiles.remove(t);
+        }
+        inOrderTiles.add(kongzi);
+        isKong = false;
     }
 
     public boolean ifWin(){
@@ -103,12 +122,12 @@ public abstract class User {
         return name;
     }
 
-    public ArrayList<ArrayList<MahjongTile>> getInOrderTiles(){
+    public ArrayList<MahjongTile[]> getInOrderTiles(){
         return inOrderTiles;
     }
 
-    public void setInOrderTiles(ArrayList<ArrayList<MahjongTile>> hand) {
-        this.inOrderTiles = hand;
+    public void setInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles) {
+        this.inOrderTiles = inOrderTiles;
     }
 
     public String getPosition() {
