@@ -11,16 +11,15 @@ public class Player extends User{
     public Player(String name, ArrayList<MahjongTile> tiles, String position) {
         this.name = name;
         this.score = 0;
-        this.tiles = tiles;
         this.position = position;
+        this.handTiles = tiles;
         this.isTurn = false;
-        this.hand = hand != null ? hand : new ArrayList<>();
     }
 
     @Override
     ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
-        tiles.remove(tile);
-        return tiles;
+        handTiles.remove(tile);
+        return handTiles;
     }
 
     @Override
