@@ -19,9 +19,11 @@ public class MahjongDeck {
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.万 || suit == MahjongTile.Suit.条 || suit == MahjongTile.Suit.饼) {
                 for (String value : numberValues) {
+                    int index = 1;
                     for (int i = 0; i < 4; i++) {
-                        tiles.add(new MahjongTile(suit, value));
+                        tiles.add(new MahjongTile(suit, value, index));
                     }
+                    index ++;
                 }
             }
         }
@@ -30,7 +32,7 @@ public class MahjongDeck {
         String[] fengValues = {"东", "南", "西", "北", "中"};
         for (String value : fengValues) {
             for (int i = 0; i < 4; i++) {
-                tiles.add(new MahjongTile(MahjongTile.Suit.风, value));
+                tiles.add(new MahjongTile(MahjongTile.Suit.风, value, 0));
             }
         }
 

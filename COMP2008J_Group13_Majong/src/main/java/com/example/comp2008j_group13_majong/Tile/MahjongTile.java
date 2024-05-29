@@ -13,6 +13,7 @@ public class MahjongTile implements MouseListener {
     private Suit suit;
     // 牌的值
     private String value;
+    private int index;
     // 牌显示正面还是背面
     private boolean up;
     // 是否可点击
@@ -20,10 +21,11 @@ public class MahjongTile implements MouseListener {
     // 当前状态，是否已经被点击
     private boolean clicked = false;
 
-    public MahjongTile(Suit suit, String value) {
+    public MahjongTile(Suit suit, String value, int index) {
         this.suit = suit;
         this.value = value;
         this.up = false;
+        this.index = index;
 //        setTileAppearance();
 //        // 给每一张牌添加鼠标监听
 //        this.addMouseListener(this);
@@ -34,7 +36,7 @@ public class MahjongTile implements MouseListener {
     }
 
     public MahjongTile(Suit suit) {
-        this(suit, null);
+        this(suit, null, 0);
     }
 
     // 根据牌的状态（正面或背面）设置外观
@@ -72,6 +74,14 @@ public class MahjongTile implements MouseListener {
 
     public boolean isUp() {
         return up;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 //    public void setUp(boolean up) {

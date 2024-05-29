@@ -32,8 +32,37 @@ public abstract class User {
         return score;
     }
 
-    public boolean ifChi(MahjongTile tile){
-        return false;
+    public MahjongTile[][] ifChi(MahjongTile tile){
+        MahjongTile t1 = new MahjongTile(tile.getSuit(), tile.getValue(), tile.getIndex() - 2);
+        MahjongTile t2 = new MahjongTile(tile.getSuit(), tile.getValue(), tile.getIndex() - 1);
+        MahjongTile t3 = new MahjongTile(tile.getSuit(), tile.getValue(), tile.getIndex() + 1);
+        MahjongTile t4 = new MahjongTile(tile.getSuit(), tile.getValue(), tile.getIndex() + 2);
+        MahjongTile[][] shuzi = new MahjongTile[3][3];
+        if ((getTile(t1) >= 1 && getTile(t2) >= 1)){
+            isChi = true;
+            shuzi[0][0] = t1;
+            shuzi[0][1] = t2;
+            shuzi[0][2] = tile;
+        }else if ((getTile(t2) >= 1 && getTile(t3) >= 1)){
+            isChi = true;
+            shuzi[1][0] = t2;
+            shuzi[1][1] = tile;
+            shuzi[1][2] = t3;
+        } else if ((getTile(t3) >= 1 && getTile(t4) >= 1)) {
+            isChi = true;
+            shuzi[2][0] = tile;
+            shuzi[2][2] = t3;
+            shuzi[2][1] = t4;
+        }else {
+            isChi = false;
+        }
+        return shuzi;
+    }
+
+    public void chi(MahjongTile tile) {
+        if (isChi){
+
+        }
     }
 
     public boolean ifPong(MahjongTile tile){
