@@ -25,8 +25,8 @@ public class MahjongTileComparator implements Comparator<MahjongTile> {
             return suitComparison;
         }
 
-        // 如果是发财或白板，不再按值排序
-        if (tile1.getSuit() == MahjongTile.Suit.发财 || tile1.getSuit() == MahjongTile.Suit.白板) {
+        // 如果是风牌、发财或白板，不再按值排序
+        if (tile1.getSuit() == MahjongTile.Suit.风 || tile1.getSuit() == MahjongTile.Suit.发财 || tile1.getSuit() == MahjongTile.Suit.白板) {
             return 0;
         }
 
