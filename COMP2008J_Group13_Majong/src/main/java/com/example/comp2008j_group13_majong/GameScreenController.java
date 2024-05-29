@@ -45,6 +45,7 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane playerHandPile;
 
+
     @FXML
     private GridPane westHandPile;
 
@@ -52,12 +53,12 @@ public class GameScreenController implements Initializable {
 
 
     public GameScreenController() {
-        GameRules gameRules = new GameRules();
-        ArrayList<MahjongTile> humanPlayerHand=gameRules.humanPlayerHand;
-        ArrayList<MahjongTile> computer1Hand=gameRules.computer1Hand;
-        ArrayList<MahjongTile> computer2Hand=gameRules.computer2Hand;
-        ArrayList<MahjongTile> computer3Hand=gameRules.computer3Hand;
-        System.out.println("humanPlayerHand: " + humanPlayerHand);
+//        GameRules gameRules = new GameRules();
+//        ArrayList<MahjongTile> humanPlayerHand=gameRules.humanPlayerHand;
+//        ArrayList<MahjongTile> computer1Hand=gameRules.computer1Hand;
+//        ArrayList<MahjongTile> computer2Hand=gameRules.computer2Hand;
+//        ArrayList<MahjongTile> computer3Hand=gameRules.computer3Hand;
+//        System.out.println("humanPlayerHand: " + humanPlayerHand);
         //loadTilesFromListsToPane(humanPlayerHand);
 
         //loadTilesFromListsToPane(humanPlayerHand);
@@ -126,12 +127,13 @@ public class GameScreenController implements Initializable {
         }
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         GameRules gameRules = new GameRules();
-        ArrayList<MahjongTile> humanPlayerHand=gameRules.humanPlayerHand;
+        ArrayList<MahjongTile> humanPlayerHand=gameRules.getHumanPlayerHand();
         loadTilesFromListsToPane(humanPlayerHand);
 
     }
+
+
 }

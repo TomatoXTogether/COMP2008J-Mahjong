@@ -59,6 +59,9 @@ public class MahjongDeck {
         }
         return null; // If no tiles are left, return null
     }
+    public int tilesLeft() {
+        return tiles.size();
+    }
 
 
 }
