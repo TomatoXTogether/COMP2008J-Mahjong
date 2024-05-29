@@ -10,23 +10,22 @@ public class Computer extends User {
     public Computer(String name,ArrayList<MahjongTile> tiles,String position) {
         this.name = name;
         this.score = 0;
-        this.tiles = tiles;
         this.position = position;
         this.isTurn = false;
-        this.hand = hand != null ? hand : new ArrayList<>();
+        this.handTiles = tiles;
     }
 
     @Override
     ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
-        tiles.remove(tile);
-        return tiles;
+        handTiles.remove(tile);
+        return handTiles;
     }
 
     @Override
     MahjongTile selectTiles(MahjongTile tile) {
         Random random = new Random();
-        int randomIndex = random.nextInt(tiles.size());
-        return tiles.get(randomIndex);
+        int randomIndex = random.nextInt(handTiles.size());
+        return handTiles.get(randomIndex);
     }
 
     @Override

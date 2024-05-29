@@ -5,23 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MahjongTileComparator implements Comparator<MahjongTile> {
-    private static final Map<String, Integer> valueMap = new HashMap<>();
     private static final Map<MahjongTile.Suit, Integer> suitMap = new HashMap<>();
 
     static {
-        // 初始化数值映射
-        String[] values = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
-        for (int i = 0; i < values.length; i++) {
-            valueMap.put(values[i], i + 1);
-        }
-        valueMap.put("东", 10);
-        valueMap.put("南", 11);
-        valueMap.put("西", 12);
-        valueMap.put("北", 13);
-        valueMap.put("中", 14);
-        valueMap.put("发", 15);
-        valueMap.put("", 16);  // 白板
-
         // 初始化花色映射
         suitMap.put(MahjongTile.Suit.万, 1);
         suitMap.put(MahjongTile.Suit.条, 2);
@@ -45,6 +31,6 @@ public class MahjongTileComparator implements Comparator<MahjongTile> {
         }
 
         // 然后按值排序
-        return valueMap.get(tile1.getValue()).compareTo(valueMap.get(tile2.getValue()));
+        return Integer.compare(tile1.getIndex(), tile2.getIndex());
     }
 }
