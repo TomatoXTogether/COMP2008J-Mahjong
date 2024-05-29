@@ -136,15 +136,15 @@ public class GameRules {
         return remainingTiles;
     }
 
-    public void dealNextRound() {
-        // 从庄家开始发牌
-        int dealerIndex = players.indexOf(dealer);
-        int currentPlayerIndex = dealerIndex;
-        int numPlayers = players.size();
-        for (int i = 0; i < numPlayers; i++) {
-            User currentPlayer = players.get(currentPlayerIndex);
-            currentPlayer.getHand().add(remainingTiles.remove(0)); // 从剩余的牌中抽取一张牌发给当前玩家
-            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers; // 下一个玩家
-        }
-    }
+//    public void dealNextRound() {
+//        // 从庄家开始发牌
+//        int dealerIndex = players.indexOf(dealer);
+//        int currentPlayerIndex = dealerIndex;
+//        int numPlayers = players.size();
+//        for (int i = 0; i < numPlayers; i++) {
+//            User currentPlayer = players.get(currentPlayerIndex);
+//            currentPlayer.getHand().add(remainingTiles.remove(0)); // 从剩余的牌中抽取一张牌发给当前玩家
+//            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers; // 下一个玩家
+//        }
+//    }
 }
