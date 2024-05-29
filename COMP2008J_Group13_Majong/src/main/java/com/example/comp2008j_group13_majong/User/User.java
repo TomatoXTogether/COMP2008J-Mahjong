@@ -12,7 +12,6 @@ public abstract class User {
     public String name;
     public int score;
     public ArrayList<MahjongTile> tiles;
-    public boolean isWin;
     public boolean isKong;
     public boolean isChi;
     public boolean isPong;
@@ -39,23 +38,25 @@ public abstract class User {
 
     public boolean ifPong(MahjongTile tile){
         if (getTile(tile) == 2){
-            return true;
+            return isPong = true;
         }
-        return false;
+        return isPong = false;
     }
 
     public boolean ifKong(MahjongTile tile){
         if (getTile(tile) == 3){
-            return true;
+            return isKong = true;
         }
-        return false;
+        return isKong = false;
     }
 
     public boolean ifWin(){
         return getHand().size() == 0;
     }
 
-    public abstract String getName();
+    public String getName(){
+        return name;
+    }
 
     public ArrayList<MahjongTile> getHand(){
         return hand;
@@ -73,6 +74,7 @@ public abstract class User {
     public void setPosition(String position) {
         this.position = position;
     }
+
     public boolean isTurn() {
         return isTurn;
     }
@@ -98,9 +100,11 @@ public abstract class User {
         return tiles;
     }
 
-    abstract ArrayList<MahjongTile> removeTiles(MahjongTile tile);
-
-    abstract void addTile(MahjongTile tile);
+    public void addTile(MahjongTile tile){
+        tiles.add(tile);
+    }
 
     abstract MahjongTile selectTiles(MahjongTile tile);
+
+    abstract ArrayList<MahjongTile> removeTiles(MahjongTile tile);
 }

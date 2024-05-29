@@ -23,11 +23,6 @@ public class Computer extends User {
     }
 
     @Override
-    void addTile(MahjongTile tile) {
-        tiles.add(tile);
-    }
-
-    @Override
     MahjongTile selectTiles(MahjongTile tile) {
         Random random = new Random();
         int randomIndex = random.nextInt(tiles.size());
@@ -37,10 +32,5 @@ public class Computer extends User {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public int getTile(MahjongTile tile) {
-        return 0;
     }
 }

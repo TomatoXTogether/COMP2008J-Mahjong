@@ -24,20 +24,9 @@ public class Player extends User{
     }
 
     @Override
-    void addTile(MahjongTile tile) {
-        tiles.add(tile);
-    }
-
-    @Override
     MahjongTile selectTiles(MahjongTile tile) {
         return tile;
     }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
 
     @Override
     public String getPosition() {
