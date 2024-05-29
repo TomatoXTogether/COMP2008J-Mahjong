@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
 public class GameRules {
     private Player humanPlayer;
     private List<Computer> computers;
     private User dealer;
+    private List<User> players;
     private MahjongDeck deck;
+    private ArrayList<MahjongTile> remainingTiles;
 
     public ArrayList<MahjongTile> humanPlayerHand;
     public ArrayList<MahjongTile> computer1Hand;
@@ -23,6 +26,7 @@ public class GameRules {
 
     public GameRules() {
         deck = new MahjongDeck();
+        remainingTiles = new ArrayList<>();
         initializePlayers();
         dealTiles();
         printPlayerHands();
@@ -43,6 +47,11 @@ public class GameRules {
         computer1Hand = new ArrayList<>();
         computer2Hand = new ArrayList<>();
         computer3Hand = new ArrayList<>();
+
+        // 将所有玩家添加到players列表
+        players = new ArrayList<>();
+        players.add(humanPlayer);
+        players.addAll(computers);
 
         // 随机选择庄家
         selectDealer();
@@ -66,13 +75,16 @@ public class GameRules {
     private void dealTiles() {
         // 打乱牌堆中的牌的顺序
         deck.shuffle();
+        remainingTiles.addAll(deck.getAllTiles());
+        System.out.println("剩余牌堆里有： " + remainingTiles.size() + " 张牌");
+
 
         // 给每个玩家发放14张随机的牌
         for (int i = 0; i < 14; i++) {
-            humanPlayerHand.add(deck.drawTile());
-            computer1Hand.add(deck.drawTile());
-            computer2Hand.add(deck.drawTile());
-            computer3Hand.add(deck.drawTile());
+            humanPlayerHand.add(remainingTiles.remove(0));
+            computer1Hand.add(remainingTiles.remove(0));
+            computer2Hand.add(remainingTiles.remove(0));
+            computer3Hand.add(remainingTiles.remove(0));
         }
     }
 
@@ -95,7 +107,11 @@ public class GameRules {
         }
     }
 
-    private ArrayList<MahjongTile> getComputerHand(int index) {
+    public ArrayList<MahjongTile> getHumanPlayerHand() {
+        return humanPlayerHand;
+    }
+
+    public ArrayList<MahjongTile> getComputerHand(int index) {
         switch (index) {
             case 0:
                 return computer1Hand;
@@ -108,7 +124,27 @@ public class GameRules {
         }
     }
 
+    public MahjongDeck getDeck() {
+        return deck;
+    }
+
     public String getDealerPosition() {
         return dealer.getPosition();
     }
+
+    public ArrayList<MahjongTile> getRemainingTiles() {
+        return remainingTiles;
+    }
+
+//    public void dealNextRound() {
+//        // 从庄家开始发牌
+//        int dealerIndex = players.indexOf(dealer);
+//        int currentPlayerIndex = dealerIndex;
+//        int numPlayers = players.size();
+//        for (int i = 0; i < numPlayers; i++) {
+//            User currentPlayer = players.get(currentPlayerIndex);
+//            currentPlayer.getHand().add(remainingTiles.remove(0)); // 从剩余的牌中抽取一张牌发给当前玩家
+//            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers; // 下一个玩家
+//        }
+//    }
 }

@@ -52,7 +52,7 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane westHandPile;
 
-    ImageView tileDisplay;
+    private ImageView currentRaisedTile;
 
     ArrayList<MahjongTile> humanPlayerHand;
     ArrayList<MahjongTile> computer1Hand;
@@ -79,10 +79,6 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void mouseClicked(MouseEvent event) {
-         // Get the current Y position of the image view
-        tileDisplay.setLayoutY(tileDisplay.getLayoutY() + 10);
-
-        System.out.println(""+tileDisplay.getLayoutY()+tileDisplay.getLayoutX());
     }
 
     @FXML
@@ -93,11 +89,25 @@ public class GameScreenController implements Initializable {
     private void loadTilesFromListsToPane (List<MahjongTile> humanTiles, List<MahjongTile> computer1Tiles,List<MahjongTile> computer2Tiles,List<MahjongTile> computer3Tiles) {
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);
-             tileDisplay = getTileDisplayForHuman(tile);
+             ImageView tileDisplay = getTileDisplayForHuman(tile);
              tileDisplay.setOnMouseClicked(e -> {
                  mouseClicked(e);
              });
-            playerHandPile.add(tileDisplay, row, 0);
+            playerHandPile.add(tileDisplay, row, 1);
+            int finalRow = row;
+            tileDisplay.setOnMouseClicked(event -> {
+                if (currentRaisedTile == null) {
+                    // 没有当前上升的牌
+                    playerHandPile.getChildren().remove(tileDisplay);
+                    playerHandPile.add(tileDisplay, finalRow, 0);
+                    currentRaisedTile = tileDisplay;
+                } else if (currentRaisedTile == tileDisplay) {
+                    // 点击的牌是当前上升的牌，下降它
+                    playerHandPile.getChildren().remove(tileDisplay);
+                    playerHandPile.add(tileDisplay, finalRow, 1);
+                    currentRaisedTile = null;
+                }
+            });
         }
         for (int row = 0; row < computer1Tiles.size(); row++) {
             MahjongTile tile = computer1Tiles.get(row);
