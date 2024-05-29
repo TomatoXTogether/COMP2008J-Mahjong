@@ -31,6 +31,6 @@ public class MahjongTileComparator implements Comparator<MahjongTile> {
         }
 
         // 然后按值排序
-        return Integer.compare(tile1.getValue(), tile2.getValue());
+        return Integer.compare(tile1.getIndex(), tile2.getIndex());
     }
 }
