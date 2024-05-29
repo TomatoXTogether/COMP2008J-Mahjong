@@ -5,6 +5,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MahjongTile implements MouseListener {
+    public MahjongTile(String value, String suit) {
+        this.value = value;
+        this.suit = Suit.valueOf(suit);
+    }
+
     public enum Suit {
         万, 条, 饼, 风, 发财, 白板
     }
