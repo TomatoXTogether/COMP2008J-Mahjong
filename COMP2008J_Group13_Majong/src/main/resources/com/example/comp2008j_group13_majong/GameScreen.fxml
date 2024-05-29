@@ -145,5 +145,6 @@
             <Font name="Rockwell" size="12.0" />
          </font>
       </Button>
+      <Button fx:id="drawButton" layoutX="375.0" layoutY="241.0" mnemonicParsing="false" onAction="#drawButtonAction" text="deal" />
    </children>
 </AnchorPane>

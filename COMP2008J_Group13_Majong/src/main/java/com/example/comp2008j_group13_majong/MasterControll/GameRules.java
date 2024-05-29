@@ -89,13 +89,21 @@ public class GameRules {
     }
 
     private void printPlayerHands() {
-        // 打印每个玩家的手牌
+        // 打印玩家的手牌
         System.out.print(humanPlayer.getName() + " 的手牌: ");
         for (MahjongTile tile : humanPlayerHand) {
             System.out.print(tile.toString() + ", ");
         }
         System.out.println();
 
+        // 打印庄家的手牌
+        System.out.print(dealer.getName() + " 的手牌: ");
+        for (MahjongTile tile : dealer.getTiles()) {
+            System.out.print(tile.toString() + ", ");
+        }
+        System.out.println();
+
+        // 打印电脑玩家的手牌
         for (int i = 0; i < computers.size(); i++) {
             Computer computer = computers.get(i);
             ArrayList<MahjongTile> hand = getComputerHand(i);
@@ -136,15 +144,42 @@ public class GameRules {
         return remainingTiles;
     }
 
-//    public void dealNextRound() {
-//        // 从庄家开始发牌
-//        int dealerIndex = players.indexOf(dealer);
-//        int currentPlayerIndex = dealerIndex;
-//        int numPlayers = players.size();
-//        for (int i = 0; i < numPlayers; i++) {
-//            User currentPlayer = players.get(currentPlayerIndex);
-//            currentPlayer.getHand().add(remainingTiles.remove(0)); // 从剩余的牌中抽取一张牌发给当前玩家
-//            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers; // 下一个玩家
-//        }
-//    }
+    public void dealerNextRound() {
+        // 判断是否还有剩余的牌
+        if (!remainingTiles.isEmpty()) {
+            // 获取庄家在玩家列表中的索引位置
+            int dealerIndex = players.indexOf(dealer);
+
+            // 循环从庄家的下一位玩家开始，依次发给每位玩家一张牌
+            for (int i = 1; i <= players.size(); i++) {
+                // 计算当前玩家的索引位置
+                int currentPlayerIndex = (dealerIndex + i) % players.size();
+                // 获取当前玩家
+                User currentPlayer = players.get(currentPlayerIndex);
+
+                // 发给当前玩家一张牌
+                MahjongTile tile = remainingTiles.remove(0);
+                currentPlayer.getTiles().add(tile);
+                System.out.println(currentPlayer.getName() + " received: " + tile);
+
+                // 更新当前玩家的手牌列表
+                if (currentPlayer instanceof Player) {
+                    humanPlayerHand.add(tile);
+                } else if (currentPlayer instanceof Computer) {
+                    int computerIndex = computers.indexOf(currentPlayer);
+                    switch (computerIndex) {
+                        case 0:
+                            computer1Hand.add(tile);
+                            break;
+                        case 1:
+                            computer2Hand.add(tile);
+                            break;
+                        case 2:
+                            computer3Hand.add(tile);
+                            break;
+                    }
+                }
+            }
+        }
+    }
 }

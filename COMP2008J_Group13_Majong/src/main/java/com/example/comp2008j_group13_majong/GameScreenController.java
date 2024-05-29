@@ -53,11 +53,17 @@ public class GameScreenController implements Initializable {
     private GridPane playerHandPile;
 
     @FXML
+    private Button drawButton;
+
+
+    @FXML
     private GridPane westHandPile;
 
     private ImageView currentRaisedTile;
 
     int index;
+
+    private GameRules gameRules;
 
     ArrayList<MahjongTile> humanPlayerHand;
     ArrayList<MahjongTile> computer1Hand;
@@ -89,8 +95,27 @@ public class GameScreenController implements Initializable {
             loadTilesFromListsToPane(humanPlayerHand,computer1Hand,computer2Hand,computer3Hand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
+            gameRules.dealerNextRound();
+            updateAllPlayersHandUI();
         }
 
+    }
+
+    @FXML
+    void drawButtonAction(ActionEvent event) {
+        gameRules.dealerNextRound();
+        updateAllPlayersHandUI();
+    }
+
+    private void updateAllPlayersHandUI() {
+        // 清空所有玩家手牌的显示
+        playerHandPile.getChildren().clear();
+        northHandPile.getChildren().clear();
+        eastHandPile.getChildren().clear();
+        westHandPile.getChildren().clear();
+
+        // 重新加载每个玩家的手牌
+        loadTilesFromListsToPane(humanPlayerHand, computer1Hand, computer2Hand, computer3Hand);
     }
 
     @FXML
@@ -149,6 +174,7 @@ public class GameScreenController implements Initializable {
             ImageView tileDisplay = getTileDisplayForComputer(tile);
             westHandPile.add(tileDisplay, 0, column);
         }
+
     }
 
     protected ImageView getTileDisplayForHuman(MahjongTile tile) {
@@ -206,7 +232,8 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        GameRules gameRules = new GameRules();
+        gameRules = new GameRules();
+        //GameRules gameRules = new GameRules();
         MahjongDeck mahjongDeck = new MahjongDeck();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
