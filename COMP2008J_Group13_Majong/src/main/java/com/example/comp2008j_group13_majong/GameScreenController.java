@@ -85,9 +85,13 @@ public class GameScreenController implements Initializable {
     private GameRules gameRules;
 
     ArrayList<MahjongTile> humanPlayerHand;
+    ArrayList<MahjongTile> southUsedTiles;
     ArrayList<MahjongTile> computer1Hand;
     ArrayList<MahjongTile> computer2Hand;
     ArrayList<MahjongTile> computer3Hand;
+    ArrayList<MahjongTile> northUsedTiles;
+    ArrayList<MahjongTile> eastUsedTiles;
+    ArrayList<MahjongTile> westUsedTiles;
 
     public GameScreenController() {
     }
