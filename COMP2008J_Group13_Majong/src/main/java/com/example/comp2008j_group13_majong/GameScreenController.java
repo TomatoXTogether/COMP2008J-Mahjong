@@ -269,7 +269,7 @@ public class GameScreenController implements Initializable {
         eastUsedTiles = new ArrayList<MahjongTile>();
         westUsedTiles = new ArrayList<MahjongTile>();
 
-        mahjongDeck.sortTiles(humanPlayerHand);
+        //mahjongDeck.sortTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
