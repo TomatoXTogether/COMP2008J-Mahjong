@@ -117,11 +117,11 @@ public class GameScreenController implements Initializable {
             humanPlayerHand.remove(index);
             southUsedTiles.add(tile);
             //System.out.println(humanPlayerHand);
-            loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
             //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
+            currentRaisedTile = null;
         }
 
     }
