@@ -51,6 +51,7 @@ public class MahjongDeck {
     public void sortTiles(List<MahjongTile> hand) {
         hand.sort(new MahjongTileComparator());
     }
+
     public void shuffle() {
         Collections.shuffle(tiles);
     }
