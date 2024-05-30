@@ -23,9 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Random;
-import com.example.comp2008j_group13_majong.User.Computer;
-import com.example.comp2008j_group13_majong.User.Player;
 
 public class GameScreenController implements Initializable {
     @FXML
@@ -102,11 +99,13 @@ public class GameScreenController implements Initializable {
     private GameRules gameRules;
 
     ArrayList<MahjongTile> humanPlayerHand;
+    ArrayList<MahjongTile> southUsedTiles;
     ArrayList<MahjongTile> computer1Hand;
     ArrayList<MahjongTile> computer2Hand;
     ArrayList<MahjongTile> computer3Hand;
-    ArrayList<MahjongTile> remainingTiles;
-    ArrayList<MahjongTile> usedTilesList;
+    ArrayList<MahjongTile> northUsedTiles;
+    ArrayList<MahjongTile> eastUsedTiles;
+    ArrayList<MahjongTile> westUsedTiles;
 
     public GameScreenController() {
     }
@@ -128,14 +127,15 @@ public class GameScreenController implements Initializable {
     @FXML
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
-            MahjongTile humanPlayedTile = humanPlayerHand.remove(index);
-            System.out.println(humanPlayerHand);
+            MahjongTile tile = humanPlayerHand.get(index);
+            humanPlayerHand.remove(index);
+            southUsedTiles.add(tile);
+            //System.out.println(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
-            currentRaisedTile=null;
-            addTileToUsedTiles(humanPlayedTile, usedTiles);
-            gameRules.dealerNextRound();
+            //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
+            currentRaisedTile = null;
         }
 
     }
@@ -149,6 +149,9 @@ public class GameScreenController implements Initializable {
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         // 清空所有玩家手牌的显示
         pane.getChildren().clear();
+        //northHandPile.getChildren().clear();
+        //eastHandPile.getChildren().clear();
+        //westHandPile.getChildren().clear();
 
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -279,14 +282,20 @@ public class GameScreenController implements Initializable {
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
         computer3Hand=gameRules.computer3Hand;
-        remainingTiles = gameRules.getRemainingTiles();
-        usedTilesList = new ArrayList<>();
 
-        mahjongDeck.sortHandTiles(humanPlayerHand);
+        southUsedTiles = new ArrayList<MahjongTile>();
+        northUsedTiles = new ArrayList<MahjongTile>();
+        eastUsedTiles = new ArrayList<MahjongTile>();
+        westUsedTiles = new ArrayList<MahjongTile>();
+
+        //mahjongDeck.sortTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
-
+        loadTilesFromListsToPaneForComputer(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
+        loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
+        loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
     }
 }
