@@ -110,7 +110,7 @@ public class GameScreenController implements Initializable {
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
             humanPlayerHand.remove(index);
-            System.out.println(humanPlayerHand);
+            //System.out.println(humanPlayerHand);
             loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
