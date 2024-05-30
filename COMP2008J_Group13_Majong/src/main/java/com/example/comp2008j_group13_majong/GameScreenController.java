@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private Label remainTilesNumber;
 
     @FXML
     private Button chi;
