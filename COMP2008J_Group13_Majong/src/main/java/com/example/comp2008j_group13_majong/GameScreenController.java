@@ -130,7 +130,6 @@ public class GameScreenController implements Initializable {
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
             MahjongTile tile = humanPlayerHand.get(index);
-            MahjongTile humanPlayedTile = humanPlayerHand.remove(index);
             humanPlayerHand.remove(index);
             southUsedTiles.add(tile);
             //System.out.println(humanPlayerHand);
@@ -140,9 +139,6 @@ public class GameScreenController implements Initializable {
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
             updateOnePlayerHand(usedTiles,southUsedTiles);//
             currentRaisedTile = null;
-            addTileToUsedTiles(humanPlayedTile, usedTiles);
-            gameRules.dealerNextRound(playerIndex);
-            updateAllPlayerHands();
         }
     }
 
@@ -150,7 +146,6 @@ public class GameScreenController implements Initializable {
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(playerIndex);
         updateAllPlayerHands();
-        gameRules.dealerNextRound(playerIndex);
         updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateOnePlayerHand(usedTiles,southUsedTiles);
         updateRemainTiles();
@@ -168,7 +163,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer1Hand, northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand, eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand, westHandPile);
-        loadTilesFromListsToPaneForHuman(pile);
         loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
     }
 
