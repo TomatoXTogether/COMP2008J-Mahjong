@@ -130,7 +130,7 @@
       </Label>
       <Line endX="23.0" endY="108.00003051757812" layoutX="663.0" layoutY="328.0" startX="-96.00003051757812" startY="4.9999847412109375" />
       <Line endX="27.0" endY="111.33334350585938" layoutX="657.0" layoutY="222.0" startX="-87.00003051757812" startY="213.66665649414062" />
-      <Button fx:id="chi" layoutX="775.0" layoutY="566.0" mnemonicParsing="false" onAction="#chiBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Chi">
+      <Button fx:id="chi" layoutX="775.0" layoutY="566.0" mnemonicParsing="false" onAction="#chiBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Chi" visible="false">
          <font>
             <Font name="Rockwell" size="12.0" />
          </font>
@@ -141,12 +141,12 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="chiImage" fitHeight="63.0" fitWidth="86.0" layoutX="765.0" layoutY="568.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="chiImage" fitHeight="63.0" fitWidth="86.0" layoutX="765.0" layoutY="568.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../../../images/吃.png" />
          </image>
       </ImageView>
-      <Button fx:id="peng" layoutX="843.0" layoutY="566.0" mnemonicParsing="false" onAction="#pengBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Peng">
+      <Button fx:id="peng" layoutX="843.0" layoutY="566.0" mnemonicParsing="false" onAction="#pengBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Peng" visible="false">
          <font>
             <Font name="Rockwell" size="12.0" />
          </font>
@@ -157,12 +157,12 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="pengImage" fitHeight="55.0" fitWidth="52.0" layoutX="845.0" layoutY="570.0" mouseTransparent="true">
+      <ImageView fx:id="pengImage" fitHeight="55.0" fitWidth="52.0" layoutX="845.0" layoutY="570.0" mouseTransparent="true" visible="false">
          <image>
             <Image url="@../../../images/碰.png" />
          </image>
       </ImageView>
-      <Button fx:id="gang" layoutX="909.0" layoutY="566.0" mnemonicParsing="false" onAction="#gangBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Gang">
+      <Button fx:id="gang" layoutX="909.0" layoutY="566.0" mnemonicParsing="false" onAction="#gangBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Gang" visible="false">
          <font>
             <Font name="Rockwell" size="12.0" />
          </font>
@@ -173,12 +173,12 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="gangImage" fitHeight="55.0" fitWidth="62.0" layoutX="909.0" layoutY="570.0" mouseTransparent="true">
+      <ImageView fx:id="gangImage" fitHeight="55.0" fitWidth="62.0" layoutX="909.0" layoutY="570.0" mouseTransparent="true" visible="false">
          <image>
             <Image url="@../../../images/杠.png" />
          </image>
       </ImageView>
-      <Button fx:id="hu" graphicTextGap="7.0" layoutX="974.0" layoutY="568.0" mnemonicParsing="false" onAction="#huBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Hu">
+      <Button fx:id="hu" graphicTextGap="7.0" layoutX="974.0" layoutY="568.0" mnemonicParsing="false" onAction="#huBottonAction" prefHeight="63.0" prefWidth="62.0" style="-fx-background-color: #c7c7c7; -fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #000000;" text="Hu" visible="false">
          <font>
             <Font name="Rockwell" size="12.0" />
          </font>
@@ -192,7 +192,7 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fx:id="huImage" fitHeight="55.0" fitWidth="59.0" layoutX="979.0" layoutY="572.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="huImage" fitHeight="55.0" fitWidth="59.0" layoutX="979.0" layoutY="572.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../../../images/胡.png" />
          </image>

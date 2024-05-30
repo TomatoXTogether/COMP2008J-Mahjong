@@ -253,6 +253,7 @@ public class GameScreenController implements Initializable {
         pane.add(tileDisplay, usedTiles.getChildren().size(), 0); // 按照顺序添加到已用牌区域
     }
 
+
 //    public MahjongTile createTileFromImage(ImageView imageView) {
 //        // 从ImageView获取图片路径
 //        System.out.println(imageView.getImage());
