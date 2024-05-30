@@ -278,14 +278,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
-        if (!(gameRules.getDealer() instanceof Player)) {
-            Computer dealer = (Computer) gameRules.getDealer();
-            Random rand = new Random();
-            MahjongTile drawnTile = remainingTiles.remove(rand.nextInt(remainingTiles.size())); // 从剩余牌堆中随机抽一张牌
-            dealer.getTiles().add(drawnTile); // 将抽到的牌加入庄家的手牌
-            MahjongTile playedTile = dealer.getTiles().remove(rand.nextInt(dealer.getTiles().size())); // 从手牌中随机出一张牌
-            addTileToUsedTiles(playedTile, usedTilesInEast); // 将牌加入已用牌区域
-            loadTilesFromListsToPaneForComputer(dealer.getTiles(), eastHandPile); // 更新庄家的手牌显示
-        }
+
     }
 }
