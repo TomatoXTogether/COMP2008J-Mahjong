@@ -15,15 +15,15 @@ public class MahjongDeck {
     private void initializeDeck() {
         // 定义花色和对应的值
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
+
         // 添加万、条、饼的牌
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.万 || suit == MahjongTile.Suit.条 || suit == MahjongTile.Suit.饼) {
-                for (String value : numberValues) {
-                    int index = 1;
+                for (int index = 1; index < 10; index++) {
+                    String value = numberValues[index - 1];
                     for (int i = 0; i < 4; i++) {
                         tiles.add(new MahjongTile(suit, value, index));
                     }
-                    index ++;
                 }
             }
         }
@@ -47,9 +47,9 @@ public class MahjongDeck {
         return tiles;
     }
 
-    // 把牌按照花色和大小自动排序
-    public void sortTiles(List<MahjongTile> hand) {
-        hand.sort(new MahjongTileComparator());
+    public void sortHandTiles(List<MahjongTile> handTiles) {
+        MahjongTileComparator comparator = new MahjongTileComparator();
+        handTiles.sort(comparator); // 对手牌进行排序
     }
 
     public void shuffle() {

@@ -80,7 +80,7 @@ public class GameRules {
 
 
         // 给每个玩家发放14张随机的牌
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 13; i++) {
             humanPlayerHand.add(remainingTiles.remove(0));
             computer1Hand.add(remainingTiles.remove(0));
             computer2Hand.add(remainingTiles.remove(0));
@@ -136,8 +136,8 @@ public class GameRules {
         return deck;
     }
 
-    public String getDealerPosition() {
-        return dealer.getPosition();
+    public User getDealer() {
+        return dealer;
     }
 
     public ArrayList<MahjongTile> getRemainingTiles() {
@@ -150,8 +150,8 @@ public class GameRules {
             // 获取庄家在玩家列表中的索引位置
             int dealerIndex = players.indexOf(dealer);
 
-            // 循环从庄家的下一位玩家开始，依次发给每位玩家一张牌
-            for (int i = 1; i <= players.size(); i++) {
+            // 从庄家开始，依次发给每位玩家一张牌
+            for (int i = 0; i < players.size(); i++) {
                 // 计算当前玩家的索引位置
                 int currentPlayerIndex = (dealerIndex + i) % players.size();
                 // 获取当前玩家
