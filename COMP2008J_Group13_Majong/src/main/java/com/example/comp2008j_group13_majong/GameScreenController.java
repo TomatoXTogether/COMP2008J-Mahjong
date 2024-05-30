@@ -4,20 +4,19 @@ import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.comp2008j_group13_majong.User.Computer;
+import com.example.comp2008j_group13_majong.User.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class GameScreenController implements Initializable {
 
     int index;
 
-    private GameRules gameRules;
+    private GameRules gameRules=new GameRules();
 
     private int playerIndex;
 
@@ -338,13 +337,18 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        gameRules = new GameRules();
-        //GameRules gameRules = new GameRules();
+
         MahjongDeck mahjongDeck = new MahjongDeck();
+        GameRules gameRules=new GameRules();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
         computer3Hand=gameRules.computer3Hand;
+
+        Player player=new Player("human",humanPlayerHand,"south");
+        Computer computer1=new Computer("computer1",computer1Hand,"north");
+        Computer computer2=new Computer("computer2",computer2Hand,"east");
+        Computer computer3=new Computer("computer3",computer3Hand,"west");
 
         southUsedTiles = new ArrayList<MahjongTile>();
         northUsedTiles = new ArrayList<MahjongTile>();
@@ -362,4 +366,5 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
         playerIndex = gameRules.getDealerIndex();
     }
+
 }
