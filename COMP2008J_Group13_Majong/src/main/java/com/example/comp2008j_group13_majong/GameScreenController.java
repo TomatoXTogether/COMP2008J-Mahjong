@@ -25,6 +25,20 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private ImageView chiImage;
+
+    @FXML
+    private ImageView gangImage;
+
+    @FXML
+    private ImageView huImage;
+
+    @FXML
+    private ImageView pengImage;
+
+    @FXML
+    private Label remainTilesNumber;
 
     @FXML
     private Button chi;
@@ -243,6 +257,11 @@ public class GameScreenController implements Initializable {
             iv.setFitHeight(100);
             iv.setImage(image);
             return iv;
+    }
+
+    private void addTileToUsedTiles(MahjongTile tile, GridPane pane) {
+        ImageView tileDisplay = getTileDisplayForHuman(tile);
+        pane.add(tileDisplay, usedTiles.getChildren().size(), 0); // 按照顺序添加到已用牌区域
     }
 
 //    public MahjongTile createTileFromImage(ImageView imageView) {
