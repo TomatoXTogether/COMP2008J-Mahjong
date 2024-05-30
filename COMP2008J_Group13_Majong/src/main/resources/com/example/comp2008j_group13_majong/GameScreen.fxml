@@ -268,23 +268,18 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Label fx:id="score" layoutX="1057.0" layoutY="769.0" style="-fx-background-color: #ffffff;" text="Score:">
+      <Label fx:id="score" layoutX="1057.0" layoutY="769.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Score:">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="round" layoutX="24.0" layoutY="18.0" style="-fx-background-color: #ffffff;" text="Round:">
+      <Label fx:id="round" layoutX="24.0" layoutY="18.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Round:">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
       <Button fx:id="drawButton" layoutX="491.0" layoutY="373.0" mnemonicParsing="false" onAction="#drawButtonAction" text="Button" />
-      <ImageView fitHeight="43.0" fitWidth="36.0" layoutX="24.0" layoutY="48.0">
-         <image>
-            <Image url="@../../../images/背面.jpg" />
-         </image>
-      </ImageView>
-      <Label fx:id="remainTilesNumber" layoutX="69.0" layoutY="61.0" style="-fx-background-color: #ffffff;" text="Remain:">
+      <Label fx:id="remainTilesNumber" layoutX="24.0" layoutY="61.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Remain:">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
