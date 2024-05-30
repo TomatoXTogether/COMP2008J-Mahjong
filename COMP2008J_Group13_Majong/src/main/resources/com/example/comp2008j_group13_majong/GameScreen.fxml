@@ -108,7 +108,7 @@
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="594.0" layoutY="415.0" text="SOURTH">
+      <Label layoutX="600.0" layoutY="418.0" text="SOUTH">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
