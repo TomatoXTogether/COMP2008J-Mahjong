@@ -145,6 +145,7 @@ public class GameScreenController implements Initializable {
         gameRules.dealerNextRound();
         updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateOnePlayerHand(usedTiles,southUsedTiles);
+        updateRemainTiles();
     }
 
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
@@ -171,7 +172,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateRemainTiles(){
-
+        remainTilesNumber.setText(String.valueOf(gameRules.getRemainingTilesNumber()));
     }
 
 
