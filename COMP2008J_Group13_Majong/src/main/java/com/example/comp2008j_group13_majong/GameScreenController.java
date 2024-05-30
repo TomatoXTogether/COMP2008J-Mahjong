@@ -23,6 +23,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Random;
+import com.example.comp2008j_group13_majong.User.Computer;
+import com.example.comp2008j_group13_majong.User.Player;
 
 public class GameScreenController implements Initializable {
 
@@ -88,6 +91,8 @@ public class GameScreenController implements Initializable {
     ArrayList<MahjongTile> computer1Hand;
     ArrayList<MahjongTile> computer2Hand;
     ArrayList<MahjongTile> computer3Hand;
+    ArrayList<MahjongTile> remainingTiles;
+    ArrayList<MahjongTile> usedTilesList;
 
     public GameScreenController() {
     }
@@ -109,12 +114,13 @@ public class GameScreenController implements Initializable {
     @FXML
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
-            humanPlayerHand.remove(index);
+            MahjongTile humanPlayedTile = humanPlayerHand.remove(index);
             System.out.println(humanPlayerHand);
             loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
-            //gameRules.dealerNextRound();
+            addTileToUsedTiles(humanPlayedTile, usedTiles);
+            gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
         }
 
@@ -228,6 +234,11 @@ public class GameScreenController implements Initializable {
             return iv;
     }
 
+    private void addTileToUsedTiles(MahjongTile tile, GridPane pane) {
+        ImageView tileDisplay = getTileDisplayForHuman(tile);
+        pane.add(tileDisplay, pane.getChildren().size(), 0); // 按照顺序添加到已用牌区域
+    }
+
 //    public MahjongTile createTileFromImage(ImageView imageView) {
 //        // 从ImageView获取图片路径
 //        System.out.println(imageView.getImage());
@@ -257,11 +268,22 @@ public class GameScreenController implements Initializable {
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
         computer3Hand=gameRules.computer3Hand;
+        remainingTiles = gameRules.getRemainingTiles();
+        usedTilesList = new ArrayList<>();
 
         mahjongDeck.sortTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
+        if (!(gameRules.getDealer() instanceof Player)) {
+            Computer dealer = (Computer) gameRules.getDealer();
+            Random rand = new Random();
+            MahjongTile drawnTile = remainingTiles.remove(rand.nextInt(remainingTiles.size())); // 从剩余牌堆中随机抽一张牌
+            dealer.getTiles().add(drawnTile); // 将抽到的牌加入庄家的手牌
+            MahjongTile playedTile = dealer.getTiles().remove(rand.nextInt(dealer.getTiles().size())); // 从手牌中随机出一张牌
+            addTileToUsedTiles(playedTile, usedTilesInEast); // 将牌加入已用牌区域
+            loadTilesFromListsToPaneForComputer(dealer.getTiles(), eastHandPile); // 更新庄家的手牌显示
+        }
     }
 }
