@@ -26,6 +26,18 @@ import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
     @FXML
+    private GridPane pairingTilesInEast;
+
+    @FXML
+    private GridPane pairingTilesInNorth;
+
+    @FXML
+    private GridPane pairingTilesInSouth;
+
+    @FXML
+    private GridPane pairingTilesInWest;
+
+    @FXML
     private ImageView chiImage;
 
     @FXML
@@ -137,7 +149,6 @@ public class GameScreenController implements Initializable {
             play.setVisible(false);
             //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
-            updateOnePlayerHand(usedTiles,southUsedTiles);//
             currentRaisedTile = null;
         }
     }
@@ -145,9 +156,10 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(playerIndex);
-        updateAllPlayerHands();
+
+        //updateAllPlayerHands();
         updateOnePlayerHand(playerHandPile,humanPlayerHand);
-        updateOnePlayerHand(usedTiles,southUsedTiles);
+        //updateOnePlayerHand(usedTiles,southUsedTiles);
         updateRemainTiles();
     }
 
@@ -167,12 +179,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
-        // 清空所有玩家手牌的显示
         pane.getChildren().clear();
-        //northHandPile.getChildren().clear();
-        //eastHandPile.getChildren().clear();
-        //westHandPile.getChildren().clear();
-
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
         loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
@@ -189,7 +196,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateRemainTiles(){
-        remainTilesNumber.setText(String.valueOf(gameRules.getRemainingTilesNumber()));
+        remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
 
@@ -197,9 +204,8 @@ public class GameScreenController implements Initializable {
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);
             ImageView tileDisplay = getTileDisplayForHuman(tile);
-            tileDisplay.setOnMouseClicked(e -> {
-                mouseClicked(e);
-            });
+            tileDisplay.setOnMouseClicked(this::mouseClicked);
+
             playerHandPile.add(tileDisplay, row, 1);
             int finalRow = row;
             tileDisplay.setOnMouseClicked(event -> {

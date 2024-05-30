@@ -146,6 +146,10 @@ public class GameRules {
 
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
+    public void nextTurn(){
+
+    }
+
     public void dealerNextRound(int playerIndex) {
         // 判断是否还有剩余的牌
         if (!remainingTiles.isEmpty()) {
