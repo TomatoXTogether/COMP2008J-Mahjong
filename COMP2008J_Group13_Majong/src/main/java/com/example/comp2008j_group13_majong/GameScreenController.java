@@ -113,7 +113,9 @@ public class GameScreenController implements Initializable {
     @FXML
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
+            MahjongTile tile = humanPlayerHand.get(index);
             humanPlayerHand.remove(index);
+            southUsedTiles.add(tile);
             //System.out.println(humanPlayerHand);
             loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -262,10 +264,19 @@ public class GameScreenController implements Initializable {
         computer2Hand=gameRules.computer2Hand;
         computer3Hand=gameRules.computer3Hand;
 
+        southUsedTiles = new ArrayList<MahjongTile>();
+        northUsedTiles = new ArrayList<MahjongTile>();
+        eastUsedTiles = new ArrayList<MahjongTile>();
+        westUsedTiles = new ArrayList<MahjongTile>();
+
         mahjongDeck.sortTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
+        loadTilesFromListsToPaneForComputer(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
+        loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
+        loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
     }
 }
