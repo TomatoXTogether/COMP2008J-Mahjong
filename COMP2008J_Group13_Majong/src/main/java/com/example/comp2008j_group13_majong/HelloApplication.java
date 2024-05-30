@@ -18,6 +18,7 @@ public class HelloApplication extends Application {
         Stage newStage = new Stage();
         newStage.setScene(new Scene(root));
         newStage.show();
+        System.out.println("111");
     }
 
     public static void main(String[] args) {
