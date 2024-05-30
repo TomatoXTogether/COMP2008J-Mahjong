@@ -170,6 +170,11 @@ public class GameScreenController implements Initializable {
 
     }
 
+    private void updateRemainTiles(){
+
+    }
+
+
     private void loadTilesFromListsToPaneForHuman (List<MahjongTile> humanTiles) {
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);

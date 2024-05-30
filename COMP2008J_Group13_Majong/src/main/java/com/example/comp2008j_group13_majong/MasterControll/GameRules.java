@@ -144,6 +144,8 @@ public class GameRules {
         return remainingTiles;
     }
 
+    public int getRemainingTilesNumber(){return remainingTiles.size();}
+
     public void dealerNextRound() {
         // 判断是否还有剩余的牌
         if (!remainingTiles.isEmpty()) {
