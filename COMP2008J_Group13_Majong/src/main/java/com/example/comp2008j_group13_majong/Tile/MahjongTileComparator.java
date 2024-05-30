@@ -19,18 +19,8 @@ public class MahjongTileComparator implements Comparator<MahjongTile> {
 
     @Override
     public int compare(MahjongTile tile1, MahjongTile tile2) {
-        // 首先按花色排序
-        int suitComparison = suitMap.get(tile1.getSuit()).compareTo(suitMap.get(tile2.getSuit()));
-        if (suitComparison != 0) {
-            return suitComparison;
-        }
-
-        // 如果是风牌、发财或白板，不再按值排序
-        if (tile1.getSuit() == MahjongTile.Suit.风 || tile1.getSuit() == MahjongTile.Suit.发财 || tile1.getSuit() == MahjongTile.Suit.白板) {
-            return 0;
-        }
-
-        // 然后按值排序
-        return Integer.compare(tile1.getIndex(), tile2.getIndex());
+        return Comparator.comparing((MahjongTile tile) -> suitMap.get(tile.getSuit()))
+                .thenComparing(MahjongTile::getIndex)
+                .compare(tile1, tile2);
     }
 }
