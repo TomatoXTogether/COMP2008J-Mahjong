@@ -141,7 +141,7 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fitHeight="63.0" fitWidth="86.0" layoutX="765.0" layoutY="568.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="chiImage" fitHeight="63.0" fitWidth="86.0" layoutX="765.0" layoutY="568.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../images/吃.png" />
          </image>
@@ -153,8 +153,11 @@
          <effect>
             <GaussianBlur radius="3.11" />
          </effect>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
       </Button>
-      <ImageView fitHeight="55.0" fitWidth="52.0" layoutX="845.0" layoutY="570.0">
+      <ImageView fx:id="pengImage" fitHeight="55.0" fitWidth="52.0" layoutX="845.0" layoutY="570.0" mouseTransparent="true">
          <image>
             <Image url="@../../../images/碰.png" />
          </image>
@@ -166,8 +169,11 @@
          <effect>
             <GaussianBlur radius="3.11" />
          </effect>
+         <cursor>
+            <Cursor fx:constant="OPEN_HAND" />
+         </cursor>
       </Button>
-      <ImageView fitHeight="55.0" fitWidth="62.0" layoutX="909.0" layoutY="570.0">
+      <ImageView fx:id="gangImage" fitHeight="55.0" fitWidth="62.0" layoutX="909.0" layoutY="570.0" mouseTransparent="true">
          <image>
             <Image url="@../../../images/杠.png" />
          </image>
@@ -186,7 +192,7 @@
             <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </Button>
-      <ImageView fitHeight="55.0" fitWidth="59.0" layoutX="979.0" layoutY="572.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="huImage" fitHeight="55.0" fitWidth="59.0" layoutX="979.0" layoutY="572.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../images/胡.png" />
          </image>

@@ -29,6 +29,18 @@ import com.example.comp2008j_group13_majong.User.Player;
 
 public class GameScreenController implements Initializable {
     @FXML
+    private ImageView chiImage;
+
+    @FXML
+    private ImageView gangImage;
+
+    @FXML
+    private ImageView huImage;
+
+    @FXML
+    private ImageView pengImage;
+
+    @FXML
     private Label remainTilesNumber;
 
     @FXML
@@ -118,9 +130,9 @@ public class GameScreenController implements Initializable {
         if(index!=-1){
             MahjongTile humanPlayedTile = humanPlayerHand.remove(index);
             System.out.println(humanPlayerHand);
-            loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
+            currentRaisedTile=null;
             addTileToUsedTiles(humanPlayedTile, usedTiles);
             gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
@@ -137,9 +149,6 @@ public class GameScreenController implements Initializable {
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         // 清空所有玩家手牌的显示
         pane.getChildren().clear();
-        //northHandPile.getChildren().clear();
-        //eastHandPile.getChildren().clear();
-        //westHandPile.getChildren().clear();
 
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -238,7 +247,7 @@ public class GameScreenController implements Initializable {
 
     private void addTileToUsedTiles(MahjongTile tile, GridPane pane) {
         ImageView tileDisplay = getTileDisplayForHuman(tile);
-        pane.add(tileDisplay, pane.getChildren().size(), 0); // 按照顺序添加到已用牌区域
+        pane.add(tileDisplay, usedTiles.getChildren().size(), 0); // 按照顺序添加到已用牌区域
     }
 
 //    public MahjongTile createTileFromImage(ImageView imageView) {
