@@ -13,6 +13,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -55,9 +56,27 @@ public class GameScreenController implements Initializable {
     @FXML
     private Button drawButton;
 
-
     @FXML
     private GridPane westHandPile;
+
+    @FXML
+    private Label round;
+
+    @FXML
+    private Label score;
+
+    @FXML
+    private GridPane usedTiles;
+
+    @FXML
+    private GridPane usedTilesInEast;
+
+    @FXML
+    private GridPane usedTilesInNorth;
+
+    @FXML
+    private GridPane usedTilesInWest;
+
 
     private ImageView currentRaisedTile;
 
@@ -95,12 +114,12 @@ public class GameScreenController implements Initializable {
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
             humanPlayerHand.remove(index);
-            System.out.println(humanPlayerHand);
-            loadTilesFromListsToPane(humanPlayerHand,computer1Hand,computer2Hand,computer3Hand);
+            //System.out.println(humanPlayerHand);
+            loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
-            gameRules.dealerNextRound();
-            updateAllPlayersHandUI();
+            //gameRules.dealerNextRound();
+            updateOnePlayerHand(playerHandPile,humanPlayerHand);
         }
 
     }
@@ -108,18 +127,18 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound();
-        updateAllPlayersHandUI();
+        updateOnePlayerHand(playerHandPile,humanPlayerHand);
     }
 
-    private void updateAllPlayersHandUI() {
+    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         // 清空所有玩家手牌的显示
-        playerHandPile.getChildren().clear();
-        northHandPile.getChildren().clear();
-        eastHandPile.getChildren().clear();
-        westHandPile.getChildren().clear();
+        pane.getChildren().clear();
+        //northHandPile.getChildren().clear();
+        //eastHandPile.getChildren().clear();
+        //westHandPile.getChildren().clear();
 
         // 重新加载每个玩家的手牌
-        loadTilesFromListsToPane(humanPlayerHand, computer1Hand, computer2Hand, computer3Hand);
+        loadTilesFromListsToPaneForHuman(pile);
     }
 
     @FXML
@@ -132,13 +151,13 @@ public class GameScreenController implements Initializable {
 
     }
 
-    private void loadTilesFromListsToPane (List<MahjongTile> humanTiles, List<MahjongTile> computer1Tiles,List<MahjongTile> computer2Tiles,List<MahjongTile> computer3Tiles) {
+    private void loadTilesFromListsToPaneForHuman (List<MahjongTile> humanTiles) {
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);
-             ImageView tileDisplay = getTileDisplayForHuman(tile);
-             tileDisplay.setOnMouseClicked(e -> {
-                 mouseClicked(e);
-             });
+            ImageView tileDisplay = getTileDisplayForHuman(tile);
+            tileDisplay.setOnMouseClicked(e -> {
+                mouseClicked(e);
+            });
             playerHandPile.add(tileDisplay, row, 1);
             int finalRow = row;
             tileDisplay.setOnMouseClicked(event -> {
@@ -156,29 +175,28 @@ public class GameScreenController implements Initializable {
                     playerHandPile.getChildren().remove(tileDisplay);
                     playerHandPile.add(tileDisplay, finalRow, 1);
                     currentRaisedTile = null;
-
                     index=-1;
                     play.setVisible(false);
 
                 }
             });
         }
-        for (int row = 0; row < computer1Tiles.size(); row++) {
-            MahjongTile tile = computer1Tiles.get(row);
-            ImageView tileDisplay = getTileDisplayForComputer(tile);
-            northHandPile.add(tileDisplay, row, 0);
-        }
-        for (int column = 0; column < computer2Tiles.size(); column++) {
-            MahjongTile tile = computer2Tiles.get(column);
-            ImageView tileDisplay = getTileDisplayForComputer(tile);
-            eastHandPile.add(tileDisplay, 0, column);
-        }
-        for (int column = 0; column < computer3Tiles.size(); column++) {
-            MahjongTile tile = computer3Tiles.get(column);
-            ImageView tileDisplay = getTileDisplayForComputer(tile);
-            westHandPile.add(tileDisplay, 0, column);
-        }
+    }
 
+    private void loadTilesFromListsToPaneForComputer(List<MahjongTile> computerTiles, GridPane pane){
+        if(computerTiles==computer1Hand){
+            for (int row = 0; row < computerTiles.size(); row++) {
+                MahjongTile tile = computerTiles.get(row);
+                ImageView tileDisplay = getTileDisplayForComputer(tile);
+                pane.add(tileDisplay, row, 0);
+            }
+        }else {
+            for (int column = 0; column < computerTiles.size(); column++) {
+                MahjongTile tile = computerTiles.get(column);
+                ImageView tileDisplay = getTileDisplayForComputer(tile);
+                pane.add(tileDisplay, 0, column);
+            }
+        }
     }
 
     protected ImageView getTileDisplayForHuman(MahjongTile tile) {
@@ -203,7 +221,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    protected ImageView getTileDisplayForComputer(MahjongTile tile) {
+    private ImageView getTileDisplayForComputer(MahjongTile tile) {
             Image image = new Image(getClass().getResourceAsStream("/images/背面.jpg"));
             //System.out.println(tile.getValue()+tile.getSuit());
             ImageView iv = new ImageView();
@@ -214,25 +232,25 @@ public class GameScreenController implements Initializable {
             return iv;
     }
 
-    public MahjongTile createTileFromImage(ImageView imageView) {
-        // 从ImageView获取图片路径
-        System.out.println(imageView.getImage());
-        String imageUrl = imageView.getImage().getUrl();
-
-        // 提取文件名部分（假设图片路径格式为 "/images/{value}{suit}.jpg" 或 "/images/{suit}.jpg"）
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf(".jpg"));
-
-        // 区分是有值的牌还是无值的牌
-        if (fileName.length() > 1) {
-            // 有值的牌
-            String value = fileName.substring(0, fileName.length() - 1);
-            String suit = fileName.substring(fileName.length() - 1);
-            return new MahjongTile(value, suit);
-        } else {
-            // 无值的牌
-            return new MahjongTile(null, fileName);
-        }
-    }
+//    public MahjongTile createTileFromImage(ImageView imageView) {
+//        // 从ImageView获取图片路径
+//        System.out.println(imageView.getImage());
+//        String imageUrl = imageView.getImage().getUrl();
+//
+//        // 提取文件名部分（假设图片路径格式为 "/images/{value}{suit}.jpg" 或 "/images/{suit}.jpg"）
+//        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf(".jpg"));
+//
+//        // 区分是有值的牌还是无值的牌
+//        if (fileName.length() > 1) {
+//            // 有值的牌
+//            String value = fileName.substring(0, fileName.length() - 1);
+//            String suit = fileName.substring(fileName.length() - 1);
+//            return new MahjongTile(value, suit);
+//        } else {
+//            // 无值的牌
+//            return new MahjongTile(null, fileName);
+//        }
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -245,6 +263,9 @@ public class GameScreenController implements Initializable {
         computer3Hand=gameRules.computer3Hand;
 
         mahjongDeck.sortTiles(humanPlayerHand);
-        loadTilesFromListsToPane(humanPlayerHand,computer1Hand,computer2Hand,computer3Hand);
+        loadTilesFromListsToPaneForHuman(humanPlayerHand);
+        loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
+        loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
+        loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
     }
 }
