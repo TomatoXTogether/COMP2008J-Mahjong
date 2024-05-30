@@ -350,10 +350,10 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
-        loadTilesFromListsToPaneForComputer(southUsedTiles, usedTiles);
-        loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
-        loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
-        loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
+        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
+        loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
+        loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
         playerIndex = gameRules.getDealerIndex();
     }
 }
