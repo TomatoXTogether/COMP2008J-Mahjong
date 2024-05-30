@@ -135,15 +135,16 @@ public class GameScreenController implements Initializable {
             play.setVisible(false);
             //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
+            updateOnePlayerHand(usedTiles,southUsedTiles);//
             currentRaisedTile = null;
         }
-
     }
 
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound();
         updateOnePlayerHand(playerHandPile,humanPlayerHand);
+        updateOnePlayerHand(usedTiles,southUsedTiles);
     }
 
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
@@ -155,7 +156,9 @@ public class GameScreenController implements Initializable {
 
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
+        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
     }
+
 
     @FXML
     void mouseClicked(MouseEvent event) {
@@ -212,6 +215,14 @@ public class GameScreenController implements Initializable {
                 ImageView tileDisplay = getTileDisplayForComputer(tile);
                 pane.add(tileDisplay, 0, column);
             }
+        }
+    }
+
+    private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+        for (int row = 0; row < usedTiles.size(); row++) {
+            MahjongTile tile = usedTiles.get(row);
+            ImageView tileDisplay = getTileDisplayForHuman(tile);
+            pane.add(tileDisplay, row, 0);
         }
     }
 
