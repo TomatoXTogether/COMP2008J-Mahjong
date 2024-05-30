@@ -221,12 +221,34 @@ public class GameScreenController implements Initializable {
     private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         for (int row = 0; row < usedTiles.size(); row++) {
             MahjongTile tile = usedTiles.get(row);
-            ImageView tileDisplay = getTileDisplayForHuman(tile);
+            ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
             pane.add(tileDisplay, row, 0);
         }
     }
 
-    protected ImageView getTileDisplayForHuman(MahjongTile tile) {
+    private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
+        if (tile.getValue() != null) {
+            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue() + tile.getSuit() + ".jpg"));
+            //System.out.println(tile.getValue()+tile.getSuit());
+            ImageView iv = new ImageView();
+            iv.setPreserveRatio(true); // 保持比例
+            iv.setFitWidth(35);       // 宽度
+            iv.setFitHeight(80);      // 高度
+            iv.setImage(image);         // 关联图像
+            return iv;
+        }else {
+            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg"));
+            //System.out.println(tile.getSuit());
+            ImageView iv = new ImageView();
+            iv.setPreserveRatio(true); // 保持比例
+            iv.setFitWidth(35);       // 宽度
+            iv.setFitHeight(80);      // 高度
+            iv.setImage(image);         // 关联图像
+            return iv;
+        }
+    }
+
+    private ImageView getTileDisplayForHuman(MahjongTile tile) {
         if(tile.getValue()!=null){
             Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue()+tile.getSuit() + ".jpg"));
             //System.out.println(tile.getValue()+tile.getSuit());
