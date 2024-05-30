@@ -109,13 +109,16 @@ public class GameScreenController implements Initializable {
     @FXML
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
+            MahjongTile tile=humanPlayerHand.get(index);
             humanPlayerHand.remove(index);
+
             //System.out.println(humanPlayerHand);
-            loadTilesFromListsToPaneForHuman(humanPlayerHand);
+            //loadTilesFromListsToPaneForHuman(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
             //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
+            currentRaisedTile=null;
         }
 
     }
