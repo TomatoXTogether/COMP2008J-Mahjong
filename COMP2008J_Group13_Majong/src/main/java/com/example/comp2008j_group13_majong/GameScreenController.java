@@ -28,6 +28,8 @@ import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private Label remainTilesNumber;
 
     @FXML
     private Button chi;
