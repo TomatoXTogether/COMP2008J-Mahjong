@@ -113,7 +113,6 @@ public abstract class User {
         inOrderTiles.add(kongzi);
         isKong = false;
     }
-
     public boolean ifWin(){
         return getTiles().size() == 0;
     }

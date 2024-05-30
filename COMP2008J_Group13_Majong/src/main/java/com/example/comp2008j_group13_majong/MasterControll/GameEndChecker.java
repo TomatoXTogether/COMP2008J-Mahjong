@@ -45,20 +45,14 @@ public class GameEndChecker {
 
     private boolean checkWin(ArrayList<MahjongTile> hand) {
         // 检查手牌是否赢的逻辑
-        // 一对加三小组
-        return isWinningHand(hand);
+        // 一对加四小组
+        return false;
     }
 
     private void endGame() {
         // 实现游戏结束的逻辑，例如清理资源、重置游戏等
         System.out.println("游戏结束。");
         // 在这里你可以做一些额外的清理工作或者游戏重置工作
-    }
-
-    private boolean isWinningHand(ArrayList<MahjongTile> hand) {
-        // 检查手牌是否赢的逻辑
-        // 这里需要你具体实现麻将的胜利规则
-        return false; // 这是一个占位符，需要你根据实际规则实现
     }
 
     private void determineWinner() {
