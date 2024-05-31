@@ -18,11 +18,13 @@ public class GameRules {
     private List<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
+    private int currentPlayerIndex;
 
     public ArrayList<MahjongTile> humanPlayerHand;
     public ArrayList<MahjongTile> computer1Hand;
     public ArrayList<MahjongTile> computer2Hand;
     public ArrayList<MahjongTile> computer3Hand;
+    public int dealerIndex;
 
     public GameRules() {
         deck = new MahjongDeck();
@@ -36,13 +38,20 @@ public class GameRules {
         // 创建玩家
         humanPlayer = new Player("Player", new ArrayList<MahjongTile>(), "南方");
 
-        // 创建电脑玩家
         computers = new ArrayList<>();
-        computers.add(new Computer("Computer1", new ArrayList<MahjongTile>(), "北方"));
-        computers.add(new Computer("Computer2", new ArrayList<MahjongTile>(), "东方"));
-        computers.add(new Computer("Computer3", new ArrayList<MahjongTile>(), "西方"));
+        Computer computer1 = new Computer("Computer1", new ArrayList<MahjongTile>(), "北方");
+        Computer computer2 = new Computer("Computer2", new ArrayList<MahjongTile>(), "东方");
+        Computer computer3 = new Computer("Computer3", new ArrayList<MahjongTile>(), "西方");
+        computers.add(computer1);
+        computers.add(computer2);
+        computers.add(computer3);
 
-        // 初始化手牌列表
+        // 设置玩家索引
+        humanPlayer.setIndex(3);
+        computer1.setIndex(1);
+        computer2.setIndex(0);
+        computer3.setIndex(2);
+
         humanPlayerHand = new ArrayList<>();
         computer1Hand = new ArrayList<>();
         computer2Hand = new ArrayList<>();
@@ -57,19 +66,25 @@ public class GameRules {
         selectDealer();
     }
 
-    private void selectDealer() {
-        // 随机选择庄家
+
+    public void selectDealer() {
         Random random = new Random();
-        int dealerIndex = random.nextInt(computers.size() + 1);
-        if (dealerIndex == 0) {
+        dealerIndex = random.nextInt(4) ; //0-3
+
+        if (dealerIndex == 3) {
             dealer = humanPlayer;
         } else {
-            dealer = computers.get(dealerIndex - 1);
+            for (Computer computer : computers) {
+                if (computer.getIndex() == dealerIndex) {
+                    dealer = computer;
+                    break;
+                }
+            }
         }
-        dealer.setTurn(true);
 
-        // 输出庄家信息
+        dealer.setTurn(true);
         System.out.println("庄家是：" + dealer.getPosition());
+        currentPlayerIndex = dealerIndex;
     }
 
     private void dealTiles() {
@@ -132,59 +147,37 @@ public class GameRules {
         }
     }
 
-    public MahjongDeck getDeck() {
-        return deck;
-    }
-
-    public User getDealer() {
-        return dealer;
-    }
-
     public ArrayList<MahjongTile> getRemainingTiles() {
         return remainingTiles;
     }
 
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
-    public void nextTurn(){
 
-    }
-
-    public void dealerNextRound(int playerIndex) {
-        // 判断是否还有剩余的牌
+    public void dealerNextRound() {
         if (!remainingTiles.isEmpty()) {
-            // 获取庄家在玩家列表中的索引位置
-            int dealerIndex = players.indexOf(dealer);
+            // 获取当前玩家
+            User currentPlayer = players.stream()
+                    .filter(player -> player.getIndex() == currentPlayerIndex)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Invalid player index"));
 
-            // 计算需要从哪位玩家开始发牌
-            int startIndex = dealerIndex;
+            // 给当前玩家发一张牌
+            MahjongTile tile = remainingTiles.remove(0);
+            currentPlayer.getTiles().add(tile);
 
-            // 发给指定索引的玩家一张牌
-            int i = startIndex;
-            while (true) {
-                // 计算当前玩家的索引位置
-                int currentPlayerIndex = i % players.size();
-                // 获取当前玩家
-                User currentPlayer = players.get(currentPlayerIndex);
+            // 打印当前玩家信息和收到的牌
+            System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
 
-                // 如果当前玩家是指定的玩家索引，给其发牌并结束循环
-                if (currentPlayerIndex == playerIndex) {
-                    // 发给当前玩家一张牌
-                    MahjongTile tile = remainingTiles.remove(0);
-                    currentPlayer.getTiles().add(tile);
-                    // 打印玩家是第几个，以及获得了什么牌
-                    System.out.println(currentPlayer.getName() + " is player " + (currentPlayerIndex + 1) + ", received: " + tile.getValue() + tile.getSuit());
-
-                    // 更新当前玩家的手牌列表
-                    if (currentPlayer instanceof Computer) {
-                        handleComputerHand((Computer) currentPlayer, tile);
-                    }
-                    break; // 结束循环
-                }
-
-                // 继续下一个玩家
-                i++;
+            // 更新当前玩家的手牌列表
+            if (currentPlayer instanceof Computer) {
+                handleComputerHand((Computer) currentPlayer, tile);
+            } else {
+                humanPlayerHand.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
+
+            // 更新currentPlayerIndex，使其在0到3之间循环
+            currentPlayerIndex = (currentPlayerIndex + 1) % 4;
         }
     }
 
@@ -201,12 +194,5 @@ public class GameRules {
                 computer3Hand.add(tile);
                 break;
         }
-    }
-
-    public List<User> getPlayers() {
-        return players;
-    }
-    public int getDealerIndex() {
-        return players.indexOf(dealer);
     }
 }
