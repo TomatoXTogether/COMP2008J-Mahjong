@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public abstract class User {
     public String position;
     public String name;
+    public int index;
     public int score;
     public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
     public ArrayList<MahjongTile> handTiles; // tiles in hand
@@ -131,6 +132,14 @@ public abstract class User {
 
     public String getPosition() {
         return position;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     // 添加设置玩家位置的方法

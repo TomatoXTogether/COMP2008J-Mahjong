@@ -32,4 +32,13 @@ public class Computer extends User {
     public String getName() {
         return name;
     }
+
+    @Override
+    public int getIndex() {
+        return index;
+    }
+    @Override
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }

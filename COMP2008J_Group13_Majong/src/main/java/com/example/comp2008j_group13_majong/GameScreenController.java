@@ -98,7 +98,6 @@ public class GameScreenController implements Initializable {
 
     private GameRules gameRules;
 
-    private int playerIndex;
 
     ArrayList<MahjongTile> humanPlayerHand;
     ArrayList<MahjongTile> southUsedTiles;
@@ -144,10 +143,14 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound(playerIndex);
+        gameRules.dealerNextRound();
+
+        // 更新 playerIndex，使其在0到3之间循环
+        //playerIndex = gameRules.getCurrentPlayerIndex();
+
         updateAllPlayerHands();
-        updateOnePlayerHand(playerHandPile,humanPlayerHand);
-        updateOnePlayerHand(usedTiles,southUsedTiles);
+        updateOnePlayerHand(playerHandPile, humanPlayerHand);
+        updateOnePlayerHand(usedTiles, southUsedTiles);
         updateRemainTiles();
     }
 
@@ -189,7 +192,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateRemainTiles(){
-        remainTilesNumber.setText(String.valueOf(gameRules.getRemainingTilesNumber()));
+        remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
 
@@ -345,7 +348,7 @@ public class GameScreenController implements Initializable {
         eastUsedTiles = new ArrayList<MahjongTile>();
         westUsedTiles = new ArrayList<MahjongTile>();
 
-        //mahjongDeck.sortTiles(humanPlayerHand);
+
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
@@ -354,6 +357,5 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
-        playerIndex = gameRules.getDealerIndex();
     }
 }

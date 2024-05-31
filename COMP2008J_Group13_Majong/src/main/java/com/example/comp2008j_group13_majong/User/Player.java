@@ -36,4 +36,12 @@ public class Player extends User{
     public void setTurn(boolean turn) {
         // 实现设置是否是当前玩家的逻辑
     }
+    @Override
+    public int getIndex() {
+        return index;
+    }
+    @Override
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }
