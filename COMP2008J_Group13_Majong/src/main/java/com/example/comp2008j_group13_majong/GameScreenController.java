@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
+//import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
@@ -355,7 +355,7 @@ public class GameScreenController implements Initializable {
         eastUsedTiles = new ArrayList<MahjongTile>();
         westUsedTiles = new ArrayList<MahjongTile>();
 
-        //mahjongDeck.sortTiles(humanPlayerHand);
+        mahjongDeck.sortHandTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
