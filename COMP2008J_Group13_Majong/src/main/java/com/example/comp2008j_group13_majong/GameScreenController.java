@@ -142,10 +142,8 @@ public class GameScreenController implements Initializable {
             MahjongTile tile = humanPlayerHand.get(index);
             humanPlayerHand.remove(index);
             southUsedTiles.add(tile);
-            //System.out.println(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
-            //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
             currentRaisedTile = null;
         }
@@ -154,18 +152,9 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound();
-
-        //updateAllPlayerHands();
-        updateOnePlayerHand(playerHandPile,humanPlayerHand);
-        //updateOnePlayerHand(usedTiles,southUsedTiles);
-        gameRules.dealerNextRound();
-
-        // 更新 playerIndex，使其在0到3之间循环
-        //playerIndex = gameRules.getCurrentPlayerIndex();
-
+        //updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateAllPlayerHands();
-        updateOnePlayerHand(playerHandPile, humanPlayerHand);
-        updateOnePlayerHand(usedTiles, southUsedTiles);
+        //updateOnePlayerHand(usedTiles, southUsedTiles);
         updateRemainTiles();
     }
 
@@ -316,37 +305,11 @@ public class GameScreenController implements Initializable {
             return iv;
     }
 
-    private void addTileToUsedTiles(MahjongTile tile, GridPane pane) {
-        ImageView tileDisplay = getTileDisplayForHuman(tile);
-        pane.add(tileDisplay, usedTiles.getChildren().size(), 0); // 按照顺序添加到已用牌区域
-    }
-
-
-//    public MahjongTile createTileFromImage(ImageView imageView) {
-//        // 从ImageView获取图片路径
-//        System.out.println(imageView.getImage());
-//        String imageUrl = imageView.getImage().getUrl();
-//
-//        // 提取文件名部分（假设图片路径格式为 "/images/{value}{suit}.jpg" 或 "/images/{suit}.jpg"）
-//        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf(".jpg"));
-//
-//        // 区分是有值的牌还是无值的牌
-//        if (fileName.length() > 1) {
-//            // 有值的牌
-//            String value = fileName.substring(0, fileName.length() - 1);
-//            String suit = fileName.substring(fileName.length() - 1);
-//            return new MahjongTile(value, suit);
-//        } else {
-//            // 无值的牌
-//            return new MahjongTile(null, fileName);
-//        }
-//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         MahjongDeck mahjongDeck = new MahjongDeck();
-        GameRules gameRules=new GameRules();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
@@ -367,14 +330,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
-        loadTilesFromListsToPaneForComputer(southUsedTiles, usedTiles);
-        loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
-        loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
-        loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
-        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
-        loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
-        loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
-        loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
     }
 
 }

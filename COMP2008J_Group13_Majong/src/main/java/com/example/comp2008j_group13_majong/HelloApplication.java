@@ -26,8 +26,6 @@ public class HelloApplication extends Application {
         Stage newStage = new Stage();
         newStage.setScene(new Scene(root));
         newStage.show();
-
-        //player.play();
     }
 
 
