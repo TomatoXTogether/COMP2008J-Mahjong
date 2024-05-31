@@ -115,6 +115,8 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane usedTilesInWest;
 
+    private MahjongDeck mahjongDeck = new MahjongDeck();
+
 
     private ImageView currentRaisedTile;
 
@@ -165,10 +167,10 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
+        // 摸牌后重新排序玩家的手牌
+        mahjongDeck.sortHandTiles(humanPlayerHand);
         playersTurn();
-        //updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateAllPlayerHands();
-        //updateOnePlayerHand(usedTiles, southUsedTiles);
         updateRemainTiles();
     }
 
@@ -371,7 +373,6 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        MahjongDeck mahjongDeck = new MahjongDeck();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
@@ -387,7 +388,7 @@ public class GameScreenController implements Initializable {
         eastUsedTiles = new ArrayList<MahjongTile>();
         westUsedTiles = new ArrayList<MahjongTile>();
 
-
+        mahjongDeck.sortHandTiles(humanPlayerHand);
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
