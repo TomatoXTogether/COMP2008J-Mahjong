@@ -375,6 +375,7 @@ public class GameScreenController implements Initializable {
         computer2 = gameRules.computer2;
         computer3 = gameRules.computer3;
 
+        mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         loadTilesFromListsToPaneForHuman(humanPlayer.handTiles);
         loadTilesFromListsToPaneForComputer(computer1.handTiles,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2.handTiles,eastHandPile);
