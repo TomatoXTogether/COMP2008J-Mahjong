@@ -1,7 +1,5 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
-import com.example.comp2008j_group13_majong.User.Computer;
-import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
