@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
+import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
@@ -154,7 +155,7 @@ public class GameRules {
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
 
-    public void dealerNextRound() {
+    public void dealerNextRound(GameScreenController gameScreenController) {
         if (!remainingTiles.isEmpty()) {
             // 获取当前玩家
             User currentPlayer = players.stream()
@@ -172,6 +173,13 @@ public class GameRules {
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
                 handleComputerHand((Computer) currentPlayer, tile);
+
+                // 电脑从牌堆中随机出一张牌
+                MahjongTile discardedTile = currentPlayer.getTiles().remove(new Random().nextInt(currentPlayer.getTiles().size()));
+                System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
+
+                // 在界面上显示这张牌
+                gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
             } else {
                 humanPlayerHand.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
@@ -180,7 +188,6 @@ public class GameRules {
             currentPlayerIndex = (currentPlayerIndex + 1) % 4;
         }
     }
-
     private void handleComputerHand(Computer computer, MahjongTile tile) {
         int computerIndex = computers.indexOf(computer);
         switch (computerIndex) {

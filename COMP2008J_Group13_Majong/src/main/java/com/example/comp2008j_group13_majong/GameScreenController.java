@@ -151,7 +151,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound();
+        gameRules.dealerNextRound(this);
         //updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateAllPlayerHands();
         //updateOnePlayerHand(usedTiles, southUsedTiles);
@@ -242,12 +242,34 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+    public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         for (int row = 0; row < usedTiles.size(); row++) {
             MahjongTile tile = usedTiles.get(row);
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
             pane.add(tileDisplay, row, 0);
         }
+    }
+
+
+    public void updateUsedTiles(MahjongTile tile, int playerIndex) {
+        switch (playerIndex) {
+            case 1: // 北玩家
+                northUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
+                break;
+            case 0: // 东玩家
+                eastUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
+                break;
+            case 2: // 西玩家
+                westUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
+                break;
+        }
+    }
+
+    public List<MahjongTile> getHumanPlayerHand() {
+        return humanPlayerHand;
     }
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
