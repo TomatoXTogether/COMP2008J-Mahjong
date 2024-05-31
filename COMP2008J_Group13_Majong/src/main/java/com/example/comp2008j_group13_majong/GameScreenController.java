@@ -4,20 +4,19 @@ import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.example.comp2008j_group13_majong.User.Computer;
+import com.example.comp2008j_group13_majong.User.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,6 +24,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private GridPane pairingTilesInEast;
+
+    @FXML
+    private GridPane pairingTilesInNorth;
+
+    @FXML
+    private GridPane pairingTilesInSouth;
+
+    @FXML
+    private GridPane pairingTilesInWest;
+
     @FXML
     private ImageView chiImage;
 
@@ -96,7 +107,7 @@ public class GameScreenController implements Initializable {
 
     int index;
 
-    private GameRules gameRules;
+    private GameRules gameRules=new GameRules();
 
 
     ArrayList<MahjongTile> humanPlayerHand;
@@ -136,13 +147,17 @@ public class GameScreenController implements Initializable {
             play.setVisible(false);
             //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
-            updateOnePlayerHand(usedTiles,southUsedTiles);//
             currentRaisedTile = null;
         }
     }
 
     @FXML
     void drawButtonAction(ActionEvent event) {
+        gameRules.dealerNextRound();
+
+        //updateAllPlayerHands();
+        updateOnePlayerHand(playerHandPile,humanPlayerHand);
+        //updateOnePlayerHand(usedTiles,southUsedTiles);
         gameRules.dealerNextRound();
 
         // 更新 playerIndex，使其在0到3之间循环
@@ -170,12 +185,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
-        // 清空所有玩家手牌的显示
         pane.getChildren().clear();
-        //northHandPile.getChildren().clear();
-        //eastHandPile.getChildren().clear();
-        //westHandPile.getChildren().clear();
-
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
         loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
@@ -200,9 +210,8 @@ public class GameScreenController implements Initializable {
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);
             ImageView tileDisplay = getTileDisplayForHuman(tile);
-            tileDisplay.setOnMouseClicked(e -> {
-                mouseClicked(e);
-            });
+            tileDisplay.setOnMouseClicked(this::mouseClicked);
+
             playerHandPile.add(tileDisplay, row, 1);
             int finalRow = row;
             tileDisplay.setOnMouseClicked(event -> {
@@ -335,13 +344,18 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        gameRules = new GameRules();
-        //GameRules gameRules = new GameRules();
+
         MahjongDeck mahjongDeck = new MahjongDeck();
+        GameRules gameRules=new GameRules();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
         computer3Hand=gameRules.computer3Hand;
+
+        Player player=new Player("human",humanPlayerHand,"south");
+        Computer computer1=new Computer("computer1",computer1Hand,"north");
+        Computer computer2=new Computer("computer2",computer2Hand,"east");
+        Computer computer3=new Computer("computer3",computer3Hand,"west");
 
         southUsedTiles = new ArrayList<MahjongTile>();
         northUsedTiles = new ArrayList<MahjongTile>();
@@ -357,5 +371,10 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
+        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
+        loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
+        loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
     }
+
 }
