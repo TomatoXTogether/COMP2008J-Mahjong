@@ -154,18 +154,7 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound();
-
-        //updateAllPlayerHands();
-        updateOnePlayerHand(playerHandPile,humanPlayerHand);
-        //updateOnePlayerHand(usedTiles,southUsedTiles);
-        gameRules.dealerNextRound();
-
-        // 更新 playerIndex，使其在0到3之间循环
-        //playerIndex = gameRules.getCurrentPlayerIndex();
-
         updateAllPlayerHands();
-        updateOnePlayerHand(playerHandPile, humanPlayerHand);
-        updateOnePlayerHand(usedTiles, southUsedTiles);
         updateRemainTiles();
     }
 
@@ -346,7 +335,7 @@ public class GameScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         MahjongDeck mahjongDeck = new MahjongDeck();
-        GameRules gameRules=new GameRules();
+        //GameRules gameRules=new GameRules();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
@@ -368,14 +357,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
         loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
-        loadTilesFromListsToPaneForComputer(southUsedTiles, usedTiles);
-        loadTilesFromListsToPaneForComputer(northUsedTiles, usedTilesInNorth);
-        loadTilesFromListsToPaneForComputer(eastUsedTiles, usedTilesInEast);
-        loadTilesFromListsToPaneForComputer(westUsedTiles, usedTilesInWest);
-        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
-        loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
-        loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
-        loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
     }
 
 }

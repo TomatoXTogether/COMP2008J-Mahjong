@@ -181,11 +181,12 @@ public abstract class User {
         }
 
         // 尝试组成顺子
+        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         if (firstTile.getSuit() == MahjongTile.Suit.万 ||
                 firstTile.getSuit() == MahjongTile.Suit.条 ||
                 firstTile.getSuit() == MahjongTile.Suit.饼) {
-            MahjongTile secondTile = new MahjongTile(firstTile.getSuit(), firstTile.getIndex() + 1);
-            MahjongTile thirdTile = new MahjongTile(firstTile.getSuit(), firstTile.getValue() + 2);
+            MahjongTile secondTile = new MahjongTile(firstTile.getSuit(), numberValues[firstTile.getIndex() + 1 - 1], firstTile.getIndex() + 1);
+            MahjongTile thirdTile = new MahjongTile(firstTile.getSuit(), numberValues[firstTile.getIndex() + 2 - 1], firstTile.getIndex() + 2);
             if (tiles.contains(secondTile) && tiles.contains(thirdTile)) {
                 tiles.remove(secondTile);
                 tiles.remove(thirdTile);

@@ -1,6 +1,8 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
 import com.example.comp2008j_group13_majong.User.Computer;
+import com.example.comp2008j_group13_majong.User.Player;
+import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameEndChecker {
+    private User user;
     private GameRules gameRules;
     private ScoreCalculator scoreCalculator;
 
@@ -46,7 +49,7 @@ public class GameEndChecker {
     private boolean checkWin(ArrayList<MahjongTile> hand) {
         // 检查手牌是否赢的逻辑
         // 一对加四小组
-        return false;
+        return user.isHu(hand);
     }
 
     private void endGame() {
