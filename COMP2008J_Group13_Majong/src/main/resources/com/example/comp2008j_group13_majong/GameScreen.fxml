@@ -23,7 +23,7 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#969696" height="103.0" layoutX="567.0" layoutY="333.0" stroke="WHITE" strokeType="INSIDE" width="119.0" />
-      <Label layoutX="569.0" layoutY="377.0" text="WEST">
+      <Label fx:id="west" layoutX="569.0" layoutY="377.0" text="WEST">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
@@ -113,17 +113,17 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Label layoutX="597.0" layoutY="335.0" text="NORTH">
+      <Label fx:id="north" layoutX="597.0" layoutY="335.0" text="NORTH">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="600.0" layoutY="418.0" text="SOUTH">
+      <Label fx:id="south" layoutX="600.0" layoutY="418.0" text="SOUTH">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="643.0" layoutY="377.0" text="EAST">
+      <Label fx:id="east" layoutX="643.0" layoutY="377.0" text="EAST">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>

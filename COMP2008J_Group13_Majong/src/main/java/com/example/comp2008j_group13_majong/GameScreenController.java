@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +25,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private Label east;
+
+    @FXML
+    private Label north;
+
+    @FXML
+    private Label south;
+
+    @FXML
+    private Label west;
+
     @FXML
     private GridPane pairingTilesInEast;
 
@@ -142,10 +155,8 @@ public class GameScreenController implements Initializable {
             MahjongTile tile = humanPlayerHand.get(index);
             humanPlayerHand.remove(index);
             southUsedTiles.add(tile);
-            //System.out.println(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
             play.setVisible(false);
-            //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayerHand);
             currentRaisedTile = null;
         }
@@ -153,8 +164,11 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound();
+        gameRules.dealerNextRound(this);
+        playersTurn();
+        //updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateAllPlayerHands();
+        //updateOnePlayerHand(usedTiles, southUsedTiles);
         updateRemainTiles();
     }
 
@@ -188,6 +202,32 @@ public class GameScreenController implements Initializable {
     @FXML
     void pengBottonAction(ActionEvent event) {
 
+    }
+
+    private void playersTurn(){
+        int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
+
+        if(currentPlayerIndex==1){
+            east.setTextFill(Color.RED);
+            north.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else if(currentPlayerIndex==2){
+            north.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else if(currentPlayerIndex==3){
+            west.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            north.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else {
+            south.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            north.setTextFill(Color.BLACK);
+        }
     }
 
     private void updateRemainTiles(){
@@ -242,12 +282,34 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+    public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         for (int row = 0; row < usedTiles.size(); row++) {
             MahjongTile tile = usedTiles.get(row);
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
             pane.add(tileDisplay, row, 0);
         }
+    }
+
+
+    public void updateUsedTiles(MahjongTile tile, int playerIndex) {
+        switch (playerIndex) {
+            case 1: // 北玩家
+                northUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
+                break;
+            case 0: // 东玩家
+                eastUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
+                break;
+            case 2: // 西玩家
+                westUsedTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
+                break;
+        }
+    }
+
+    public List<MahjongTile> getHumanPlayerHand() {
+        return humanPlayerHand;
     }
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
@@ -305,37 +367,11 @@ public class GameScreenController implements Initializable {
             return iv;
     }
 
-    private void addTileToUsedTiles(MahjongTile tile, GridPane pane) {
-        ImageView tileDisplay = getTileDisplayForHuman(tile);
-        pane.add(tileDisplay, usedTiles.getChildren().size(), 0); // 按照顺序添加到已用牌区域
-    }
-
-
-//    public MahjongTile createTileFromImage(ImageView imageView) {
-//        // 从ImageView获取图片路径
-//        System.out.println(imageView.getImage());
-//        String imageUrl = imageView.getImage().getUrl();
-//
-//        // 提取文件名部分（假设图片路径格式为 "/images/{value}{suit}.jpg" 或 "/images/{suit}.jpg"）
-//        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1, imageUrl.lastIndexOf(".jpg"));
-//
-//        // 区分是有值的牌还是无值的牌
-//        if (fileName.length() > 1) {
-//            // 有值的牌
-//            String value = fileName.substring(0, fileName.length() - 1);
-//            String suit = fileName.substring(fileName.length() - 1);
-//            return new MahjongTile(value, suit);
-//        } else {
-//            // 无值的牌
-//            return new MahjongTile(null, fileName);
-//        }
-//    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         MahjongDeck mahjongDeck = new MahjongDeck();
-        //GameRules gameRules=new GameRules();
         humanPlayerHand=gameRules.humanPlayerHand;
         computer1Hand=gameRules.computer1Hand;
         computer2Hand=gameRules.computer2Hand;
@@ -351,7 +387,6 @@ public class GameScreenController implements Initializable {
         eastUsedTiles = new ArrayList<MahjongTile>();
         westUsedTiles = new ArrayList<MahjongTile>();
 
-        mahjongDeck.sortHandTiles(humanPlayerHand);
 
         loadTilesFromListsToPaneForHuman(humanPlayerHand);
         loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
