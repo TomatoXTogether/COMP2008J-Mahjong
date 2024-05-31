@@ -87,6 +87,10 @@ public class GameRules {
         currentPlayerIndex = dealerIndex;
     }
 
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
+    }
+
     private void dealTiles() {
         // 打乱牌堆中的牌的顺序
         deck.shuffle();

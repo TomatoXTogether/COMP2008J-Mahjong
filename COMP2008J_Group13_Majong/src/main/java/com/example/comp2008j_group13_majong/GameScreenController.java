@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +25,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+    @FXML
+    private Label east;
+
+    @FXML
+    private Label north;
+
+    @FXML
+    private Label south;
+
+    @FXML
+    private Label west;
+
     @FXML
     private GridPane pairingTilesInEast;
 
@@ -152,6 +165,7 @@ public class GameScreenController implements Initializable {
     @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound();
+        playersTurn();
         //updateOnePlayerHand(playerHandPile,humanPlayerHand);
         updateAllPlayerHands();
         //updateOnePlayerHand(usedTiles, southUsedTiles);
@@ -188,6 +202,32 @@ public class GameScreenController implements Initializable {
     @FXML
     void pengBottonAction(ActionEvent event) {
 
+    }
+
+    private void playersTurn(){
+        int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
+
+        if(currentPlayerIndex==1){
+            east.setTextFill(Color.RED);
+            north.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else if(currentPlayerIndex==2){
+            north.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else if(currentPlayerIndex==3){
+            west.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            north.setTextFill(Color.BLACK);
+            south.setTextFill(Color.BLACK);
+        }else {
+            south.setTextFill(Color.RED);
+            east.setTextFill(Color.BLACK);
+            west.setTextFill(Color.BLACK);
+            north.setTextFill(Color.BLACK);
+        }
     }
 
     private void updateRemainTiles(){
