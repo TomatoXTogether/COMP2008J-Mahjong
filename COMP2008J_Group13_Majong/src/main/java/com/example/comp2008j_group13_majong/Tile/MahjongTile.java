@@ -26,6 +26,8 @@ public class MahjongTile implements MouseListener {
     // 当前状态，是否已经被点击
     private boolean clicked = false;
 
+    public boolean ifNum;
+
     public MahjongTile(Suit suit, String value, int index) {
         this.suit = suit;
         this.value = value;

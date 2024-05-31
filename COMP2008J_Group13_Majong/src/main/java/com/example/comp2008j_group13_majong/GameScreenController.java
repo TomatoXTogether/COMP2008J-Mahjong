@@ -124,15 +124,11 @@ public class GameScreenController implements Initializable {
 
     private GameRules gameRules=new GameRules();
 
+    private Player humanPlayer;
+    private Computer computer1;
+    private Computer computer2;
+    private Computer computer3;
 
-    ArrayList<MahjongTile> humanPlayerHand;
-    ArrayList<MahjongTile> southUsedTiles;
-    ArrayList<MahjongTile> computer1Hand;
-    ArrayList<MahjongTile> computer2Hand;
-    ArrayList<MahjongTile> computer3Hand;
-    ArrayList<MahjongTile> northUsedTiles;
-    ArrayList<MahjongTile> eastUsedTiles;
-    ArrayList<MahjongTile> westUsedTiles;
 
     public GameScreenController() {
     }
@@ -154,12 +150,13 @@ public class GameScreenController implements Initializable {
     @FXML
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
-            MahjongTile tile = humanPlayerHand.get(index);
-            humanPlayerHand.remove(index);
-            southUsedTiles.add(tile);
+            MahjongTile usedTile = humanPlayer.removeTile(index);
+            //System.out.println(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
+            MahjongTile[][] shunzi = computer2.ifChi(usedTile);
             play.setVisible(false);
-            updateOnePlayerHand(playerHandPile,humanPlayerHand);
+            //gameRules.dealerNextRound();
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             currentRaisedTile = null;
         }
     }
@@ -168,7 +165,7 @@ public class GameScreenController implements Initializable {
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
-        mahjongDeck.sortHandTiles(humanPlayerHand);
+        mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         playersTurn();
         updateAllPlayerHands();
         updateRemainTiles();
@@ -182,18 +179,18 @@ public class GameScreenController implements Initializable {
         westHandPile.getChildren().clear();
 
         // 重新加载每个玩家的手牌
-        loadTilesFromListsToPaneForHuman(humanPlayerHand);
-        loadTilesFromListsToPaneForComputer(computer1Hand, northHandPile);
-        loadTilesFromListsToPaneForComputer(computer2Hand, eastHandPile);
-        loadTilesFromListsToPaneForComputer(computer3Hand, westHandPile);
-        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForHuman(humanPlayer.handTiles);
+        loadTilesFromListsToPaneForComputer(computer1.handTiles, northHandPile);
+        loadTilesFromListsToPaneForComputer(computer2.handTiles, eastHandPile);
+        loadTilesFromListsToPaneForComputer(computer3.handTiles, westHandPile);
+        loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
     private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
-        loadTilesFromListsToPaneForUsedTiles(southUsedTiles, usedTiles);
+        loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
     @FXML
@@ -269,7 +266,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void loadTilesFromListsToPaneForComputer(List<MahjongTile> computerTiles, GridPane pane){
-        if(computerTiles==computer1Hand){
+        if(computerTiles==computer1.handTiles){
             for (int row = 0; row < computerTiles.size(); row++) {
                 MahjongTile tile = computerTiles.get(row);
                 ImageView tileDisplay = getTileDisplayForComputer(tile);
@@ -296,22 +293,22 @@ public class GameScreenController implements Initializable {
     public void updateUsedTiles(MahjongTile tile, int playerIndex) {
         switch (playerIndex) {
             case 1: // 北玩家
-                northUsedTiles.add(tile);
-                loadTilesFromListsToPaneForUsedTiles(northUsedTiles, usedTilesInNorth);
+                computer1.handTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
                 break;
             case 0: // 东玩家
-                eastUsedTiles.add(tile);
-                loadTilesFromListsToPaneForUsedTiles(eastUsedTiles, usedTilesInEast);
+                computer2.handTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
                 break;
             case 2: // 西玩家
-                westUsedTiles.add(tile);
-                loadTilesFromListsToPaneForUsedTiles(westUsedTiles, usedTilesInWest);
+                computer3.handTiles.add(tile);
+                loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
                 break;
         }
     }
 
     public List<MahjongTile> getHumanPlayerHand() {
-        return humanPlayerHand;
+        return humanPlayer.handTiles;
     }
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
@@ -373,26 +370,20 @@ public class GameScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        humanPlayerHand=gameRules.humanPlayerHand;
-        computer1Hand=gameRules.computer1Hand;
-        computer2Hand=gameRules.computer2Hand;
-        computer3Hand=gameRules.computer3Hand;
+        humanPlayer = gameRules.humanPlayer;
+        computer1 = gameRules.computer1;
+        computer2 = gameRules.computer2;
+        computer3 = gameRules.computer3;
 
-        Player player=new Player("human",humanPlayerHand,"south");
-        Computer computer1=new Computer("computer1",computer1Hand,"north");
-        Computer computer2=new Computer("computer2",computer2Hand,"east");
-        Computer computer3=new Computer("computer3",computer3Hand,"west");
-
-        southUsedTiles = new ArrayList<MahjongTile>();
-        northUsedTiles = new ArrayList<MahjongTile>();
-        eastUsedTiles = new ArrayList<MahjongTile>();
-        westUsedTiles = new ArrayList<MahjongTile>();
-
-        mahjongDeck.sortHandTiles(humanPlayerHand);
-        loadTilesFromListsToPaneForHuman(humanPlayerHand);
-        loadTilesFromListsToPaneForComputer(computer1Hand,northHandPile);
-        loadTilesFromListsToPaneForComputer(computer2Hand,eastHandPile);
-        loadTilesFromListsToPaneForComputer(computer3Hand,westHandPile);
+        loadTilesFromListsToPaneForHuman(humanPlayer.handTiles);
+        loadTilesFromListsToPaneForComputer(computer1.handTiles,northHandPile);
+        loadTilesFromListsToPaneForComputer(computer2.handTiles,eastHandPile);
+        loadTilesFromListsToPaneForComputer(computer3.handTiles,westHandPile);
+        loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
+        loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
+        loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
+        loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
+        //playerIndex = gameRules.getDealerIndex();
     }
 
 }

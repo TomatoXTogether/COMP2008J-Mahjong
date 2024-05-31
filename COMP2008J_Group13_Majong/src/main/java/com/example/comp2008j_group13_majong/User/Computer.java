@@ -13,13 +13,11 @@ public class Computer extends User {
         this.position = position;
         this.isTurn = false;
         this.handTiles = tiles;
+        this.usedTiles = new ArrayList<>();
+        this.inOrderTiles = new ArrayList<>();
     }
 
-    @Override
-    ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
-        handTiles.remove(tile);
-        return handTiles;
-    }
+
 
     @Override
     MahjongTile selectTiles(MahjongTile tile) {

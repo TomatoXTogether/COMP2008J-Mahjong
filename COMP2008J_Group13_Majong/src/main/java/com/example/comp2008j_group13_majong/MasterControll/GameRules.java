@@ -13,7 +13,11 @@ import java.util.List;
 import java.util.Random;
 
 public class GameRules {
-    private Player humanPlayer;
+    public Player humanPlayer;
+    public Computer computer1;
+    public Computer computer2;
+    public Computer computer3;
+
     private List<Computer> computers;
     private User dealer;
     private List<User> players;
@@ -21,10 +25,6 @@ public class GameRules {
     private ArrayList<MahjongTile> remainingTiles;
     private int currentPlayerIndex;
 
-    public ArrayList<MahjongTile> humanPlayerHand;
-    public ArrayList<MahjongTile> computer1Hand;
-    public ArrayList<MahjongTile> computer2Hand;
-    public ArrayList<MahjongTile> computer3Hand;
     public int dealerIndex;
 
     public GameRules() {
@@ -36,13 +36,17 @@ public class GameRules {
     }
 
     private void initializePlayers() {
+        ArrayList<MahjongTile> humanPlayerHand = new ArrayList<>();
+        ArrayList<MahjongTile> computer1Hand = new ArrayList<>();
+        ArrayList<MahjongTile> computer2Hand = new ArrayList<>();
+        ArrayList<MahjongTile> computer3Hand = new ArrayList<>();
         // 创建玩家
-        humanPlayer = new Player("Player", new ArrayList<MahjongTile>(), "南方");
+        humanPlayer = new Player("Player", humanPlayerHand, "South");
 
         computers = new ArrayList<>();
-        Computer computer1 = new Computer("Computer1", new ArrayList<MahjongTile>(), "北方");
-        Computer computer2 = new Computer("Computer2", new ArrayList<MahjongTile>(), "东方");
-        Computer computer3 = new Computer("Computer3", new ArrayList<MahjongTile>(), "西方");
+        computer1 = new Computer("Computer1", computer1Hand, "North");
+        computer2 = new Computer("Computer2", computer2Hand, "East");
+        computer3 = new Computer("Computer3", computer3Hand, "West");
         computers.add(computer1);
         computers.add(computer2);
         computers.add(computer3);
@@ -52,11 +56,6 @@ public class GameRules {
         computer1.setIndex(1);
         computer2.setIndex(0);
         computer3.setIndex(2);
-
-        humanPlayerHand = new ArrayList<>();
-        computer1Hand = new ArrayList<>();
-        computer2Hand = new ArrayList<>();
-        computer3Hand = new ArrayList<>();
 
         // 将所有玩家添加到players列表
         players = new ArrayList<>();
@@ -101,17 +100,17 @@ public class GameRules {
 
         // 给每个玩家发放14张随机的牌
         for (int i = 0; i < 13; i++) {
-            humanPlayerHand.add(remainingTiles.remove(0));
-            computer1Hand.add(remainingTiles.remove(0));
-            computer2Hand.add(remainingTiles.remove(0));
-            computer3Hand.add(remainingTiles.remove(0));
+            humanPlayer.handTiles.add(remainingTiles.remove(0));
+            computer1.handTiles.add(remainingTiles.remove(0));
+            computer2.handTiles.add(remainingTiles.remove(0));
+            computer3.handTiles.add(remainingTiles.remove(0));
         }
     }
 
     private void printPlayerHands() {
         // 打印玩家的手牌
         System.out.print(humanPlayer.getName() + " 的手牌: ");
-        for (MahjongTile tile : humanPlayerHand) {
+        for (MahjongTile tile : humanPlayer.handTiles) {
             System.out.print(tile.toString() + ", ");
         }
         System.out.println();
@@ -136,17 +135,17 @@ public class GameRules {
     }
 
     public ArrayList<MahjongTile> getHumanPlayerHand() {
-        return humanPlayerHand;
+        return humanPlayer.handTiles;
     }
 
     public ArrayList<MahjongTile> getComputerHand(int index) {
         switch (index) {
             case 0:
-                return computer1Hand;
+                return computer1.handTiles;
             case 1:
-                return computer2Hand;
+                return computer2.handTiles;
             case 2:
-                return computer3Hand;
+                return computer3.handTiles;
             default:
                 return new ArrayList<>();
         }
@@ -176,34 +175,61 @@ public class GameRules {
 
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
+                if (currentPlayer.isChi){
+                    currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                }
                 handleComputerHand((Computer) currentPlayer, tile);
 
                 // 电脑从牌堆中随机出一张牌
                 MahjongTile discardedTile = currentPlayer.getTiles().remove(new Random().nextInt(currentPlayer.getTiles().size()));
+                currentPlayer.usedTiles.add(discardedTile);
                 System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
 
                 // 在界面上显示这张牌
                 gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
+
+                next(currentPlayerIndex).ifChi(discardedTile);
             } else {
-                humanPlayerHand.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
+                humanPlayer.handTiles.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
 
             // 更新currentPlayerIndex，使其在0到3之间循环
             currentPlayerIndex = (currentPlayerIndex + 1) % 4;
         }
     }
+
     private void handleComputerHand(Computer computer, MahjongTile tile) {
         int computerIndex = computers.indexOf(computer);
         switch (computerIndex) {
             case 0:
-                computer1Hand.add(tile);
+                computer1.handTiles.add(tile);
                 break;
             case 1:
-                computer2Hand.add(tile);
+                computer2.handTiles.add(tile);
                 break;
             case 2:
-                computer3Hand.add(tile);
+                computer3.handTiles.add(tile);
                 break;
         }
     }
+
+    public User next(int currentIndex){
+       User next = null;
+       for (User user : players){
+           if (user.getIndex() == currentIndex){
+               next = players.get((currentIndex+1)%4);
+           }
+       }
+       return next;
+    }
+
+    public User last(int currentIndex) {
+            User next = null;
+            for (User user : players){
+                if (user.getIndex() == currentIndex){
+                    next = players.get((currentIndex+1)%4);
+                }
+            }
+            return next;
+        }
 }

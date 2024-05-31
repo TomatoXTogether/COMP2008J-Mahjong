@@ -14,12 +14,8 @@ public class Player extends User{
         this.position = position;
         this.handTiles = tiles;
         this.isTurn = false;
-    }
-
-    @Override
-    ArrayList<MahjongTile> removeTiles(MahjongTile tile) {
-        handTiles.remove(tile);
-        return handTiles;
+        this.usedTiles = new ArrayList<>();
+        this.inOrderTiles = new ArrayList<>();
     }
 
     @Override

@@ -22,7 +22,9 @@ public class MahjongDeck {
                 for (int index = 1; index < 10; index++) {
                     String value = numberValues[index - 1];
                     for (int i = 0; i < 4; i++) {
-                        tiles.add(new MahjongTile(suit, value, index));
+                        MahjongTile tile = new MahjongTile(suit, value, index);
+                        tiles.add(tile);
+                        tile.ifNum = true;
                     }
                 }
             }
@@ -32,14 +34,20 @@ public class MahjongDeck {
         String[] fengValues = {"东", "南", "西", "北", "中"};
         for (String value : fengValues) {
             for (int i = 0; i < 4; i++) {
-                tiles.add(new MahjongTile(MahjongTile.Suit.风, value, 0));
+                MahjongTile tile = new MahjongTile(MahjongTile.Suit.风, value, 0);
+                tiles.add(tile);
+                tile.ifNum = false;
             }
         }
 
         // 添加发财和白板
         for (int i = 0; i < 4; i++) {
-            tiles.add(new MahjongTile(MahjongTile.Suit.发财));
-            tiles.add(new MahjongTile(MahjongTile.Suit.白板));
+            MahjongTile t1 = new MahjongTile(MahjongTile.Suit.发财);
+            MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
+            tiles.add(t1);
+            tiles.add(t2);
+            t1.ifNum = false;
+            t2.ifNum = false;
         }
     }
 
