@@ -334,6 +334,8 @@ public class GameScreenController implements Initializable {
             case 2:
                 loadTilesFromListsToPaneForInOrderTiles(computer3.inOrderTiles, pairingTilesInWest);
                 break;
+            case 3:
+                loadTilesFromListsToPaneForInOrderTiles(humanPlayer.inOrderTiles, pairingTilesInSouth);
         }
 }
 
