@@ -266,7 +266,7 @@ public class GameRules {
     public User last(int currentIndex) {
             User last = null;
             for (User user : players){
-                if (user.getIndex() == (currentIndex + 3 ) % 4){
+                if (user.getIndex() == (currentIndex + 3) % 4){
                     last = user;
                 }
             }
