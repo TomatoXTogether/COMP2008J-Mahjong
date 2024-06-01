@@ -316,9 +316,9 @@ public abstract class User {
 
     abstract MahjongTile selectTiles(MahjongTile tile);
 
-    public MahjongTile removeTile(int  index) {
+    public MahjongTile removeTile(int index) {
         MahjongTile tile = handTiles.get(index);
-        handTiles.remove(index);
+        handTiles.remove(tile);
         usedTiles.add(tile);
         return tile;
     }
