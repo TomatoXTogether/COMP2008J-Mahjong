@@ -71,7 +71,8 @@ public class GameRules {
 
     public void selectDealer() {
         Random random = new Random();
-        dealerIndex = random.nextInt(4) ; //0-3
+        //dealerIndex = random.nextInt(4) ; //0-3
+        dealerIndex = 3;
 
         if (dealerIndex == 3) {
             dealer = humanPlayer;
@@ -101,10 +102,27 @@ public class GameRules {
 
 
         // 给每个玩家发放14张随机的牌
-        for (int i = 0; i < 14; i++) {
+        /** for (int i = 0; i < 14; i++) {
             humanPlayer.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
+            computer3.handTiles.add(remainingTiles.remove(0));
+        }**/
+
+        // test
+        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
+        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
+            if (suit == MahjongTile.Suit.条) {
+                for (int index = 1; index < 10; index++) {
+                    String value = numberValues[index - 1];
+                    MahjongTile tile = new MahjongTile(suit, value, index);
+                    computer2.handTiles.add(tile);
+                }
+            }
+        }
+        for (int i = 0; i < 14; i++) {
+            humanPlayer.handTiles.add(remainingTiles.remove(0));
+            computer1.handTiles.add(remainingTiles.remove(0));
             computer3.handTiles.add(remainingTiles.remove(0));
         }
     }
@@ -191,7 +209,9 @@ public class GameRules {
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isChi){
-                    currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    User last = last(currentPlayerIndex);
+                    MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    currentPlayer.chi(chiTile);
                 }
                 //handleComputerHand((Computer) currentPlayer, tile);
 
@@ -236,20 +256,20 @@ public class GameRules {
     public User next(int currentIndex){
        User next = null;
        for (User user : players){
-           if (user.getIndex() == currentIndex){
-               next = players.get((currentIndex+1)%4);
+           if (user.getIndex() == (currentIndex + 1 ) % 4){
+               next = user;
            }
        }
        return next;
     }
 
     public User last(int currentIndex) {
-            User next = null;
+            User last = null;
             for (User user : players){
-                if (user.getIndex() == currentIndex){
-                    next = players.get((currentIndex+1)%4);
+                if (user.getIndex() == (currentIndex + 3 ) % 4){
+                    last = user;
                 }
             }
-            return next;
+            return last;
         }
 }
