@@ -113,7 +113,7 @@ public class GameRules {
         // test
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
-            if (suit == MahjongTile.Suit.条) {
+            if (suit == MahjongTile.Suit.饼) {
                 for (int index = 1; index < 10; index++) {
                     String value = numberValues[index - 1];
                     MahjongTile tile = new MahjongTile(suit, value, index);
@@ -212,7 +212,7 @@ public class GameRules {
 
                 if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
-                    MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
                 }
                 if (currentPlayer.isPeng) {
@@ -232,7 +232,8 @@ public class GameRules {
 
                 // 在界面上显示这张牌
                 gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
-                lastDiscardedTile = discardedTile;
+                gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 next(currentPlayerIndex).ifChi(discardedTile);
             } else {
