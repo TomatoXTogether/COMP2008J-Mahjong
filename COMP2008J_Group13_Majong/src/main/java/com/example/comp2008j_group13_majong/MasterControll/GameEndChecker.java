@@ -47,7 +47,7 @@ public class GameEndChecker {
     private boolean checkWin(ArrayList<MahjongTile> hand) {
         // 检查手牌是否赢的逻辑
         // 一对加四小组
-        return user.isHu(hand);
+        return user.ifWin();
     }
 
     private void endGame() {

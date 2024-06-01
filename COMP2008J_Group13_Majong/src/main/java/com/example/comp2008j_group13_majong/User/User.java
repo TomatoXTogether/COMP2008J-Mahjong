@@ -23,6 +23,8 @@ public abstract class User {
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
+    public boolean isPong;
+    public boolean isHu;
     public boolean isPeng;
 
 
@@ -213,95 +215,83 @@ public abstract class User {
         isKong = false;
     }
 
-    public boolean isHu(ArrayList<MahjongTile> handTiles) {
-        // 复制一份手牌，避免直接修改原始手牌
-        ArrayList<MahjongTile> tiles = new ArrayList<>(handTiles);
+    public ArrayList<MahjongTile> ifHu(MahjongTile tile) {
+        ArrayList<MahjongTile> tilesToCheck = new ArrayList<>(handTiles);
+        tilesToCheck.add(tile);
+        if (isWinningHand(tilesToCheck)) {
+            isHu = true;
+            return tilesToCheck;
+        }
+        isHu = false;
+        return null;
+    }
 
-        // 按照牌的值和花色进行排序
+    private boolean isWinningHand(ArrayList<MahjongTile> tiles) {
+        // 对手牌进行排序，便于后续判断
         tiles.sort(new MahjongTileComparator());
 
-        // 尝试寻找将牌（即一对相同的牌）
+        // 判断是否可以胡牌的逻辑
+        // 这里我们使用递归回溯法来检查所有可能的顺子和刻子组合
+        return canFormWinningHand(tiles);
+    }
+
+    private boolean canFormWinningHand(ArrayList<MahjongTile> tiles) {
+        // 尝试找到一对（将牌）
         for (int i = 0; i < tiles.size() - 1; i++) {
-            if (Objects.equals(tiles.get(i).getValue(), tiles.get(i + 1).getValue()) &&
-                    tiles.get(i).getSuit() == tiles.get(i + 1).getSuit()) {
-
-                // 将该对牌作为将牌
-                MahjongTile tile1 = tiles.remove(i);
-                MahjongTile tile2 = tiles.remove(i);
-
-                // 检查剩下的牌是否可以组成四组顺子或刻子
-                if (canFormMelds(tiles)) {
-                    // 将将牌重新加入手牌
-                    tiles.add(i, tile2);
-                    tiles.add(i, tile1);
-                    return true;
-                }
-
-                // 将将牌重新加入手牌
-                tiles.add(i, tile2);
-                tiles.add(i, tile1);
+            if (tiles.get(i).equals(tiles.get(i + 1))) {
+                ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
+                remainingTiles.remove(i);
+                remainingTiles.remove(i);
+                return canFormSets(remainingTiles);
             }
         }
         return false;
     }
 
-    // 判断是否可以将剩下的牌组成四组顺子或刻子
-    private boolean canFormMelds(ArrayList<MahjongTile> tiles) {
-        // 递归终止条件：如果手牌为空，说明成功组成四组顺子或刻子
+    private boolean canFormSets(ArrayList<MahjongTile> tiles) {
         if (tiles.isEmpty()) {
-            return true;
+            return true; // 所有牌都被分组完
         }
 
-        MahjongTile firstTile = tiles.get(0);
-
-        // 尝试组成刻子
-        if (tiles.size() >= 3 &&
-                Objects.equals(tiles.get(0).getValue(), tiles.get(1).getValue()) &&
-                Objects.equals(tiles.get(0).getValue(), tiles.get(2).getValue()) &&
-                tiles.get(0).getSuit() == tiles.get(1).getSuit() &&
-                tiles.get(0).getSuit() == tiles.get(2).getSuit()) {
-            MahjongTile tile1 = tiles.remove(0);
-            MahjongTile tile2 = tiles.remove(0);
-            MahjongTile tile3 = tiles.remove(0);
-            if (canFormMelds(tiles)) {
-                tiles.add(0, tile3);
-                tiles.add(0, tile2);
-                tiles.add(0, tile1);
-                return true;
-            }
-            tiles.add(0, tile3);
-            tiles.add(0, tile2);
-            tiles.add(0, tile1);
+        // 尝试找刻子
+        if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
+         && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
+            ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            return canFormSets(remainingTiles);
         }
 
-        // 尝试组成顺子
-        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
-        if (firstTile.getSuit() == MahjongTile.Suit.万 ||
-                firstTile.getSuit() == MahjongTile.Suit.条 ||
-                firstTile.getSuit() == MahjongTile.Suit.饼) {
-            MahjongTile secondTile = new MahjongTile(firstTile.getSuit(), numberValues[firstTile.getIndex() + 1 - 1], firstTile.getIndex() + 1);
-            MahjongTile thirdTile = new MahjongTile(firstTile.getSuit(), numberValues[firstTile.getIndex() + 2 - 1], firstTile.getIndex() + 2);
-            if (tiles.contains(secondTile) && tiles.contains(thirdTile)) {
-                tiles.remove(secondTile);
-                tiles.remove(thirdTile);
-                tiles.remove(firstTile);
-                if (canFormMelds(tiles)) {
-                    tiles.add(firstTile);
-                    tiles.add(secondTile);
-                    tiles.add(thirdTile);
-                    return true;
-                }
-                tiles.add(firstTile);
-                tiles.add(secondTile);
-                tiles.add(thirdTile);
-            }
+        // 尝试找顺子
+        if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
+         && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
+            ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            return canFormSets(remainingTiles);
         }
-
         return false;
+    }
+
+    public void hu(MahjongTile tile) {
+        if (isHu) {
+            ArrayList<MahjongTile> winningTiles = ifHu(tile);
+            for (MahjongTile t: handTiles) {
+                handTiles.remove(t);
+            }
+
+            // 将胡的牌添加到 inOrderTiles 中
+            MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
+            inOrderTiles.add(winningTilesArray);
+            // 更新状态
+            isHu = false;
+        }
     }
 
     public boolean ifWin(){
-        return getTiles().size() == 0;
+        return getTiles().isEmpty();
     }
 
     public String getName(){
