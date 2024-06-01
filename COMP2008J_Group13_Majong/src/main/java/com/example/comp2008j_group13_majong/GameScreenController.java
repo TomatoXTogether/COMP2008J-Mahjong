@@ -200,8 +200,34 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
+        System.out.println("Peng button clicked");
+        MahjongTile lastDiscardedTile = gameRules.getLastDiscardedTile();
+        if (lastDiscardedTile != null) {
+            humanPlayer.ifCanPeng(lastDiscardedTile);
+            if (humanPlayer.isPeng) {
+                // 执行碰操作
+                MahjongTile[] pengTiles = humanPlayer.getPengTiles(lastDiscardedTile);
+                humanPlayer.peng(pengTiles);
 
+                // 将碰的牌添加到玩家的手牌中
+                humanPlayer.handTiles.add(lastDiscardedTile);
+
+                // 更新界面显示
+                updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
+                loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
+
+                // 设置按钮不可见
+                peng.setVisible(false);
+            }
+        }
     }
+
+    public void updatePengButtonVisibility(boolean isEnabled) {
+        peng.setDisable(!isEnabled);
+    }
+//    public void updatePengButtonVisibility(boolean isVisible) {
+//        peng.setVisible(isVisible);
+//    }
 
     private void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
@@ -385,6 +411,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
         //playerIndex = gameRules.getDealerIndex();
+        peng.setVisible(true);
     }
 
 }

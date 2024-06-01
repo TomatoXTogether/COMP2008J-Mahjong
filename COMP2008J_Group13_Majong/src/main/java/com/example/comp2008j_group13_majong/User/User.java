@@ -6,6 +6,9 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class User {
     public String position;
@@ -18,7 +21,8 @@ public abstract class User {
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
-    public boolean isPong;
+    public boolean isPeng;
+
 
     public int getScore(){
         if (isKong){
@@ -29,9 +33,9 @@ public abstract class User {
             score += 10;
             isChi = false;
         }
-        if (isPong){
+        if (isPeng){
             score += 10;
-            isPong = false;
+            isPeng = false;
         }
         return score;
     }
@@ -113,28 +117,52 @@ public abstract class User {
         }
     }
 
-    public MahjongTile[] ifPong(MahjongTile tile){
-        MahjongTile[] pongzi = new MahjongTile[3];
-        if (getTileNum(tile) == 2){
-            int i = 0;
-            for (MahjongTile t : handTiles){
-                if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
-                    pongzi[i] = t;
-                    i ++;
-                }
-            }
-            isPong = true;
-        }else {
-            isPong = false;
-        }
-        return pongzi;
-    }
+//    public MahjongTile[] ifPeng(MahjongTile tile){
+//        MahjongTile[] pongzi = new MahjongTile[3];
+//        if (getTileNum(tile) == 2){
+//            int i = 0;
+//            for (MahjongTile t : handTiles){
+//                if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
+//                    pongzi[i] = t;
+//                    i ++;
+//                }
+//            }
+//            isPeng = true;
+//        }else {
+//            isPeng = false;
+//        }
+//        return pongzi;
+//    }
 
     public void peng(MahjongTile[] pongzi) {
-        for (MahjongTile t : pongzi){
+        for (MahjongTile t : pongzi) {
             handTiles.remove(t);
         }
         inOrderTiles.add(pongzi);
+        isPeng = false;
+//        for (MahjongTile t : pongzi){
+//            handTiles.remove(t);
+//        }
+//        inOrderTiles.add(pongzi);
+    }
+
+    public void ifCanPeng(MahjongTile tile) {
+        MahjongTile[] pengTiles = getPengTiles(tile);
+        if (pengTiles != null) {
+            isPeng = true;
+        }else {
+        isPeng = false;
+    }
+    }
+
+    public MahjongTile[] getPengTiles(MahjongTile tile) {
+        List<MahjongTile> matchingTiles = handTiles.stream()
+                .filter(t -> t.equals(tile))
+                .collect(Collectors.toList());
+        if (matchingTiles.size() >= 2) {
+            return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)};
+        }
+        return null;
     }
 
     public MahjongTile[] ifKong(MahjongTile tile){

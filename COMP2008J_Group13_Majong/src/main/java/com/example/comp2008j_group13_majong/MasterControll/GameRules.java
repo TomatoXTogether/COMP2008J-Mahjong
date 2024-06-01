@@ -26,6 +26,7 @@ public class GameRules {
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
     private int currentPlayerIndex;
+    private MahjongTile lastDiscardedTile;
 
     public int dealerIndex;
 
@@ -208,10 +209,19 @@ public class GameRules {
 
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
+
                 if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
                     MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
+                }
+                if (currentPlayer.isPeng) {
+                    User last = players.get((currentPlayerIndex - 1 + players.size()) % players.size());
+                    MahjongTile pengTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    MahjongTile[] pengTiles = currentPlayer.getPengTiles(pengTile);
+                    if (pengTiles != null) {
+                        currentPlayer.peng(pengTiles);
+                    }
                 }
                 //handleComputerHand((Computer) currentPlayer, tile);
 
@@ -222,13 +232,23 @@ public class GameRules {
 
                 // 在界面上显示这张牌
                 gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
+                lastDiscardedTile = discardedTile;
 
                 next(currentPlayerIndex).ifChi(discardedTile);
             } else {
                 if (currentPlayer.isChi){
                     currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                 }
-
+                if (currentPlayer.isPeng) {
+                    User last = players.get((currentPlayerIndex - 1 + players.size()) % players.size());
+                    MahjongTile pengTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    MahjongTile[] pengTiles = currentPlayer.getPengTiles(pengTile);
+                    if (pengTiles != null) {
+                        currentPlayer.peng(pengTiles);
+                    }
+                }
+                currentPlayer.ifCanPeng(tile);
+                gameScreenController.updatePengButtonVisibility(currentPlayer.isPeng);
                 //humanPlayer.handTiles.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
 
@@ -237,6 +257,11 @@ public class GameRules {
         }
         printPlayerHands();
     }
+
+    public MahjongTile getLastDiscardedTile() {
+        return lastDiscardedTile;
+    }
+
 
     private void handleComputerHand(Computer computer, MahjongTile tile) {
         int computerIndex = computers.indexOf(computer);
