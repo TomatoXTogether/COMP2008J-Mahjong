@@ -293,15 +293,15 @@ public class GameScreenController implements Initializable {
     public void updateUsedTiles(MahjongTile tile, int playerIndex) {
         switch (playerIndex) {
             case 1: // 北玩家
-                computer1.handTiles.add(tile);
+                //computer1.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
                 break;
             case 0: // 东玩家
-                computer2.handTiles.add(tile);
+                //computer2.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
                 break;
             case 2: // 西玩家
-                computer3.handTiles.add(tile);
+                //computer3.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
                 break;
         }

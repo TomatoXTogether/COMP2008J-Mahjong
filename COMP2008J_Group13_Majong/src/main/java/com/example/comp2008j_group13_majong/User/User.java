@@ -65,17 +65,17 @@ public abstract class User {
                 t4 = new MahjongTile(tile.getSuit(), numberValues[tile.getIndex() + 2 - 1], tile.getIndex() + 2);
             }
             MahjongTile[][] shunzi = new MahjongTile[3][3];
-            if ((getTile(t1) >= 1 && getTile(t2) >= 1)){
+            if ((getTileNum(t1) >= 1 && getTileNum(t2) >= 1)){
                 isChi = true;
                 shunzi[0][0] = t1;
                 shunzi[0][1] = t2;
                 shunzi[0][2] = tile;
-            }else if ((getTile(t2) >= 1 && getTile(t3) >= 1)){
+            }else if ((getTileNum(t2) >= 1 && getTileNum(t3) >= 1)){
                 isChi = true;
                 shunzi[1][0] = t2;
                 shunzi[1][1] = tile;
                 shunzi[1][2] = t3;
-            } else if ((getTile(t3) >= 1 && getTile(t4) >= 1)) {
+            } else if ((getTileNum(t3) >= 1 && getTileNum(t4) >= 1)) {
                 isChi = true;
                 shunzi[2][0] = tile;
                 shunzi[2][2] = t3;
@@ -93,21 +93,21 @@ public abstract class User {
         if (isChi){
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
-                handTiles.remove(shunzi[0][0]);
-                handTiles.remove(shunzi[0][1]);
-                handTiles.remove(shunzi[0][2]);
+                handTiles.remove(getTile(shunzi[0][0]));
+                handTiles.remove(getTile(shunzi[0][1]));
+                handTiles.remove(getTile(shunzi[0][2]));
                 inOrderTiles.add(shunzi[0]);
                 isChi = false;
             }else if (shunzi[1][0] != null){
-                handTiles.remove(shunzi[1][0]);
-                handTiles.remove(shunzi[1][1]);
-                handTiles.remove(shunzi[1][2]);
+                handTiles.remove(getTile(shunzi[1][0]));
+                handTiles.remove(getTile(shunzi[1][1]));
+                handTiles.remove(getTile(shunzi[1][2]));
                 inOrderTiles.add(shunzi[1]);
                 isChi = false;
             }else if (shunzi[2][0] != null){
-                handTiles.remove(shunzi[2][0]);
-                handTiles.remove(shunzi[2][1]);
-                handTiles.remove(shunzi[2][2]);
+                handTiles.remove(getTile(shunzi[2][0]));
+                handTiles.remove(getTile(shunzi[2][1]));
+                handTiles.remove(getTile(shunzi[2][2]));
                 inOrderTiles.add(shunzi[2]);
                 isChi = false;
             }
@@ -116,7 +116,7 @@ public abstract class User {
 
     public MahjongTile[] ifPong(MahjongTile tile){
         MahjongTile[] pongzi = new MahjongTile[3];
-        if (getTile(tile) == 2){
+        if (getTileNum(tile) == 2){
             int i = 0;
             for (MahjongTile t : handTiles){
                 if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
@@ -140,7 +140,7 @@ public abstract class User {
 
     public MahjongTile[] ifKong(MahjongTile tile){
         MahjongTile[] kongzi = new MahjongTile[4];
-        if (getTile(tile) == 3){
+        if (getTileNum(tile) == 3){
             int i = 0;
             for (MahjongTile t : handTiles){
                 if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
@@ -207,7 +207,7 @@ public abstract class User {
         isTurn = turn;
     }
 
-    public int getTile(MahjongTile tile) {
+    public int getTileNum(MahjongTile tile) {
         if (tile != null){
             int num = 0;
             for (int i = 0; i < handTiles.size(); i++){
@@ -222,6 +222,15 @@ public abstract class User {
         return 0;
     }
 
+    public MahjongTile getTile(MahjongTile tile){
+        for (MahjongTile t : handTiles){
+            if (t.getSuit().equals(tile.getSuit()) && t.getValue().equals(tile.getValue())){
+                return t;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<MahjongTile> getTiles(){
         return handTiles;
     }
@@ -232,9 +241,9 @@ public abstract class User {
 
     abstract MahjongTile selectTiles(MahjongTile tile);
 
-    public MahjongTile removeTile(int  index) {
+    public MahjongTile removeTile(int index) {
         MahjongTile tile = handTiles.get(index);
-        handTiles.remove(index);
+        handTiles.remove(tile);
         usedTiles.add(tile);
         return tile;
     }

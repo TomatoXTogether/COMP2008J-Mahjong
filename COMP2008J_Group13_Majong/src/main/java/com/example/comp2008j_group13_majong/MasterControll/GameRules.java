@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static com.example.comp2008j_group13_majong.Tile.MahjongTile.Suit.发财;
+
 public class GameRules {
     public Player humanPlayer;
     public Computer computer1;
@@ -69,7 +71,8 @@ public class GameRules {
 
     public void selectDealer() {
         Random random = new Random();
-        dealerIndex = random.nextInt(4) ; //0-3
+        //dealerIndex = random.nextInt(4) ; //0-3
+        dealerIndex = 3;
 
         if (dealerIndex == 3) {
             dealer = humanPlayer;
@@ -99,10 +102,27 @@ public class GameRules {
 
 
         // 给每个玩家发放14张随机的牌
-        for (int i = 0; i < 13; i++) {
+        /** for (int i = 0; i < 14; i++) {
             humanPlayer.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
+            computer3.handTiles.add(remainingTiles.remove(0));
+        }**/
+
+        // test
+        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
+        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
+            if (suit == MahjongTile.Suit.饼) {
+                for (int index = 1; index < 10; index++) {
+                    String value = numberValues[index - 1];
+                    MahjongTile tile = new MahjongTile(suit, value, index);
+                    humanPlayer.handTiles.add(tile);
+                }
+            }
+        }
+        for (int i = 0; i < 14; i++) {
+            computer2.handTiles.add(remainingTiles.remove(0));
+            computer1.handTiles.add(remainingTiles.remove(0));
             computer3.handTiles.add(remainingTiles.remove(0));
         }
     }
@@ -129,6 +149,19 @@ public class GameRules {
             System.out.print(computer.getName() + " 的手牌: ");
             for (MahjongTile tile : hand) {
                 System.out.print(tile.toString() + ", ");
+            }
+            System.out.println();
+        }
+
+        // print inorder tiles
+        for (int i = 0; i < players.size(); i++) {
+            User user = players.get(i);
+            ArrayList<MahjongTile[]> inOrderTiles = user.getInOrderTiles();
+            System.out.print(user.getName() + " 的顺子牌: ");
+            for (MahjongTile[] tiles : inOrderTiles) {
+                for (MahjongTile tile : tiles) {
+                    System.out.print(tile.toString() + ",");
+                }
             }
             System.out.println();
         }
@@ -168,7 +201,7 @@ public class GameRules {
 
             // 给当前玩家发一张牌
             MahjongTile tile = remainingTiles.remove(0);
-            currentPlayer.getTiles().add(tile);
+            currentPlayer.handTiles.add(tile);
 
             // 打印当前玩家信息和收到的牌
             System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
@@ -176,13 +209,15 @@ public class GameRules {
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isChi){
-                    currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    User last = last(currentPlayerIndex);
+                    MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    currentPlayer.chi(chiTile);
                 }
-                handleComputerHand((Computer) currentPlayer, tile);
+                //handleComputerHand((Computer) currentPlayer, tile);
 
                 // 电脑从牌堆中随机出一张牌
-                MahjongTile discardedTile = currentPlayer.getTiles().remove(new Random().nextInt(currentPlayer.getTiles().size()));
-                currentPlayer.usedTiles.add(discardedTile);
+                int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
+                MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                 System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
 
                 // 在界面上显示这张牌
@@ -190,12 +225,17 @@ public class GameRules {
 
                 next(currentPlayerIndex).ifChi(discardedTile);
             } else {
-                humanPlayer.handTiles.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
+                if (currentPlayer.isChi){
+                    currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                }
+
+                //humanPlayer.handTiles.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
 
             // 更新currentPlayerIndex，使其在0到3之间循环
             currentPlayerIndex = (currentPlayerIndex + 1) % 4;
         }
+        printPlayerHands();
     }
 
     private void handleComputerHand(Computer computer, MahjongTile tile) {
@@ -216,20 +256,20 @@ public class GameRules {
     public User next(int currentIndex){
        User next = null;
        for (User user : players){
-           if (user.getIndex() == currentIndex){
-               next = players.get((currentIndex+1)%4);
+           if (user.getIndex() == (currentIndex + 1 ) % 4){
+               next = user;
            }
        }
        return next;
     }
 
     public User last(int currentIndex) {
-            User next = null;
+            User last = null;
             for (User user : players){
-                if (user.getIndex() == currentIndex){
-                    next = players.get((currentIndex+1)%4);
+                if (user.getIndex() == (currentIndex + 3) % 4){
+                    last = user;
                 }
             }
-            return next;
+            return last;
         }
 }
