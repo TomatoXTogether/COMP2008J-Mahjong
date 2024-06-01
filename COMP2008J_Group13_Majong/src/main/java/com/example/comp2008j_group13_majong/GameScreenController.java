@@ -283,6 +283,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+        pane.getChildren().clear();
         for (int row = 0; row < usedTiles.size(); row++) {
             MahjongTile tile = usedTiles.get(row);
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
