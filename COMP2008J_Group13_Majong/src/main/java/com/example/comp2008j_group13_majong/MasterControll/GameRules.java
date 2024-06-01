@@ -112,16 +112,16 @@ public class GameRules {
         // test
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
-            if (suit == MahjongTile.Suit.条) {
+            if (suit == MahjongTile.Suit.饼) {
                 for (int index = 1; index < 10; index++) {
                     String value = numberValues[index - 1];
                     MahjongTile tile = new MahjongTile(suit, value, index);
-                    computer2.handTiles.add(tile);
+                    humanPlayer.handTiles.add(tile);
                 }
             }
         }
         for (int i = 0; i < 14; i++) {
-            humanPlayer.handTiles.add(remainingTiles.remove(0));
+            computer2.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer3.handTiles.add(remainingTiles.remove(0));
         }
