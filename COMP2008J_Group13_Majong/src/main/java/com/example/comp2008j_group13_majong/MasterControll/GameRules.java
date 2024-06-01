@@ -1,16 +1,14 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
 import com.example.comp2008j_group13_majong.GameScreenController;
+import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static com.example.comp2008j_group13_majong.Tile.MahjongTile.Suit.发财;
 
@@ -129,6 +127,9 @@ public class GameRules {
     }
 
     private void printPlayerHands() {
+        MahjongTileComparator comparator = new MahjongTileComparator();
+        humanPlayer.handTiles.sort(comparator);
+
         // 打印玩家的手牌
         System.out.print(humanPlayer.getName() + " 的手牌: ");
         for (MahjongTile tile : humanPlayer.handTiles) {
@@ -147,6 +148,7 @@ public class GameRules {
         for (int i = 0; i < computers.size(); i++) {
             Computer computer = computers.get(i);
             ArrayList<MahjongTile> hand = getComputerHand(i);
+            computer.handTiles.sort(comparator);
             System.out.print(computer.getName() + " 的手牌: ");
             for (MahjongTile tile : hand) {
                 System.out.print(tile.toString() + ", ");
@@ -209,19 +211,27 @@ public class GameRules {
 
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
-
+                User last = last(currentPlayerIndex);
                 if (currentPlayer.isChi){
-                    User last = last(currentPlayerIndex);
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
                 }
                 if (currentPlayer.isPeng) {
-                    User last = players.get((currentPlayerIndex - 1 + players.size()) % players.size());
+                    System.out.println(currentPlayer.getName() + " isPeng is true");
                     MahjongTile pengTile = last.usedTiles.get(last.usedTiles.size() - 1);
-                    MahjongTile[] pengTiles = currentPlayer.getPengTiles(pengTile);
+                    System.out.println(currentPlayer.getName() + " is attempting to peng with tile: " + pengTile);
+                    MahjongTile[] pengTiles = currentPlayer.ifPeng(pengTile);
                     if (pengTiles != null) {
-                        currentPlayer.peng(pengTiles);
+                        System.out.println(currentPlayer.getName() + " has valid tiles for peng: " + Arrays.toString(pengTiles));
+                        currentPlayer.peng(pengTile);
+                        System.out.println(currentPlayer.getName() + " executed peng with tiles: " + Arrays.toString(pengTiles));
+                        // 在界面上更新Peng操作后的牌
+                        gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                    } else {
+                        System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
                     }
+                } else {
+                    System.out.println(currentPlayer.getName() + " isPeng is false");
                 }
                 //handleComputerHand((Computer) currentPlayer, tile);
 
@@ -236,21 +246,27 @@ public class GameRules {
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 next(currentPlayerIndex).ifChi(discardedTile);
+                next(currentPlayerIndex).ifPeng(discardedTile);
             } else {
                 if (currentPlayer.isChi){
                     currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                 }
                 if (currentPlayer.isPeng) {
-                    User last = players.get((currentPlayerIndex - 1 + players.size()) % players.size());
-                    MahjongTile pengTile = last.usedTiles.get(last.usedTiles.size() - 1);
-                    MahjongTile[] pengTiles = currentPlayer.getPengTiles(pengTile);
+                    System.out.println(currentPlayer.getName() + " isPeng is true");
+                    MahjongTile pengTile = last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size() - 1);
+                    System.out.println(currentPlayer.getName() + " is attempting to peng with tile: " + pengTile);
+                    MahjongTile[] pengTiles = currentPlayer.ifPeng(pengTile);
                     if (pengTiles != null) {
-                        currentPlayer.peng(pengTiles);
+                        System.out.println(currentPlayer.getName() + " has valid tiles for peng: " + Arrays.toString(pengTiles));
+                        currentPlayer.peng(pengTile);
+                        System.out.println(currentPlayer.getName() + " executed peng with tiles: " + Arrays.toString(pengTiles));
+                        gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                    } else {
+                        System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
                     }
+                } else {
+                    System.out.println(currentPlayer.getName() + " isPeng is false");
                 }
-                currentPlayer.ifCanPeng(tile);
-                gameScreenController.updatePengButtonVisibility(currentPlayer.isPeng);
-                //humanPlayer.handTiles.add(tile); // 如果是人类玩家，则更新 humanPlayerHand
             }
 
             // 更新currentPlayerIndex，使其在0到3之间循环

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public abstract class User {
     public String position;
@@ -16,6 +17,7 @@ public abstract class User {
     public int index;
     public int score;
     public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
+    //public ArrayList<MahjongTile[]> inPengTiles;// tiles in peng
     public ArrayList<MahjongTile> handTiles; // tiles in hand
     public ArrayList<MahjongTile> usedTiles;
     public boolean isTurn;
@@ -134,36 +136,57 @@ public abstract class User {
 //        return pongzi;
 //    }
 
-    public void peng(MahjongTile[] pongzi) {
-        for (MahjongTile t : pongzi) {
-            handTiles.remove(t);
-        }
-        inOrderTiles.add(pongzi);
-        isPeng = false;
-//        for (MahjongTile t : pongzi){
-//            handTiles.remove(t);
+//    public void peng(MahjongTile[] pengTiles) {
+//        for (MahjongTile tile : pengTiles) {
+//            handTiles.remove(tile);
 //        }
-//        inOrderTiles.add(pongzi);
-    }
-
-    public void ifCanPeng(MahjongTile tile) {
-        MahjongTile[] pengTiles = getPengTiles(tile);
-        if (pengTiles != null) {
-            isPeng = true;
-        }else {
-        isPeng = false;
-    }
-    }
-
-    public MahjongTile[] getPengTiles(MahjongTile tile) {
+//        inOrderTiles.add(pengTiles);
+//        isPeng = false;
+//    }
+    public MahjongTile[] ifPeng(MahjongTile tile) {
+        System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = handTiles.stream()
                 .filter(t -> t.equals(tile))
                 .collect(Collectors.toList());
+
         if (matchingTiles.size() >= 2) {
+            System.out.println("Player's hand contains two matching tiles for peng: " + matchingTiles);
+            isPeng = true;
             return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)};
+        } else {
+            System.out.println("Player's hand does not contain matching tiles for peng.");
+            isPeng = false;
         }
+
         return null;
     }
+
+    public void peng(MahjongTile tile) {
+        System.out.println("Attempting to execute peng with tile: " + tile);
+
+        List<MahjongTile> matchingTiles = handTiles.stream()
+                .filter(t -> t.equals(tile))
+                .collect(Collectors.toList());
+
+        if (matchingTiles.size() >= 2) {
+            System.out.println("Matching tiles found for peng: " + matchingTiles);
+
+            // 确保要移除的牌在手牌中
+            if (handTiles.contains(matchingTiles.get(0)) && handTiles.contains(matchingTiles.get(1))) {
+                handTiles.remove(matchingTiles.get(0));
+                handTiles.remove(matchingTiles.get(1));
+                inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)});
+                System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
+                isPeng = false;
+            } else {
+                System.out.println("Error: Matching tiles are not found in handTiles.");
+            }
+        } else {
+            System.out.println("Unable to execute peng. Matching tiles not found.");
+            isPeng = false;
+        }
+    }
+
 
     public MahjongTile[] ifKong(MahjongTile tile){
         MahjongTile[] kongzi = new MahjongTile[4];
