@@ -169,6 +169,7 @@ public class GameScreenController implements Initializable {
         playersTurn();
         updateAllPlayerHands();
         updateRemainTiles();
+        updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
     }
 
     private void updateAllPlayerHands() {
@@ -282,10 +283,23 @@ public class GameScreenController implements Initializable {
     }
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+        pane.getChildren().clear();
         for (int row = 0; row < usedTiles.size(); row++) {
             MahjongTile tile = usedTiles.get(row);
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
             pane.add(tileDisplay, row, 0);
+        }
+    }
+
+    public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
+        for (int row = 0; row < inOrderTiles.size(); row++) {
+            MahjongTile[] tiles = inOrderTiles.get(row);
+            int col = 0;
+            for (MahjongTile tile : tiles){
+                ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
+                pane.add(tileDisplay, col, row);
+                col ++;
+            }
         }
     }
 
@@ -304,8 +318,26 @@ public class GameScreenController implements Initializable {
                 //computer3.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
                 break;
+            case 3:
+                loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
         }
     }
+
+    public void updateInOrderTiles( int playerIndex) {
+        switch (playerIndex) {
+            case 1:
+                loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
+                break;
+            case 0:
+                loadTilesFromListsToPaneForInOrderTiles(computer2.inOrderTiles, pairingTilesInEast);
+                break;
+            case 2:
+                loadTilesFromListsToPaneForInOrderTiles(computer3.inOrderTiles, pairingTilesInWest);
+                break;
+            case 3:
+                loadTilesFromListsToPaneForInOrderTiles(humanPlayer.inOrderTiles, pairingTilesInSouth);
+        }
+}
 
     public List<MahjongTile> getHumanPlayerHand() {
         return humanPlayer.handTiles;

@@ -116,12 +116,12 @@ public class GameRules {
                 for (int index = 1; index < 10; index++) {
                     String value = numberValues[index - 1];
                     MahjongTile tile = new MahjongTile(suit, value, index);
-                    humanPlayer.handTiles.add(tile);
+                    computer2.handTiles.add(tile);
                 }
             }
         }
         for (int i = 0; i < 14; i++) {
-            computer2.handTiles.add(remainingTiles.remove(0));
+            humanPlayer.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer3.handTiles.add(remainingTiles.remove(0));
         }
@@ -210,7 +210,7 @@ public class GameRules {
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
-                    MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                    MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
                 }
                 //handleComputerHand((Computer) currentPlayer, tile);
@@ -222,6 +222,8 @@ public class GameRules {
 
                 // 在界面上显示这张牌
                 gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
+                gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 next(currentPlayerIndex).ifChi(discardedTile);
             } else {
