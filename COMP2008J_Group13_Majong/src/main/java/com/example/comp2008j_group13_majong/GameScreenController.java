@@ -6,6 +6,7 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
+import com.example.comp2008j_group13_majong.User.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -83,7 +84,7 @@ public class GameScreenController implements Initializable {
     private GridPane northHandPile;
 
     @FXML
-    private Button peng;
+    public Button peng;
 
     @FXML
     private Button play;
@@ -240,7 +241,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
-
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
     }
 
 

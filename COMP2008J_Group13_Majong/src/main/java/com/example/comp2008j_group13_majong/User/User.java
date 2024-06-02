@@ -149,14 +149,17 @@ public abstract class User {
         System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
         for(MahjongTile handTile : handTiles){
-            if (tile.getValue().equals(handTile.getValue()) && tile.getSuit().equals(handTile.getSuit())){
-                matchingTiles.add(handTile);
+            if(tile.getValue() != null){
+                if(handTile.getValue() != null && tile.getValue().equals(handTile.getValue()) && tile.getSuit().equals(handTile.getSuit())){
+                    matchingTiles.add(handTile);
+                }
+            }else{
+               if(tile.getSuit().equals(handTile.getSuit())){
+                    matchingTiles.add(handTile);
+                }
             }
         }
 
-        //= handTiles.stream()
-//                .filter(t -> t.equals(tile))
-//                .collect(Collectors.toList());
 
         if (matchingTiles.size() >= 2) {
             System.out.println("Player's hand contains two matching tiles for peng: " + matchingTiles);
