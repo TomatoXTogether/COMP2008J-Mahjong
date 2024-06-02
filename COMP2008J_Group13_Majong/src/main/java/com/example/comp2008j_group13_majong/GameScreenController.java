@@ -151,14 +151,35 @@ public class GameScreenController implements Initializable {
     void playBottonAction(ActionEvent event) {
         if(index!=-1){
             MahjongTile usedTile = humanPlayer.removeTile(index);
-            //System.out.println(humanPlayerHand);
             playerHandPile.getChildren().remove(currentRaisedTile);
-            MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+            if(!pengTestAction(event, usedTile)){
+                MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+            }
             play.setVisible(false);
-            //gameRules.dealerNextRound();
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             currentRaisedTile = null;
         }
+    }
+
+    @FXML
+    public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
+        //MahjongTile usedTile = humanPlayer.removeTile(index);
+        for (int i = 0; i < gameRules.computers.size(); i++) {
+            Computer computer = gameRules.computers.get(i);
+            MahjongTile[] pengzi = computer.ifPeng(usedTile);
+            if (pengzi != null) {
+                gameRules.pengAction(this, computer, humanPlayer);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @FXML
+    private void removeUsedTile(MahjongTile tile) {
+        // 更新usedTiles列表和界面显示
+        humanPlayer.usedTiles.remove(tile);
+        updateUsedTiles(tile, humanPlayer.getIndex());
     }
 
     @FXML
@@ -204,35 +225,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
-//        System.out.println("Peng button clicked");
-//        MahjongTile lastDiscardedTile = gameRules.getLastDiscardedTile();
-//        if (lastDiscardedTile != null) {
-//            humanPlayer.ifPeng(lastDiscardedTile);
-//            if (humanPlayer.isPeng) {
-//                // 执行碰操作
-//                MahjongTile[] pengTiles = humanPlayer.getPengTiles(lastDiscardedTile);
-//                humanPlayer.peng(pengTiles);
-//
-//                // 将碰的牌添加到玩家的 inOrderTiles 中
-//                humanPlayer.inOrderTiles.add(pengTiles);
-//
-//                // 更新界面显示
-//                updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
-//                loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
-//                updateInOrderTiles(3); // 3 代表玩家
-//
-//                // 设置按钮不可见
-//                peng.setVisible(false);
-//            }
-//        }
+
     }
 
-    public void updatePengButtonVisibility(boolean isEnabled) {
-        peng.setDisable(!isEnabled);
-    }
-//    public void updatePengButtonVisibility(boolean isVisible) {
-//        peng.setVisible(isVisible);
-//    }
 
     private void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
