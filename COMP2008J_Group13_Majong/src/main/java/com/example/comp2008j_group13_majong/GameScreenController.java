@@ -152,8 +152,10 @@ public class GameScreenController implements Initializable {
         if(index!=-1){
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
-            if(!pengTestAction(event, usedTile)){
-                MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+            if (!huTestAction(event, usedTile)) {
+                if(!pengTestAction(event, usedTile)){
+                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                }
             }
             play.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
@@ -174,6 +176,19 @@ public class GameScreenController implements Initializable {
         }
         return false;
     }
+
+    public boolean huTestAction(ActionEvent event,MahjongTile usedTile) {
+        for (int i = 0; i < gameRules.computers.size(); i++) {
+            Computer computer = gameRules.computers.get(i);
+            ArrayList<MahjongTile> tilesToCheck = computer.ifHu(usedTile);
+            if (tilesToCheck != null) {
+                gameRules.huAction(this, computer, humanPlayer);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @FXML
     private void removeUsedTile(MahjongTile tile) {

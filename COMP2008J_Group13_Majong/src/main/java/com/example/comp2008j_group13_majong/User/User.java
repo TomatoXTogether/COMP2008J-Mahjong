@@ -283,18 +283,16 @@ public abstract class User {
     }
 
     public void hu(MahjongTile tile) {
-        if (isHu) {
-            ArrayList<MahjongTile> winningTiles = ifHu(tile);
-            for (MahjongTile t: handTiles) {
-                handTiles.remove(t);
-            }
-
-            // 将胡的牌添加到 inOrderTiles 中
-            MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
-            inOrderTiles.add(winningTilesArray);
-            // 更新状态
-            isHu = false;
+        ArrayList<MahjongTile> winningTiles = ifHu(tile);
+        for (MahjongTile t: handTiles) {
+            handTiles.remove(t);
         }
+
+        // 将胡的牌添加到 inOrderTiles 中
+        MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
+        inOrderTiles.add(winningTilesArray);
+        // 更新状态
+        isHu = false;
     }
 
     public boolean ifWin(){

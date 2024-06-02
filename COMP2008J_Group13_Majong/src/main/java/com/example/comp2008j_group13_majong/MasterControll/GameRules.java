@@ -277,6 +277,26 @@ public class GameRules {
         }
     }
 
+    public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
+        if (currentPlayer.isHu) {
+            MahjongTile huTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
+            ArrayList<MahjongTile> huTiles = currentPlayer.ifHu(huTile);
+            if (huTiles != null) {
+                currentPlayer.hu(huTile);
+
+                // 在界面上更新胡操作后的牌
+                gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                lastPlayer.usedTiles.remove(huTile);
+
+                // 在界面上显示赢家
+                GameEndChecker.checkWin(currentPlayer);
+
+                // 结束游戏
+                GameEndChecker.endGame();
+            }
+        }
+    }
+
     public MahjongTile getLastDiscardedTile() {
         return lastDiscardedTile;
     }

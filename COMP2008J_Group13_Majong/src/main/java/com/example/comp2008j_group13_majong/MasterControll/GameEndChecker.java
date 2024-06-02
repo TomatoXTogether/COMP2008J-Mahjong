@@ -1,5 +1,7 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
+import com.example.comp2008j_group13_majong.User.Computer;
+import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
@@ -19,23 +21,6 @@ public class GameEndChecker {
     }
 
     public void checkGameEnd() {
-        // 检查人类玩家是否赢了
-        if (checkWin(gameRules.getHumanPlayerHand())) {
-            System.out.println(gameRules.getHumanPlayerHand() + " 赢了！");
-            endGame();
-            return;
-        }
-
-        // 检查电脑玩家是否赢了
-        for (int i = 0; i < 3; i++) { // 电脑玩家数量为3
-            ArrayList<MahjongTile> hand = gameRules.getComputerHand(i);
-            if (checkWin(hand)) {
-                System.out.println("电脑 " + (i + 1) + " 赢了！");
-                endGame();
-                return;
-            }
-        }
-
         // 检查是否牌堆发光牌无法继续
         if (gameRules.getRemainingTiles().isEmpty()) {
             System.out.println("牌堆已经发光，游戏结束！");
@@ -44,13 +29,19 @@ public class GameEndChecker {
         }
     }
 
-    private boolean checkWin(ArrayList<MahjongTile> hand) {
-        // 检查手牌是否赢的逻辑
-        // 一对加四小组
-        return user.ifWin();
+    public static void checkWin(User user) {
+        if (user instanceof Player) {
+            if (user.ifWin()) {
+                System.out.println( " 人类玩家赢了！");
+            }
+        } else if (user instanceof Computer) {
+            if (user.ifWin()) {
+                System.out.println(user.getName() + "赢了！");
+            }
+        }
     }
 
-    private void endGame() {
+    public static void endGame() {
         // 实现游戏结束的逻辑，例如清理资源、重置游戏等
         System.out.println("游戏结束。");
         // 在这里你可以做一些额外的清理工作或者游戏重置工作
