@@ -189,11 +189,6 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void gangBottonAction(ActionEvent event) {
-
-    }
-
-    @FXML
     void huBottonAction(ActionEvent event) {
 
     }
