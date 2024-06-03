@@ -7,6 +7,7 @@ import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
+import javafx.event.ActionEvent;
 
 import java.util.*;
 
@@ -209,7 +210,7 @@ public class GameRules {
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
 
-    public void dealerNextRound(GameScreenController gameScreenController) {
+    public void dealerNextRound(GameScreenController gameScreenController, ActionEvent event) {
         if (!remainingTiles.isEmpty()) {
             // 获取当前玩家
             User currentPlayer = players.stream()
