@@ -143,7 +143,18 @@ public class GameScreenController implements Initializable {
     }
     @FXML
     void chiBottonAction(ActionEvent event) {
-
+        if(index!=-1){
+            MahjongTile usedTile = humanPlayer.removeTile(index);
+            playerHandPile.getChildren().remove(currentRaisedTile);
+            if (!huTestAction(event, usedTile, humanPlayer) && humanPlayer.isChi) {
+                if(!pengTestAction(event, usedTile)){
+                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                }
+            }
+            chi.setVisible(false);
+            chiImage.setVisible(false);
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        }
     }
 
     @FXML
@@ -518,7 +529,7 @@ public class GameScreenController implements Initializable {
         Thread thread = new Thread(() -> {
             try {
                 Thread.sleep(10000);
-                System.exit(0);
+                //System.exit(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
