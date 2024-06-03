@@ -59,7 +59,7 @@ public class GameScreenController implements Initializable {
     private GridPane pairingTilesInWest;
 
     @FXML
-    private ImageView chiImage;
+    public ImageView chiImage;
 
     @FXML
     private ImageView gangImage;
@@ -74,7 +74,7 @@ public class GameScreenController implements Initializable {
     private Label remainTilesNumber;
 
     @FXML
-    private Button chi;
+    public Button chi;
 
     @FXML
     private GridPane eastHandPile;
@@ -144,16 +144,17 @@ public class GameScreenController implements Initializable {
     @FXML
     void chiBottonAction(ActionEvent event) {
         if(index!=-1){
-            MahjongTile usedTile = humanPlayer.removeTile(index);
-            playerHandPile.getChildren().remove(currentRaisedTile);
-            if (!huTestAction(event, usedTile, humanPlayer) && humanPlayer.isChi) {
-                if(!pengTestAction(event, usedTile)){
-                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
-                }
+            User last = gameRules.last(humanPlayer.index);
+            MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+            if (humanPlayer.isChi) {
+                humanPlayer.chi(chiTile);
+                last.usedTiles.remove(last.usedTiles.size() - 1);
             }
             chi.setVisible(false);
             chiImage.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            updateUsedTiles(last.index);
+            updateInOrderTiles(3) ;
         }
     }
 
@@ -231,7 +232,7 @@ public class GameScreenController implements Initializable {
     private void removeUsedTile(MahjongTile tile) {
         // 更新usedTiles列表和界面显示
         humanPlayer.usedTiles.remove(tile);
-        updateUsedTiles(tile, humanPlayer.getIndex());
+        updateUsedTiles(humanPlayer.getIndex());
     }
 
     @FXML
@@ -383,7 +384,7 @@ public class GameScreenController implements Initializable {
     }
 
 
-    public void updateUsedTiles(MahjongTile tile, int playerIndex) {
+    public void updateUsedTiles(int playerIndex) {
         switch (playerIndex) {
             case 1: // 北玩家
                 //computer1.handTiles.add(tile);
@@ -402,7 +403,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void updateInOrderTiles( int playerIndex) {
+    public void updateInOrderTiles(int playerIndex) {
         switch (playerIndex) {
             case 1:
                 loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
