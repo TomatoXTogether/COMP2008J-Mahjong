@@ -1,6 +1,7 @@
 package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
+import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
@@ -121,8 +122,8 @@ public class GameScreenController implements Initializable {
     private ImageView currentRaisedTile;
 
     int index;
-
-    private GameRules gameRules=new GameRules();
+    private ScoreCalculator scoreCalculator = new ScoreCalculator();
+    private GameRules gameRules=new GameRules(scoreCalculator);
 
     private Player humanPlayer;
     private Computer computer1;

@@ -28,12 +28,13 @@ public class GameRules {
     public int dealerIndex;
     private GameEndChecker gameEndChecker;
 
-    public GameRules() {
+    public GameRules(ScoreCalculator scoreCalculator) {
         deck = new MahjongDeck();
         remainingTiles = new ArrayList<>();
         initializePlayers();
         dealTiles();
         printPlayerHands();
+        this.gameEndChecker = new GameEndChecker(this, scoreCalculator);
     }
 
     private void initializePlayers() {
@@ -249,7 +250,7 @@ public class GameRules {
                 //next(currentPlayerIndex).ifChi(discardedTile);
 
                 if (!gameScreenController.huTestAction(event, discardedTile, currentPlayer)) {
-                    Boolean humanPeng = false;
+                    boolean humanPeng = false;
                     for(int tempt = 0;tempt < 3; tempt ++){
                         int newIndex = (currentPlayerIndex + tempt) % 4;
                         User nextUser = next(newIndex);
@@ -262,13 +263,16 @@ public class GameRules {
                             }
                         }
                     }
-                    if (humanPeng == false){
+                    if (!humanPeng){
                         // 更新currentPlayerIndex，使其在0到3之间循环
                         currentPlayerIndex = (currentPlayerIndex + 1) % 4;
                     }
                     next(currentPlayerIndex).ifPeng(discardedTile);
                 }
 
+            } else {
+                // 人类玩家不需要出牌，只更新currentPlayerIndex
+                currentPlayerIndex = (currentPlayerIndex + 1) % 4;
             }
             //else {
             //    if (currentPlayer.isChi){
