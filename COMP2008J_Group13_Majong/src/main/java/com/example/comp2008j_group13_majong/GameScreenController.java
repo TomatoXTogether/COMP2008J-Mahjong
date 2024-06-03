@@ -8,6 +8,7 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,9 +17,12 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +30,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+
+    @FXML
+    private AnchorPane animationPane;
+
     @FXML
     private Label east;
 
@@ -90,7 +98,7 @@ public class GameScreenController implements Initializable {
     private Button play;
 
     @FXML
-    private GridPane playerHandPile;
+    public GridPane playerHandPile;
 
     @FXML
     private Button drawButton;
@@ -244,7 +252,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
+    public void updateOnePlayerHand(GridPane pane, ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -261,6 +269,7 @@ public class GameScreenController implements Initializable {
         User currentUser = gameRules.current(gameRules.currentPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
     }
 
 
@@ -431,7 +440,7 @@ public class GameScreenController implements Initializable {
             //System.out.println(tile.getValue()+tile.getSuit());
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(50);       // 宽度
+            iv.setFitWidth(45);       // 宽度
             iv.setFitHeight(100);      // 高度
             iv.setImage(image);         // 关联图像
             return iv;
@@ -440,7 +449,7 @@ public class GameScreenController implements Initializable {
             //System.out.println(tile.getSuit());
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(50);       // 宽度
+            iv.setFitWidth(45);       // 宽度
             iv.setFitHeight(100);      // 高度
             iv.setImage(image);         // 关联图像
             return iv;
@@ -479,6 +488,80 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
+        animation("chi",1);
+        animation("peng",0);
+        animation("gang",2);
     }
+
+    public void animation(String operation, int playerIndex){
+        Image image;
+        if(operation=="chi"){
+            image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
+        }else if(operation=="peng"){
+            image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }
+
+        // 创建ImageView以显示图像
+        ImageView imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(300);  // 设置图像宽度
+        imageView.setFitHeight(300); // 设置图像高度
+
+        // 创建平移动画
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
+
+        if(playerIndex==0){
+            //east
+            imageView.setLayoutX(700);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(-100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==1){
+            //north
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(150);
+            translateTransition.setToY(100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==2){
+            //west
+            imageView.setLayoutX(300);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(100); // 将图像水平向右平移200个像素
+
+        }else {
+            //south
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(450);
+            translateTransition.setToY(-100); // 将图像水平向右平移200个像素
+        }
+
+        // 开始动画
+        translateTransition.play();
+
+        // 创建 FadeTransition 来处理图像消失动画
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), imageView);
+        fadeOut.setFromValue(2.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+
+        fadeOut.playFromStart(); //立即开始动画
+
+        // 让程序在3秒后结束运行（模拟图像的消失）
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        animationPane.getChildren().add(imageView);
+
+
+    }
+
 
 }

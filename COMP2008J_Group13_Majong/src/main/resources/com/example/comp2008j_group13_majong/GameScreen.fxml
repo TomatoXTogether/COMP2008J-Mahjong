@@ -15,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.comp2008j_group13_majong.GameScreenController">
+<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.comp2008j_group13_majong.GameScreenController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1247.0">
          <image>
@@ -346,5 +346,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
+      <AnchorPane fx:id="animationPane" mouseTransparent="true" />
    </children>
 </AnchorPane>
