@@ -59,6 +59,12 @@ public class GameScreenController implements Initializable {
     private GridPane pairingTilesInWest;
 
     @FXML
+    private Button pass;
+
+    @FXML
+    private ImageView passImage;
+
+    @FXML
     private ImageView chiImage;
 
     @FXML
@@ -69,6 +75,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     private ImageView pengImage;
+
+    @FXML
+    private ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -147,6 +156,25 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
+    void mouseClicked(MouseEvent event) {
+
+    }
+
+    @FXML
+    void pengBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
+        animation("peng",3);
+    }
+
+    @FXML
+    void passButtonAction(ActionEvent event) {
+
+    }
+
+    @FXML
     void gangBottonAction(ActionEvent event) {
 
     }
@@ -167,6 +195,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             play.setVisible(false);
+            playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             currentRaisedTile = null;
         }
@@ -259,19 +288,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    @FXML
-    void mouseClicked(MouseEvent event) {
-
-    }
-
-    @FXML
-    void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
-        peng.setVisible(false);
-    }
-
 
     private void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
@@ -322,6 +338,7 @@ public class GameScreenController implements Initializable {
 
                     index=finalRow;
                     play.setVisible(true);
+                    playImage.setVisible(true);
                 } else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
                     playerHandPile.getChildren().remove(tileDisplay);
@@ -329,7 +346,7 @@ public class GameScreenController implements Initializable {
                     currentRaisedTile = null;
                     index=-1;
                     play.setVisible(false);
-
+                    playImage.setVisible(false);
                 }
             });
         }
@@ -490,7 +507,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
         animation("chi",1);
         animation("peng",0);
-        animation("gang",2);
+        animation("hu",2);
     }
 
     public void animation(String operation, int playerIndex){
@@ -499,15 +516,23 @@ public class GameScreenController implements Initializable {
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
         }else if(operation=="peng"){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else {
+        }else if(operation=="gang"){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
         }
 
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(300);  // 设置图像宽度
-        imageView.setFitHeight(300); // 设置图像高度
+        if(operation=="hu"){
+            imageView.setFitWidth(500);  // 设置图像宽度
+            imageView.setFitHeight(500); // 设置图像高度
+        }else {
+            imageView.setFitWidth(300);  // 设置图像宽度
+            imageView.setFitHeight(300); // 设置图像高度
+        }
+
 
         // 创建平移动画
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
