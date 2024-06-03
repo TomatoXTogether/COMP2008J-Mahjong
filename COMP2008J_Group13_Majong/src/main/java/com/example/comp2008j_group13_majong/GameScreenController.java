@@ -1,6 +1,7 @@
 package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
+import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
@@ -71,22 +72,19 @@ public class GameScreenController implements Initializable {
     private ImageView pengImage;
 
     @FXML
+    private ImageView playImage;
+
+    @FXML
     private Label remainTilesNumber;
 
     @FXML
-    public Button chi;
+    private Button chi;
 
     @FXML
     private GridPane eastHandPile;
 
     @FXML
-    public Button gang;
-
-    @FXML
-    public Button pass;
-
-    @FXML
-    public ImageView passImage;
+    private Button gang;
 
     @FXML
     private GridPane handPile;
@@ -136,8 +134,8 @@ public class GameScreenController implements Initializable {
     private ImageView currentRaisedTile;
 
     int index;
-
-    private GameRules gameRules=new GameRules();
+    private ScoreCalculator scoreCalculator = new ScoreCalculator();
+    private GameRules gameRules=new GameRules(scoreCalculator);
 
     private Player humanPlayer;
     private Computer computer1;
@@ -165,27 +163,8 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    public void passButtonAction(ActionEvent actionEvent) {
-        if(index!=-1){
-            gameRules.dealerNextRound(this);
-            // 摸牌后重新排序玩家的手牌
-            mahjongDeck.sortHandTiles(humanPlayer.handTiles);
-            mahjongDeck.sortHandTiles(computer1.handTiles);
-            mahjongDeck.sortHandTiles(computer2.handTiles);
-            mahjongDeck.sortHandTiles(computer3.handTiles);
-            playersTurn();
-            updateAllPlayerHands();
-            updateRemainTiles();
-            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
-            pass.setVisible(false);
-            passImage.setVisible(false);
-            chi.setVisible(false);
-            chiImage.setVisible(false);
-            peng.setVisible(false);
-            pengImage.setVisible(false);
-            gang.setVisible(false);
-            gangImage.setVisible(false);
-        }
+    void gangBottonAction(ActionEvent event) {
+
     }
 
     @FXML
@@ -408,6 +387,7 @@ public class GameScreenController implements Initializable {
 
                     index=finalRow;
                     play.setVisible(true);
+                    playImage.setVisible(true);
                 } else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
                     playerHandPile.getChildren().remove(tileDisplay);
@@ -415,7 +395,7 @@ public class GameScreenController implements Initializable {
                     currentRaisedTile = null;
                     index=-1;
                     play.setVisible(false);
-
+                    playImage.setVisible(false);
                 }
             });
         }
@@ -576,7 +556,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
         animation("chi",1);
         animation("peng",0);
-        animation("gang",2);
+        animation("hu",2);
     }
 
     public void animation(String operation, int playerIndex){
@@ -585,15 +565,23 @@ public class GameScreenController implements Initializable {
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
         }else if(operation=="peng"){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else {
+        }else if(operation=="gang"){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
         }
 
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(300);  // 设置图像宽度
-        imageView.setFitHeight(300); // 设置图像高度
+        if(operation=="hu"){
+            imageView.setFitWidth(500);  // 设置图像宽度
+            imageView.setFitHeight(500); // 设置图像高度
+        }else {
+            imageView.setFitWidth(300);  // 设置图像宽度
+            imageView.setFitHeight(300); // 设置图像高度
+        }
+
 
         // 创建平移动画
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
@@ -648,4 +636,6 @@ public class GameScreenController implements Initializable {
 
 
     }
+
+
 }
