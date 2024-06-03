@@ -270,6 +270,7 @@ public class GameScreenController implements Initializable {
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
+        animation("peng",3);
     }
 
 
@@ -490,7 +491,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
         animation("chi",1);
         animation("peng",0);
-        animation("gang",2);
+        animation("hu",2);
     }
 
     public void animation(String operation, int playerIndex){
@@ -499,15 +500,23 @@ public class GameScreenController implements Initializable {
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
         }else if(operation=="peng"){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else {
+        }else if(operation=="gang"){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
         }
 
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitWidth(300);  // 设置图像宽度
-        imageView.setFitHeight(300); // 设置图像高度
+        if(operation=="hu"){
+            imageView.setFitWidth(500);  // 设置图像宽度
+            imageView.setFitHeight(500); // 设置图像高度
+        }else {
+            imageView.setFitWidth(300);  // 设置图像宽度
+            imageView.setFitHeight(300); // 设置图像高度
+        }
+
 
         // 创建平移动画
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
