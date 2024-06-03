@@ -74,7 +74,7 @@ public class GameScreenController implements Initializable {
     private ImageView huImage;
 
     @FXML
-    public ImageView pengImage;
+    private ImageView pengImage;
 
     @FXML
     private ImageView playImage;
@@ -152,22 +152,19 @@ public class GameScreenController implements Initializable {
     }
     @FXML
     void chiBottonAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mouseClicked(MouseEvent event) {
-
-    }
-
-    @FXML
-    void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
-        peng.setVisible(false);
-        pengImage.setVisible(false);
-        animation("peng",3);
+        if(index!=-1){
+            User last = gameRules.last(humanPlayer.index);
+            MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+            if (humanPlayer.isChi) {
+                humanPlayer.chi(chiTile);
+                last.usedTiles.remove(last.usedTiles.size() - 1);
+            }
+            chi.setVisible(false);
+            chiImage.setVisible(false);
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            updateUsedTiles(last.index);
+            updateInOrderTiles(3) ;
+        }
     }
 
     @FXML
@@ -250,12 +247,12 @@ public class GameScreenController implements Initializable {
     private void removeUsedTile(MahjongTile tile) {
         // 更新usedTiles列表和界面显示
         humanPlayer.usedTiles.remove(tile);
-        updateUsedTiles(tile, humanPlayer.getIndex());
+        updateUsedTiles(humanPlayer.getIndex());
     }
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound(this, event);
+        gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         mahjongDeck.sortHandTiles(computer1.handTiles);
@@ -287,6 +284,18 @@ public class GameScreenController implements Initializable {
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
+    }
+
+    @FXML
+    void mouseClicked(MouseEvent event) {
+
+    }
+
+    @FXML
+    void pengBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
     }
 
 
@@ -371,15 +380,11 @@ public class GameScreenController implements Initializable {
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
-
-            for (int row = 0; row < usedTiles.size(); row++) {
-                    MahjongTile tile = usedTiles.get(row);
-                    ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
-                    pane.add(tileDisplay, row, 0);
-
-            }
-
-
+        for (int row = 0; row < usedTiles.size(); row++) {
+            MahjongTile tile = usedTiles.get(row);
+            ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
+            pane.add(tileDisplay, row, 0);
+        }
     }
 
     public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
@@ -395,7 +400,7 @@ public class GameScreenController implements Initializable {
     }
 
 
-    public void updateUsedTiles(MahjongTile tile, int playerIndex) {
+    public void updateUsedTiles(int playerIndex) {
         switch (playerIndex) {
             case 1: // 北玩家
                 //computer1.handTiles.add(tile);
@@ -414,7 +419,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void updateInOrderTiles( int playerIndex) {
+    public void updateInOrderTiles(int playerIndex) {
         switch (playerIndex) {
             case 1:
                 loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
