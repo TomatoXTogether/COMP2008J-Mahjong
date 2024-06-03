@@ -219,31 +219,21 @@ public class GameRules {
                     .orElseThrow(() -> new IllegalStateException("Invalid player index"));
 
             // 检查当前玩家是否已经进行了吃、碰或胡牌操作
-            if (!currentPlayer.isChi && !currentPlayer.isPeng) {
+            if (!currentPlayer.justChi && !currentPlayer.justPenged) {
                 // 给当前玩家发一张牌
                 MahjongTile tile = remainingTiles.remove(0);
                 currentPlayer.handTiles.add(tile);
-
-            if (!currentPlayer.justPenged) {
-                // 给当前玩家发一张牌
-                tile = remainingTiles.remove(0);
-                currentPlayer.handTiles.add(tile);
-
-                // 打印当前玩家信息和收到的牌
-                System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
-            } else {
-                if (currentPlayer.isChi) {
-                    currentPlayer.isChi = false;
-                } else {
-                    currentPlayer.isPeng = false;
-                }
-            }
 
                 // 打印当前玩家信息和收到的牌
                 System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
             } else {
                 // 重置标志
-                currentPlayer.justPenged = false;
+                if (currentPlayer.justChi) {
+                    currentPlayer.justChi = false;
+                }
+                if (currentPlayer.justPenged) {
+                    currentPlayer.justPenged = false;
+                }
             }
 
             User last = last(currentPlayerIndex);
@@ -301,9 +291,10 @@ public class GameRules {
 
             // 更新currentPlayerIndex，使其在0到3之间循环
             //currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+            printPlayerHands();
+        } else {
+            gameEndChecker.checkGameEnd();
         }
-        printPlayerHands();
-        gameEndChecker.checkGameEnd();
     }
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
