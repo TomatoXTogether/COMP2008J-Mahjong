@@ -487,28 +487,61 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-        animation();
+        animation("chi",1);
+        animation("peng",0);
+        animation("gang",2);
     }
 
-    public void animation(){
-        // 加载动画特效
-        Image image = new Image(getClass().getResourceAsStream("/images/背景.JPG"));
+    public void animation(String operation, int playerIndex){
+        Image image;
+        if(operation=="chi"){
+            image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
+        }else if(operation=="peng"){
+            image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }
 
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(100);  // 设置图像宽度
-        imageView.setFitHeight(100); // 设置图像高度
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(300);  // 设置图像宽度
+        imageView.setFitHeight(300); // 设置图像高度
 
         // 创建平移动画
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), imageView);
-        translateTransition.setToX(-150); // 将图像水平向右平移200个像素
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
+
+        if(playerIndex==0){
+            //east
+            imageView.setLayoutX(700);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(-100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==1){
+            //north
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(150);
+            translateTransition.setToY(100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==2){
+            //west
+            imageView.setLayoutX(300);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(100); // 将图像水平向右平移200个像素
+
+        }else {
+            //south
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(450);
+            translateTransition.setToY(-100); // 将图像水平向右平移200个像素
+        }
 
         // 开始动画
         translateTransition.play();
 
         // 创建 FadeTransition 来处理图像消失动画
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.6), imageView);
-        fadeOut.setFromValue(1.0);
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), imageView);
+        fadeOut.setFromValue(2.0);
         fadeOut.setToValue(0.0);
         fadeOut.setCycleCount(1);
 
@@ -517,8 +550,7 @@ public class GameScreenController implements Initializable {
         // 让程序在3秒后结束运行（模拟图像的消失）
         Thread thread = new Thread(() -> {
             try {
-                Thread.sleep(10000);
-                System.exit(0);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
