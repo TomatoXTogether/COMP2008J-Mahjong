@@ -342,6 +342,7 @@ public class GameRules {
                     gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
