@@ -156,6 +156,25 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
+    void mouseClicked(MouseEvent event) {
+
+    }
+
+    @FXML
+    void pengBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
+        animation("peng",3);
+    }
+
+    @FXML
+    void passButtonAction(ActionEvent event) {
+
+    }
+
+    @FXML
     void gangBottonAction(ActionEvent event) {
 
     }
@@ -269,24 +288,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    @FXML
-    void mouseClicked(MouseEvent event) {
-
-    }
-
-    @FXML
-    void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
-        peng.setVisible(false);
-        animation("peng",3);
-    }
-
-    @FXML
-    void passButtonAction(ActionEvent event) {
-
-    }
 
     private void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
