@@ -20,7 +20,7 @@ public class GameRules {
 
     public List<Computer> computers;
     private User dealer;
-    private List<User> players;
+    public List<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
     private int currentPlayerIndex;

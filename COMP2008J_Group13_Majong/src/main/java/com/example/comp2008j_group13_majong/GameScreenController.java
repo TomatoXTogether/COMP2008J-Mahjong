@@ -6,6 +6,7 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
+import com.example.comp2008j_group13_majong.User.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
