@@ -17,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -217,7 +216,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound(this);
+        gameRules.dealerNextRound(this, event);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         mahjongDeck.sortHandTiles(computer1.handTiles);

@@ -23,7 +23,6 @@ public abstract class User {
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
-    public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
 
@@ -40,6 +39,10 @@ public abstract class User {
         if (isPeng){
             score += 10;
             isPeng = false;
+        }
+        if (isHu) {
+            score += 100;
+            isHu = false;
         }
         return score;
     }
@@ -189,7 +192,6 @@ public abstract class User {
                 handTiles.remove(matchingTiles.get(1));
                 inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)});
                 System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
-                isPeng = false;
             } else {
                 System.out.println("Error: Matching tiles are not found in handTiles.");
             }
@@ -294,8 +296,6 @@ public abstract class User {
         // 将胡的牌添加到 inOrderTiles 中
         MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
         inOrderTiles.add(winningTilesArray);
-        // 更新状态
-        isHu = false;
     }
 
     public boolean ifWin(){
