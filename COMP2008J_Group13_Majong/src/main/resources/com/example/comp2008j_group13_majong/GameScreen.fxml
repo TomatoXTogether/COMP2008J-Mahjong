@@ -14,7 +14,6 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.comp2008j_group13_majong.GameScreenController">
    <children>
@@ -378,6 +377,5 @@
          </rowConstraints>
       </GridPane>
       <AnchorPane fx:id="animationPane" mouseTransparent="true" />
-      <Text fx:id="playScore" layoutX="1119.0" layoutY="782.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="64.0" />
    </children>
 </AnchorPane>

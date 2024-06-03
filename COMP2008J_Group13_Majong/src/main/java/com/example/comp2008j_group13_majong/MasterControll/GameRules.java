@@ -103,11 +103,11 @@ public class GameRules {
 
         // 给每个玩家发放14张随机的牌
         /** for (int i = 0; i < 14; i++) {
-            humanPlayer.handTiles.add(remainingTiles.remove(0));
-            computer1.handTiles.add(remainingTiles.remove(0));
-            computer2.handTiles.add(remainingTiles.remove(0));
-            computer3.handTiles.add(remainingTiles.remove(0));
-        }**/
+         humanPlayer.handTiles.add(remainingTiles.remove(0));
+         computer1.handTiles.add(remainingTiles.remove(0));
+         computer2.handTiles.add(remainingTiles.remove(0));
+         computer3.handTiles.add(remainingTiles.remove(0));
+         }**/
 
         // test
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
@@ -125,6 +125,7 @@ public class GameRules {
                     computer1.handTiles.add(t1);
                 }
                 humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
             }
@@ -437,25 +438,25 @@ public class GameRules {
     }
 
     public User next(int currentIndex){
-       User next = null;
-       for (User user : players){
-           if (user.getIndex() == (currentIndex + 1 ) % 4){
-               next = user;
-           }
-       }
-       return next;
+        User next = null;
+        for (User user : players){
+            if (user.getIndex() == (currentIndex + 1 ) % 4){
+                next = user;
+            }
+        }
+        return next;
     }
 
     public User last(int currentIndex) {
-            User last = null;
-            for (User user : players){
-                if (user.getIndex() == (currentIndex + 3) % 4){
-                    last = user;
-                }
+        User last = null;
+        for (User user : players){
+            if (user.getIndex() == (currentIndex + 3) % 4){
+                last = user;
             }
-            return last;
         }
-     public User current(int currentIndex){
+        return last;
+    }
+    public User current(int currentIndex){
         User current = null;
         for (User user : players){
             if (user.getIndex() == currentIndex){
@@ -463,5 +464,5 @@ public class GameRules {
             }
         }
         return current;
-     }
+    }
 }
