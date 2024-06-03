@@ -7,6 +7,7 @@ import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import com.example.comp2008j_group13_majong.User.Computer;
 import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,10 +16,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +30,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
+
+    @FXML
+    private AnchorPane animationPane;
+
     @FXML
     private Label east;
 
@@ -84,7 +92,7 @@ public class GameScreenController implements Initializable {
     private GridPane northHandPile;
 
     @FXML
-    private Button peng;
+    public Button peng;
 
     @FXML
     private Button play;
@@ -153,8 +161,10 @@ public class GameScreenController implements Initializable {
         if(index!=-1){
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
-            if(!pengTestAction(event, usedTile)){
-                MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+            if (!huTestAction(event, usedTile, humanPlayer)) {
+                if(!pengTestAction(event, usedTile)){
+                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                }
             }
             play.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
@@ -175,6 +185,36 @@ public class GameScreenController implements Initializable {
         }
         return false;
     }
+
+    public boolean huTestAction(ActionEvent event, MahjongTile usedTile, User lastPlayer) {
+        if (lastPlayer instanceof Player) {
+            for (int i = 0; i < gameRules.computers.size(); i++) {
+                Computer computer = gameRules.computers.get(i);
+                ArrayList<MahjongTile> tilesToCheck = computer.ifHu(usedTile);
+                if (tilesToCheck != null) {
+                    gameRules.huAction(this, computer, lastPlayer);
+                    return true;
+                }
+            }
+        } else if (lastPlayer instanceof Computer) {
+            List<User> players = new ArrayList<>();
+            players.add(humanPlayer);
+            players.add(computer1);
+            players.add(computer2);
+            players.add(computer3);
+            for (User player : players) {
+                if (player != lastPlayer) {
+                    ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
+                    if (tilesToCheck != null) {
+                        gameRules.huAction(this, player, lastPlayer);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     @FXML
     private void removeUsedTile(MahjongTile tile) {
@@ -226,7 +266,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
-
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
     }
 
 
@@ -397,7 +439,7 @@ public class GameScreenController implements Initializable {
             //System.out.println(tile.getValue()+tile.getSuit());
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(50);       // 宽度
+            iv.setFitWidth(45);       // 宽度
             iv.setFitHeight(100);      // 高度
             iv.setImage(image);         // 关联图像
             return iv;
@@ -406,7 +448,7 @@ public class GameScreenController implements Initializable {
             //System.out.println(tile.getSuit());
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(50);       // 宽度
+            iv.setFitWidth(45);       // 宽度
             iv.setFitHeight(100);      // 高度
             iv.setImage(image);         // 关联图像
             return iv;
@@ -445,6 +487,48 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
+        animation();
     }
+
+    public void animation(){
+        // 加载动画特效
+        Image image = new Image(getClass().getResourceAsStream("/images/背景.JPG"));
+
+        // 创建ImageView以显示图像
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);  // 设置图像宽度
+        imageView.setFitHeight(100); // 设置图像高度
+
+        // 创建平移动画
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), imageView);
+        translateTransition.setToX(-150); // 将图像水平向右平移200个像素
+
+        // 开始动画
+        translateTransition.play();
+
+        // 创建 FadeTransition 来处理图像消失动画
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.6), imageView);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setCycleCount(1);
+
+        fadeOut.playFromStart(); //立即开始动画
+
+        // 让程序在3秒后结束运行（模拟图像的消失）
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(10000);
+                System.exit(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+
+        animationPane.getChildren().add(imageView);
+
+
+    }
+
 
 }
