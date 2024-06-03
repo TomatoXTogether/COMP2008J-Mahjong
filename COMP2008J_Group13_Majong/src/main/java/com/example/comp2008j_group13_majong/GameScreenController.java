@@ -59,7 +59,7 @@ public class GameScreenController implements Initializable {
     private GridPane pairingTilesInWest;
 
     @FXML
-    private ImageView chiImage;
+    public ImageView chiImage;
 
     @FXML
     private ImageView gangImage;
@@ -74,7 +74,7 @@ public class GameScreenController implements Initializable {
     private Label remainTilesNumber;
 
     @FXML
-    private Button chi;
+    public Button chi;
 
     @FXML
     private GridPane eastHandPile;
@@ -98,7 +98,7 @@ public class GameScreenController implements Initializable {
     private Button play;
 
     @FXML
-    public GridPane playerHandPile;
+    private GridPane playerHandPile;
 
     @FXML
     private Button drawButton;
@@ -143,7 +143,19 @@ public class GameScreenController implements Initializable {
     }
     @FXML
     void chiBottonAction(ActionEvent event) {
-
+        if(index!=-1){
+            User last = gameRules.last(humanPlayer.index);
+            MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+            if (humanPlayer.isChi) {
+                humanPlayer.chi(chiTile);
+                last.usedTiles.remove(last.usedTiles.size() - 1);
+            }
+            chi.setVisible(false);
+            chiImage.setVisible(false);
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            updateUsedTiles(last.index);
+            updateInOrderTiles(3) ;
+        }
     }
 
 
@@ -304,7 +316,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    public void updateOnePlayerHand(GridPane pane, ArrayList<MahjongTile> pile) {
+    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);

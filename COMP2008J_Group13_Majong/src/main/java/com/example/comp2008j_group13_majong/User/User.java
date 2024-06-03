@@ -23,6 +23,7 @@ public abstract class User {
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
+    public boolean justChi = false;
     public boolean justPenged = false;
     public boolean justGangged = false;
     public boolean isPong;
@@ -43,6 +44,10 @@ public abstract class User {
         if (isPeng){
             score += 10;
             isPeng = false;
+        }
+        if (isHu) {
+            score += 100;
+            isHu = false;
         }
         return score;
     }
@@ -88,8 +93,8 @@ public abstract class User {
             } else if ((getTileNum(t3) >= 1 && getTileNum(t4) >= 1)) {
                 isChi = true;
                 shunzi[2][0] = tile;
-                shunzi[2][2] = t3;
-                shunzi[2][1] = t4;
+                shunzi[2][1] = t3;
+                shunzi[2][2] = t4;
             }else {
                 isChi = false;
             }

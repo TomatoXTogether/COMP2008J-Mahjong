@@ -18,10 +18,9 @@ public class GameRules {
     public Computer computer2;
     public Computer computer3;
 
-
     public List<Computer> computers;
     private User dealer;
-    private List<User> players;
+    public List<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
     public int currentPlayerIndex;
@@ -127,7 +126,6 @@ public class GameRules {
                 humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
             }
         }
         for (int i = 0; i < 14; i++) {
@@ -135,7 +133,7 @@ public class GameRules {
             computer3.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
         }
-        for(int i = 0; i < 11; i++){
+        for(int i = 0; i < 12; i++){
             humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
 
@@ -245,8 +243,8 @@ public class GameRules {
                 System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
 
                 // 在界面上显示这张牌
-                gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
-                gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                gameScreenController.updateUsedTiles(currentPlayer.getIndex());
+                gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 next(currentPlayerIndex).ifChi(discardedTile);
@@ -281,7 +279,9 @@ public class GameRules {
                 next(currentPlayerIndex).ifGang(discardedTile); // 添加这行代码以确保检查杠的情况
             }else {
                 if (currentPlayer.isChi){
-                    currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    gameScreenController.chi.setVisible(true);;
+                    gameScreenController.chiImage.setVisible(true);
                 }
                 // 更新currentPlayerIndex，使其在0到3之间循环
                 currentPlayerIndex = (currentPlayerIndex + 1) % 4;
