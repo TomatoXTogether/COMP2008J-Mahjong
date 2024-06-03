@@ -90,7 +90,7 @@ public class GameScreenController implements Initializable {
     private Button play;
 
     @FXML
-    private GridPane playerHandPile;
+    public GridPane playerHandPile;
 
     @FXML
     private Button drawButton;
@@ -244,7 +244,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
+    public void updateOnePlayerHand(GridPane pane, ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -261,6 +261,7 @@ public class GameScreenController implements Initializable {
         User currentUser = gameRules.current(gameRules.currentPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
     }
 
 
