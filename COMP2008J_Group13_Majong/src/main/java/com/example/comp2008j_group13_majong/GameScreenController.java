@@ -68,13 +68,13 @@ public class GameScreenController implements Initializable {
     public ImageView chiImage;
 
     @FXML
-    private ImageView gangImage;
+    public ImageView gangImage;
 
     @FXML
     private ImageView huImage;
 
     @FXML
-    private ImageView pengImage;
+    public ImageView pengImage;
 
     @FXML
     private ImageView playImage;
@@ -152,7 +152,20 @@ public class GameScreenController implements Initializable {
     }
     @FXML
     void chiBottonAction(ActionEvent event) {
-
+            if (index != -1) {
+                User last = gameRules.last(humanPlayer.index);
+                MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
+                if (humanPlayer.isChi) {
+                    humanPlayer.chi(chiTile);
+                    last.usedTiles.remove(last.usedTiles.size() - 1);
+                }
+                animation("chi",3);
+                chi.setVisible(false);
+                chiImage.setVisible(false);
+                updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
+                updateUsedTiles(last.index);
+                updateInOrderTiles(3);
+            }
     }
 
     @FXML
@@ -166,6 +179,7 @@ public class GameScreenController implements Initializable {
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
+        pengImage.setVisible(false);
         animation("peng",3);
     }
 

@@ -237,6 +237,7 @@ public class GameRules {
                 if (currentPlayer.isChi){
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
+                    gameScreenController.animation("chi", currentPlayerIndex);
                 }
 
                 // 电脑从牌堆中随机出一张牌
@@ -257,6 +258,9 @@ public class GameRules {
                     if (nextUser.ifGang(discardedTile) != null) {
                         if (nextUser == humanPlayer) {
                             gameScreenController.gang.setVisible(true);
+                            gameScreenController.gangImage.setVisible(true);
+                            gameScreenController.pass.setVisible(true);
+                            gameScreenController.passImage.setVisible(true);
                             humanPengOrGang = true;
                             return;
                         } else {
@@ -267,6 +271,9 @@ public class GameRules {
                     if (nextUser.ifPeng(discardedTile) != null) {
                         if (nextUser == humanPlayer) {
                             gameScreenController.peng.setVisible(true);
+                            gameScreenController.pengImage.setVisible(true);
+                            gameScreenController.pass.setVisible(true);
+                            gameScreenController.passImage.setVisible(true);
                             humanPengOrGang = true;
                             // currentPlayerIndex = humanPlayer.index;
                             break;
@@ -338,6 +345,7 @@ public class GameRules {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
@@ -386,6 +394,7 @@ public class GameRules {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    gameScreenController.animation("gang", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for gang");
