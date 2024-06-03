@@ -7,6 +7,7 @@ import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
+import javafx.scene.layout.GridPane;
 
 import java.util.*;
 
@@ -319,11 +320,11 @@ public class GameRules {
                 // 更新界面上的顺序牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(pengTile);
-                gameScreenController.updateUsedTiles(null, lastPlayer.getIndex());
+                gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
-                    gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile, currentPlayer.handTiles);
+                    gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
                     currentPlayer.justPenged = true;
                 }
 
@@ -331,8 +332,8 @@ public class GameRules {
                     //电脑随机出牌
                     int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
-                    gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
-                    gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                    gameScreenController.updateUsedTiles(currentPlayer.getIndex());
+                    gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
                 }
             } else {
@@ -364,7 +365,7 @@ public class GameRules {
                 // 更新界面上的顺序牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(gangTile);
-                gameScreenController.updateUsedTiles(null, lastPlayer.getIndex());
+                gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
@@ -379,8 +380,8 @@ public class GameRules {
                     //电脑随机出牌
                     int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
-                    gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
-                    gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                    gameScreenController.updateUsedTiles(currentPlayer.getIndex());
+                    gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
                 }
             } else {

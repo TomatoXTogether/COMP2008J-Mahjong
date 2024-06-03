@@ -98,7 +98,7 @@ public class GameScreenController implements Initializable {
     private Button play;
 
     @FXML
-    private GridPane playerHandPile;
+    public GridPane playerHandPile;
 
     @FXML
     private Button drawButton;
@@ -157,7 +157,10 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(3) ;
         }
     }
+    @FXML
+    void passButtonAction(ActionEvent event) {
 
+    }
 
     @FXML
     void huBottonAction(ActionEvent event) {
@@ -264,7 +267,7 @@ public class GameScreenController implements Initializable {
     private void removeUsedTile(MahjongTile tile) {
         // 更新usedTiles列表和界面显示
         humanPlayer.usedTiles.remove(tile);
-        updateUsedTiles(tile, humanPlayer.getIndex());
+        updateUsedTiles(humanPlayer.getIndex());
     }
 
     @FXML
@@ -316,7 +319,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
+    public void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -430,7 +433,7 @@ public class GameScreenController implements Initializable {
     }
 
 
-    public void updateUsedTiles(MahjongTile tile, int playerIndex) {
+    public void updateUsedTiles(int playerIndex) {
         switch (playerIndex) {
             case 1: // 北玩家
                 //computer1.handTiles.add(tile);
