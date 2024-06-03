@@ -59,6 +59,12 @@ public class GameScreenController implements Initializable {
     private GridPane pairingTilesInWest;
 
     @FXML
+    private Button pass;
+
+    @FXML
+    private ImageView passImage;
+
+    @FXML
     private ImageView chiImage;
 
     @FXML
@@ -69,6 +75,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     private ImageView pengImage;
+
+    @FXML
+    private ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -167,6 +176,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             play.setVisible(false);
+            playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             currentRaisedTile = null;
         }
@@ -273,6 +283,10 @@ public class GameScreenController implements Initializable {
         animation("peng",3);
     }
 
+    @FXML
+    void passButtonAction(ActionEvent event) {
+
+    }
 
     private void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
@@ -323,6 +337,7 @@ public class GameScreenController implements Initializable {
 
                     index=finalRow;
                     play.setVisible(true);
+                    playImage.setVisible(true);
                 } else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
                     playerHandPile.getChildren().remove(tileDisplay);
@@ -330,7 +345,7 @@ public class GameScreenController implements Initializable {
                     currentRaisedTile = null;
                     index=-1;
                     play.setVisible(false);
-
+                    playImage.setVisible(false);
                 }
             });
         }
