@@ -42,6 +42,10 @@ public abstract class User {
             score += 10;
             isPeng = false;
         }
+        if (isHu) {
+            score += 100;
+            isHu = false;
+        }
         return score;
     }
 
