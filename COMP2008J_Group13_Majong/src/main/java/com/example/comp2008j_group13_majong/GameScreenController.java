@@ -80,7 +80,7 @@ public class GameScreenController implements Initializable {
     private GridPane eastHandPile;
 
     @FXML
-    private Button gang;
+    public Button gang;
 
     @FXML
     public Button pass;
@@ -104,7 +104,7 @@ public class GameScreenController implements Initializable {
     private Button play;
 
     @FXML
-    private GridPane playerHandPile;
+    public GridPane playerHandPile;
 
     @FXML
     private Button drawButton;
@@ -200,31 +200,67 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void playBottonAction(ActionEvent event) {
-        if(index!=-1){
+        if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
             if (!huTestAction(event, usedTile, humanPlayer)) {
-                if(!pengTestAction(event, usedTile)){
-                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                if (!gangTestAction(event, usedTile)) {
+                    if (!pengTestAction(event, usedTile)) {
+                        MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                    }
                 }
             }
             play.setVisible(false);
-            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
         }
     }
 
     @FXML
     public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
-        //MahjongTile usedTile = humanPlayer.removeTile(index);
+        if (gang.isVisible()) {
+            peng.setVisible(false);
+            return false;
+        }
+
         for (int i = 0; i < gameRules.computers.size(); i++) {
             Computer computer = gameRules.computers.get(i);
             MahjongTile[] pengzi = computer.ifPeng(usedTile);
             if (pengzi != null) {
+                // 如果是电脑玩家自动碰
                 gameRules.pengAction(this, computer, humanPlayer);
                 return true;
             }
         }
+
+        // 检查真人玩家是否可以碰
+        MahjongTile[] pengzi = humanPlayer.ifPeng(usedTile);
+        if (pengzi != null) {
+            peng.setVisible(true);
+            return true;
+        }
+
+        return false;
+    }
+    @FXML
+    public boolean gangTestAction(ActionEvent event,MahjongTile usedTile){
+        for (int i = 0; i < gameRules.computers.size(); i++) {
+            Computer computer = gameRules.computers.get(i);
+            MahjongTile[] gangzi = computer.ifGang(usedTile);
+            if (gangzi != null) {
+                // 如果是电脑玩家自动杠
+                gameRules.gangAction(this, computer, humanPlayer);
+                return true;
+            }
+        }
+
+        // 检查真人玩家是否可以杠
+        MahjongTile[] gangzi = humanPlayer.ifGang(usedTile);
+        if (gangzi != null) {
+            gang.setVisible(true);
+            return true;
+        }
+
         return false;
     }
 
@@ -266,6 +302,26 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
+    public void gangBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.gangAction(this,humanPlayer,currentUser);
+        gang.setVisible(false);
+//        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+//        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
+//        gameRules.gangAction(this, currentUser, lastUser);
+//        gang.setVisible(false);
+    }
+
+    @FXML
+    void pengBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
+    }
+
+    @FXML
     void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
@@ -294,7 +350,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
 
-    private void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
+    public void updateOnePlayerHand(GridPane pane,ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
         // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(pile);
@@ -306,12 +362,6 @@ public class GameScreenController implements Initializable {
 
     }
 
-    @FXML
-    void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
-    }
 
 
     private void playersTurn(){
@@ -433,7 +483,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void updateInOrderTiles(int playerIndex) {
+    public void updateInOrderTiles( int playerIndex) {
         switch (playerIndex) {
             case 1:
                 loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
@@ -529,28 +579,61 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-        animation();
+        animation("chi",1);
+        animation("peng",0);
+        animation("gang",2);
     }
 
-    public void animation(){
-        // 加载动画特效
-        Image image = new Image(getClass().getResourceAsStream("/images/背景.JPG"));
+    public void animation(String operation, int playerIndex){
+        Image image;
+        if(operation=="chi"){
+            image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
+        }else if(operation=="peng"){
+            image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
+        }else {
+            image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+        }
 
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(100);  // 设置图像宽度
-        imageView.setFitHeight(100); // 设置图像高度
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(300);  // 设置图像宽度
+        imageView.setFitHeight(300); // 设置图像高度
 
         // 创建平移动画
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), imageView);
-        translateTransition.setToX(-150); // 将图像水平向右平移200个像素
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
+
+        if(playerIndex==0){
+            //east
+            imageView.setLayoutX(700);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(-100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==1){
+            //north
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(150);
+            translateTransition.setToY(100); // 将图像水平向右平移200个像素
+
+        }else if(playerIndex==2){
+            //west
+            imageView.setLayoutX(300);
+            imageView.setLayoutY(300);
+            translateTransition.setToX(100); // 将图像水平向右平移200个像素
+
+        }else {
+            //south
+            imageView.setLayoutX(470);
+            imageView.setLayoutY(450);
+            translateTransition.setToY(-100); // 将图像水平向右平移200个像素
+        }
 
         // 开始动画
         translateTransition.play();
 
         // 创建 FadeTransition 来处理图像消失动画
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1.6), imageView);
-        fadeOut.setFromValue(1.0);
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), imageView);
+        fadeOut.setFromValue(2.0);
         fadeOut.setToValue(0.0);
         fadeOut.setCycleCount(1);
 
@@ -559,8 +642,7 @@ public class GameScreenController implements Initializable {
         // 让程序在3秒后结束运行（模拟图像的消失）
         Thread thread = new Thread(() -> {
             try {
-                Thread.sleep(10000);
-                //System.exit(0);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

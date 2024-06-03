@@ -7,6 +7,7 @@ import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
+import javafx.scene.layout.GridPane;
 
 import java.util.*;
 
@@ -71,7 +72,7 @@ public class GameRules {
     public void selectDealer() {
         Random random = new Random();
         //dealerIndex = random.nextInt(4) ; //0-3
-        dealerIndex = 2;
+        dealerIndex = 3;
 
         if (dealerIndex == 3) {
             dealer = humanPlayer;
@@ -112,17 +113,29 @@ public class GameRules {
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.饼) {
-                for (int index = 1; index < 10; index++) {
-                    String value = numberValues[index - 1];
-                    MahjongTile tile = new MahjongTile(suit, value, index);
-                    humanPlayer.handTiles.add(tile);
+//                for (int index = 1; index < 10; index++) {
+//                    String value = numberValues[index - 1];
+//                    MahjongTile tile = new MahjongTile(suit, value, index);
+//                    computer1.handTiles.add(tile);
+//                }
+                for (int index = 1; index < 14; index++) {
+                    //String value = numberValues[index - 1];
+                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.发财);
+                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
+                    computer1.handTiles.add(t1);
                 }
+                humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
             }
         }
         for (int i = 0; i < 14; i++) {
-            computer1.handTiles.add(remainingTiles.remove(0));
+
             computer3.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
+        }
+        for(int i = 0; i < 12; i++){
+            humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
 
     }
@@ -203,12 +216,20 @@ public class GameRules {
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Invalid player index"));
 
-            // 给当前玩家发一张牌
-            MahjongTile tile = remainingTiles.remove(0);
-            currentPlayer.handTiles.add(tile);
 
-            // 打印当前玩家信息和收到的牌
-            System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
+            if (!currentPlayer.justPenged && !currentPlayer.justGangged) {
+                // 给当前玩家发一张牌
+                MahjongTile tile = remainingTiles.remove(0);
+                currentPlayer.handTiles.add(tile);
+
+                // 打印当前玩家信息和收到的牌
+                System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
+            } else {
+                // 重置标志
+                currentPlayer.justPenged = false;
+                currentPlayer.justGangged = false;
+            }
+
             User last = last(currentPlayerIndex);
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
@@ -228,25 +249,36 @@ public class GameRules {
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 next(currentPlayerIndex).ifChi(discardedTile);
-                Boolean humanPeng = false;
-                for(int tempt = 0;tempt < 3; tempt ++){
+                Boolean humanPengOrGang = false;
+                for (int tempt = 0; tempt < 3; tempt++) {
                     int newIndex = (currentPlayerIndex + tempt) % 4;
                     User nextUser = next(newIndex);
-                    if(nextUser.ifPeng(discardedTile) != null){
-                        if(nextUser == humanPlayer){
+                    if (nextUser.ifGang(discardedTile) != null) {
+                        if (nextUser == humanPlayer) {
+                            gameScreenController.gang.setVisible(true);
+                            humanPengOrGang = true;
+                            return;
+                        } else {
+                            gangAction(gameScreenController, nextUser, currentPlayer);
+                            return;
+                        }
+                    }
+                    if (nextUser.ifPeng(discardedTile) != null) {
+                        if (nextUser == humanPlayer) {
                             gameScreenController.peng.setVisible(true);
-                            humanPeng = true;
-                            //currentPlayerIndex = humanPlayer.index;
+                            humanPengOrGang = true;
+                            // currentPlayerIndex = humanPlayer.index;
                             break;
                         }
                     }
                 }
-                if (humanPeng == false){
+                if (!humanPengOrGang) {
                     // 更新currentPlayerIndex，使其在0到3之间循环
                     currentPlayerIndex = (currentPlayerIndex + 1) % 4;
                 }
                 next(currentPlayerIndex).ifPeng(discardedTile);
-            } else {
+                next(currentPlayerIndex).ifGang(discardedTile); // 添加这行代码以确保检查杠的情况
+            }else {
                 if (currentPlayer.isChi){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.chi.setVisible(true);;
@@ -265,6 +297,11 @@ public class GameRules {
     }
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
+        if (currentPlayer.isGang) {
+            gangAction(gameScreenController, currentPlayer, lastPlayer);
+            return;
+        }
+
         if (currentPlayer.isPeng) {
             System.out.println(currentPlayer.getName() + " isPeng is true");
             MahjongTile pengTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
@@ -274,13 +311,25 @@ public class GameRules {
                 System.out.println(currentPlayer.getName() + " has valid tiles for peng: " + Arrays.toString(pengTiles));
                 currentPlayer.peng(pengTile);
                 System.out.println(currentPlayer.getName() + " executed peng with tiles: " + Arrays.toString(pengTiles));
-                currentPlayer.handTiles.remove(pengTiles);
-                //currentPlayer.handTiles.add(pengTile);
-                currentPlayer.inOrderTiles.add(pengTiles);
+                for (MahjongTile tile : pengTiles) {
+                    currentPlayer.handTiles.remove(tile);
+                }
 
-                // 在界面上更新Peng操作后的牌
+                // 添加到顺序牌中
+                currentPlayer.inOrderTiles.add(pengTiles);
+                //currentPlayer.inOrderTiles.add(new MahjongTile[]{pengTile});
+
+                // 更新界面上的顺序牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(pengTile);
+                gameScreenController.updateUsedTiles( lastPlayer.getIndex());
+
+                if (currentPlayer == humanPlayer) {
+                    // 更新真人玩家手牌
+                    gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
+                    currentPlayer.justPenged = true;
+                }
+
                 if(currentPlayer != humanPlayer){
                     //电脑随机出牌
                     int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
@@ -296,6 +345,56 @@ public class GameRules {
             System.out.println(currentPlayer.getName() + " isPeng is false");
         }
     }
+
+    public void gangAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
+        if (currentPlayer.isGang) {
+            System.out.println(currentPlayer.getName() + " isGang is true");
+            MahjongTile gangTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
+            System.out.println(currentPlayer.getName() + " is attempting to gang with tile: " + gangTile);
+            MahjongTile[] gangTiles = currentPlayer.ifGang(gangTile);
+            if (gangTiles != null) {
+                System.out.println(currentPlayer.getName() + " has valid tiles for gang: " + Arrays.toString(gangTiles));
+                currentPlayer.gang(gangTile);
+                System.out.println(currentPlayer.getName() + " executed gang with tiles: " + Arrays.toString(gangTiles));
+
+                for (MahjongTile tile : gangTiles) {
+                    currentPlayer.handTiles.remove(tile);
+                }
+
+                // 添加到顺序牌中
+                currentPlayer.inOrderTiles.add(gangTiles);
+
+                // 更新界面上的顺序牌
+                gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                lastPlayer.usedTiles.remove(gangTile);
+                gameScreenController.updateUsedTiles( lastPlayer.getIndex());
+
+                if (currentPlayer == humanPlayer) {
+                    // 更新真人玩家手牌
+                    gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile, currentPlayer.handTiles);
+                    currentPlayer.justGangged = true;
+
+                    // 更新真人玩家顺序牌
+                    gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                }
+
+                if(currentPlayer != humanPlayer){
+                    //电脑随机出牌
+                    int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
+                    MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
+                    gameScreenController.updateUsedTiles(currentPlayer.getIndex());
+                    gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
+                    currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                }
+            } else {
+                System.out.println(currentPlayer.getName() + " does not have valid tiles for gang");
+            }
+        } else {
+            System.out.println(currentPlayer.getName() + " isGang is false");
+        }
+    }
+
+
 
     public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isHu) {
