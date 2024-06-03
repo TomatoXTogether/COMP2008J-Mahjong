@@ -74,7 +74,7 @@ public class GameScreenController implements Initializable {
     private ImageView huImage;
 
     @FXML
-    private ImageView pengImage;
+    public ImageView pengImage;
 
     @FXML
     private ImageView playImage;
@@ -166,6 +166,7 @@ public class GameScreenController implements Initializable {
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
+        pengImage.setVisible(false);
         animation("peng",3);
     }
 
@@ -370,11 +371,15 @@ public class GameScreenController implements Initializable {
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
-        for (int row = 0; row < usedTiles.size(); row++) {
-            MahjongTile tile = usedTiles.get(row);
-            ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
-            pane.add(tileDisplay, row, 0);
-        }
+
+            for (int row = 0; row < usedTiles.size(); row++) {
+                    MahjongTile tile = usedTiles.get(row);
+                    ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
+                    pane.add(tileDisplay, row, 0);
+
+            }
+
+
     }
 
     public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {

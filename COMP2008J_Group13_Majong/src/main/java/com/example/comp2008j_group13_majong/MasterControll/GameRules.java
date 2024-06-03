@@ -274,6 +274,7 @@ public class GameRules {
                         if(nextUser.ifPeng(discardedTile) != null){
                             if(nextUser == humanPlayer){
                                 gameScreenController.peng.setVisible(true);
+                                gameScreenController.pengImage.setVisible(true);
                                 humanPeng = true;
                                 //currentPlayerIndex = humanPlayer.index;
                                 break;
