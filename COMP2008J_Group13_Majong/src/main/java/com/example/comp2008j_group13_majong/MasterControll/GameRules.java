@@ -251,6 +251,8 @@ public class GameRules {
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.chi.setVisible(true);;
                     gameScreenController.chiImage.setVisible(true);
+                    gameScreenController.pass.setVisible(true);
+                    gameScreenController.passImage.setVisible(true);
                 }
                 // 更新currentPlayerIndex，使其在0到3之间循环
                 currentPlayerIndex = (currentPlayerIndex + 1) % 4;

@@ -83,6 +83,12 @@ public class GameScreenController implements Initializable {
     private Button gang;
 
     @FXML
+    public Button pass;
+
+    @FXML
+    public ImageView passImage;
+
+    @FXML
     private GridPane handPile;
 
     @FXML
@@ -155,6 +161,30 @@ public class GameScreenController implements Initializable {
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             updateUsedTiles(last.index);
             updateInOrderTiles(3) ;
+        }
+    }
+
+    @FXML
+    public void passButtonAction(ActionEvent actionEvent) {
+        if(index!=-1){
+            gameRules.dealerNextRound(this);
+            // 摸牌后重新排序玩家的手牌
+            mahjongDeck.sortHandTiles(humanPlayer.handTiles);
+            mahjongDeck.sortHandTiles(computer1.handTiles);
+            mahjongDeck.sortHandTiles(computer2.handTiles);
+            mahjongDeck.sortHandTiles(computer3.handTiles);
+            playersTurn();
+            updateAllPlayerHands();
+            updateRemainTiles();
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            pass.setVisible(false);
+            passImage.setVisible(false);
+            chi.setVisible(false);
+            chiImage.setVisible(false);
+            peng.setVisible(false);
+            pengImage.setVisible(false);
+            gang.setVisible(false);
+            gangImage.setVisible(false);
         }
     }
 
@@ -541,6 +571,4 @@ public class GameScreenController implements Initializable {
 
 
     }
-
-
 }
