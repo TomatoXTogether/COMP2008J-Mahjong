@@ -168,50 +168,6 @@ public class GameScreenController implements Initializable {
             }
     }
 
-    @FXML
-    void mouseClicked(MouseEvent event) {
-
-    }
-
-    @FXML
-    void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
-        peng.setVisible(false);
-        pengImage.setVisible(false);
-        animation("peng",3);
-    }
-
-    @FXML
-    void passButtonAction(ActionEvent event) {
-            if(index!=-1){
-                gameRules.dealerNextRound(this);
-                // 摸牌后重新排序玩家的手牌
-                mahjongDeck.sortHandTiles(humanPlayer.handTiles);
-                mahjongDeck.sortHandTiles(computer1.handTiles);
-                mahjongDeck.sortHandTiles(computer2.handTiles);
-                mahjongDeck.sortHandTiles(computer3.handTiles);
-                playersTurn();
-                updateAllPlayerHands();
-                updateRemainTiles();
-                updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
-                pass.setVisible(false);
-                passImage.setVisible(false);
-                chi.setVisible(false);
-                chiImage.setVisible(false);
-                peng.setVisible(false);
-                pengImage.setVisible(false);
-                gang.setVisible(false);
-                gangImage.setVisible(false);
-            }
-        }
-
-
-    @FXML
-    void gangBottonAction(ActionEvent event) {
-
-    }
 
     @FXML
     void huBottonAction(ActionEvent event) {
@@ -220,32 +176,67 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void playBottonAction(ActionEvent event) {
-        if(index!=-1){
+        if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
             if (!huTestAction(event, usedTile, humanPlayer)) {
-                if(!pengTestAction(event, usedTile)){
-                    MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                if (!gangTestAction(event, usedTile)) {
+                    if (!pengTestAction(event, usedTile)) {
+                        MahjongTile[][] shunzi = computer2.ifChi(usedTile);
+                    }
                 }
             }
             play.setVisible(false);
-            playImage.setVisible(false);
-            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
         }
     }
 
     @FXML
     public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
-        //MahjongTile usedTile = humanPlayer.removeTile(index);
+        if (gang.isVisible()) {
+            peng.setVisible(false);
+            return false;
+        }
+
         for (int i = 0; i < gameRules.computers.size(); i++) {
             Computer computer = gameRules.computers.get(i);
             MahjongTile[] pengzi = computer.ifPeng(usedTile);
             if (pengzi != null) {
+                // 如果是电脑玩家自动碰
                 gameRules.pengAction(this, computer, humanPlayer);
                 return true;
             }
         }
+
+        // 检查真人玩家是否可以碰
+        MahjongTile[] pengzi = humanPlayer.ifPeng(usedTile);
+        if (pengzi != null) {
+            peng.setVisible(true);
+            return true;
+        }
+
+        return false;
+    }
+    @FXML
+    public boolean gangTestAction(ActionEvent event,MahjongTile usedTile){
+        for (int i = 0; i < gameRules.computers.size(); i++) {
+            Computer computer = gameRules.computers.get(i);
+            MahjongTile[] gangzi = computer.ifGang(usedTile);
+            if (gangzi != null) {
+                // 如果是电脑玩家自动杠
+                gameRules.gangAction(this, computer, humanPlayer);
+                return true;
+            }
+        }
+
+        // 检查真人玩家是否可以杠
+        MahjongTile[] gangzi = humanPlayer.ifGang(usedTile);
+        if (gangzi != null) {
+            gang.setVisible(true);
+            return true;
+        }
+
         return false;
     }
 
@@ -284,6 +275,26 @@ public class GameScreenController implements Initializable {
         // 更新usedTiles列表和界面显示
         humanPlayer.usedTiles.remove(tile);
         updateUsedTiles(humanPlayer.getIndex());
+    }
+
+    @FXML
+    public void gangBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.gangAction(this,humanPlayer,currentUser);
+        gang.setVisible(false);
+//        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+//        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
+//        gameRules.gangAction(this, currentUser, lastUser);
+//        gang.setVisible(false);
+    }
+
+    @FXML
+    void pengBottonAction(ActionEvent event) {
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.pengAction(this,humanPlayer,currentUser);
+        peng.setVisible(false);
     }
 
     @FXML
@@ -384,6 +395,10 @@ public class GameScreenController implements Initializable {
                 }
             });
         }
+    }
+
+    @FXML
+    private void mouseClicked(MouseEvent mouseEvent) {
     }
 
     private void loadTilesFromListsToPaneForComputer(List<MahjongTile> computerTiles, GridPane pane){
