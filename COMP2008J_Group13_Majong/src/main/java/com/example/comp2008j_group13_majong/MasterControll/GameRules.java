@@ -28,6 +28,7 @@ public class GameRules {
     private MahjongTile lastDiscardedTile;
 
     public int dealerIndex;
+    private GameEndChecker gameEndChecker;
 
     public GameRules() {
         deck = new MahjongDeck();
@@ -35,6 +36,7 @@ public class GameRules {
         initializePlayers();
         dealTiles();
         printPlayerHands();
+        this.gameEndChecker = new GameEndChecker(this, scoreCalculator);
     }
 
     private void initializePlayers() {
@@ -125,7 +127,6 @@ public class GameRules {
                     computer1.handTiles.add(t1);
                 }
                 humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
             }
@@ -250,7 +251,6 @@ public class GameRules {
                 gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
-
                 next(currentPlayerIndex).ifChi(discardedTile);
                 Boolean humanPengOrGang = false;
                 for (int tempt = 0; tempt < 3; tempt++) {
@@ -301,8 +301,10 @@ public class GameRules {
 
             // 更新currentPlayerIndex，使其在0到3之间循环
             //currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+            printPlayerHands();
+        } else {
+            gameEndChecker.checkGameEnd();
         }
-        printPlayerHands();
     }
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
@@ -415,6 +417,7 @@ public class GameRules {
 
     public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isHu) {
+            currentPlayerIndex = currentPlayer.index;
             MahjongTile huTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
             ArrayList<MahjongTile> huTiles = currentPlayer.ifHu(huTile);
             if (huTiles != null) {
@@ -425,10 +428,10 @@ public class GameRules {
                 lastPlayer.usedTiles.remove(huTile);
 
                 // 在界面上显示赢家
-                GameEndChecker.checkWin(currentPlayer);
+                gameEndChecker.checkWin(currentPlayer);
 
                 // 结束游戏
-                GameEndChecker.endGame();
+                gameEndChecker.endGame();
             }
         }
     }

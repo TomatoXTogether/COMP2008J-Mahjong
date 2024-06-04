@@ -142,7 +142,7 @@ public class GameScreenController implements Initializable {
 
     public int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules();
+    private GameRules gameRules=new GameRules(scoreCalculator);
     private PlayerAction playerAction = new PlayerAction();
 
     private Player humanPlayer;
@@ -194,6 +194,17 @@ public class GameScreenController implements Initializable {
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
+            boolean moveToNext = true;
+            for (int i = 0; i < gameRules.computers.size(); i++) {
+                Computer computer = gameRules.computers.get(i);
+                if (computer.justHu || computer.justPenged || computer.justChi) {
+                    moveToNext = false;
+                    break;
+                }
+            }
+            if (moveToNext) {
+                GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
+            }
         }
     }
 
@@ -311,7 +322,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound(this);
+        gameRules.dealerNextRound(this, event);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         mahjongDeck.sortHandTiles(computer1.handTiles);
@@ -320,6 +331,7 @@ public class GameScreenController implements Initializable {
         playersTurn();
         updateAllPlayerHands();
         updateRemainTiles();
+        updateScore();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
     }
 
@@ -376,10 +388,14 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+    public void updateScore(){
+        score.setText("Score: "+ humanPlayer.getScore());
+    }
+
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
-            gameRules.dealerNextRound(this);
+            gameRules.dealerNextRound(this, event);
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);

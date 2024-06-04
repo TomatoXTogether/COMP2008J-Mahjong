@@ -27,6 +27,7 @@ public abstract class User {
     public boolean justChi = false;
     public boolean justPenged = false;
     public boolean justGangged = false;
+    public boolean justHu = false;
     public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
@@ -151,7 +152,7 @@ public abstract class User {
 //        return pongzi;
 //    }
 
-    //    public void peng(MahjongTile[] pengTiles) {
+//    public void peng(MahjongTile[] pengTiles) {
 //        for (MahjongTile tile : pengTiles) {
 //            handTiles.remove(tile);
 //        }
@@ -159,7 +160,7 @@ public abstract class User {
 //        isPeng = false;
 //    }
     public MahjongTile[] ifPeng(MahjongTile tile) {
-        //System.out.println("Entering ifPeng method with tile: " + tile);
+        System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
         for(MahjongTile handTile : handTiles){
             if(tile.getValue() != null){
@@ -167,7 +168,7 @@ public abstract class User {
                     matchingTiles.add(handTile);
                 }
             }else{
-                if(tile.getSuit().equals(handTile.getSuit())){
+               if(tile.getSuit().equals(handTile.getSuit())){
                     matchingTiles.add(handTile);
                 }
             }
@@ -201,7 +202,7 @@ public abstract class User {
                 handTiles.remove(matchingTiles.get(0));
                 handTiles.remove(matchingTiles.get(1));
                 inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)});
-                //System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
+                System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
                 isPeng = false;
             } else {
                 System.out.println("Error: Matching tiles are not found in handTiles.");
@@ -334,7 +335,7 @@ public abstract class User {
 
         // 尝试找刻子
         if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-                && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
+         && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
@@ -344,7 +345,7 @@ public abstract class User {
 
         // 尝试找顺子
         if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-                && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
+         && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
