@@ -142,7 +142,7 @@ public class GameScreenController implements Initializable {
 
     public int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules(scoreCalculator);
+    private GameRules gameRules=new GameRules();
     private PlayerAction playerAction = new PlayerAction();
 
     private Player humanPlayer;
@@ -175,7 +175,14 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void huBottonAction(ActionEvent event) {
-
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.huAction(this, humanPlayer, currentUser);
+        hu.setVisible(false);
+        huImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
+        animation("hu",3);
     }
 
     @FXML
