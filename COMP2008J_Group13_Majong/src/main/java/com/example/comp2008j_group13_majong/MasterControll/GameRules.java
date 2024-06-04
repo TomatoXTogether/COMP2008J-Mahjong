@@ -182,6 +182,7 @@ public class GameRules {
                 }
             }
             System.out.println();
+            System.out.println(user.getName() + " 的分数是：" + user.getScore());
         }
     }
 
@@ -325,6 +326,9 @@ public class GameRules {
                 lastPlayer.usedTiles.remove(pengTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
+                // get score
+                currentPlayer.score += 20;
+
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
@@ -369,6 +373,9 @@ public class GameRules {
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(gangTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
+
+                // get score
+                currentPlayer.score += 50;
 
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌

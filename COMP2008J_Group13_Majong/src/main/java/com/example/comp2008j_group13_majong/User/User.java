@@ -106,6 +106,7 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
+            this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
                 handTiles.remove(getTile(shunzi[0][0]));
@@ -154,7 +155,7 @@ public abstract class User {
 //        isPeng = false;
 //    }
     public MahjongTile[] ifPeng(MahjongTile tile) {
-        System.out.println("Entering ifPeng method with tile: " + tile);
+        //System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
         for(MahjongTile handTile : handTiles){
             if(tile.getValue() != null){
@@ -196,7 +197,7 @@ public abstract class User {
                 handTiles.remove(matchingTiles.get(0));
                 handTiles.remove(matchingTiles.get(1));
                 inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)});
-                System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
+                //System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
                 isPeng = false;
             } else {
                 System.out.println("Error: Matching tiles are not found in handTiles.");
