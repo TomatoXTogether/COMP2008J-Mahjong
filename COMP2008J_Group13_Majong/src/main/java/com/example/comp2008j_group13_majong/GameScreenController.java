@@ -203,7 +203,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             if (moveToNext) {
-                GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
+                gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
             }
         }
     }
@@ -277,7 +277,14 @@ public class GameScreenController implements Initializable {
                 if (player != lastPlayer) {
                     ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
                     if (tilesToCheck != null) {
-                        gameRules.huAction(this, player, lastPlayer);
+                        if (player == humanPlayer) {
+                            hu.setVisible(true);
+                            huImage.setVisible(true);
+                            pass.setVisible(true);
+                            passImage.setVisible(true);
+                        } else {
+                            gameRules.huAction(this, player, lastPlayer);
+                        }
                         return true;
                     }
                 }
