@@ -34,7 +34,7 @@ import java.util.ResourceBundle;
 public class GameScreenController implements Initializable {
 
     @FXML
-    private AnchorPane animationPane;
+    private AnchorPane animationPane=new AnchorPane();
 
     @FXML
     private Label east;
@@ -603,8 +603,8 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-        animation("chi",1);
-        animation("peng",0);
+        animation("chi",0);
+        animation("peng",1);
         animation("hu",2);
     }
 
@@ -633,7 +633,7 @@ public class GameScreenController implements Initializable {
 
 
         // 创建平移动画
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.2), imageView);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), imageView);
 
         if(playerIndex==0){
             //east

@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.User;
 
+import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
@@ -106,6 +107,9 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
+            GameScreenController gameScreenController=new GameScreenController();
+            gameScreenController.animation("chi", index);
+            System.out.println("chi");
             this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
