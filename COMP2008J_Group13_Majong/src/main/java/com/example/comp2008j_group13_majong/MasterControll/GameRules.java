@@ -358,6 +358,7 @@ public class GameRules {
     public void gangAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isGang) {
             System.out.println(currentPlayer.getName() + " isGang is true");
+            System.out.println(currentPlayerIndex);
             MahjongTile gangTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
             System.out.println(currentPlayer.getName() + " is attempting to gang with tile: " + gangTile);
             MahjongTile[] gangTiles = currentPlayer.ifGang(gangTile);
