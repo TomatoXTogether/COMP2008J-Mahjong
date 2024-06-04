@@ -25,10 +25,12 @@ public abstract class User {
     public boolean isChi;
     public boolean justChi = false;
     public boolean justPenged = false;
+    public boolean justGangged = false;
     public boolean justHu = false;
     public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
+    public boolean isGang;
 
 
     public int getScore(){
@@ -92,8 +94,8 @@ public abstract class User {
             } else if ((getTileNum(t3) >= 1 && getTileNum(t4) >= 1)) {
                 isChi = true;
                 shunzi[2][0] = tile;
-                shunzi[2][2] = t3;
-                shunzi[2][1] = t4;
+                shunzi[2][1] = t3;
+                shunzi[2][2] = t4;
             }else {
                 isChi = false;
             }
@@ -105,6 +107,7 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
+            this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
                 handTiles.remove(getTile(shunzi[0][0]));
@@ -205,6 +208,62 @@ public abstract class User {
             isPeng = false;
         }
     }
+
+
+    public MahjongTile[] ifGang(MahjongTile tile) {
+        System.out.println("Entering ifGang method with tile: " + tile);
+        List<MahjongTile> matchingTiles = new ArrayList<>();
+        for (MahjongTile handTile : handTiles) {
+            if (tile.getValue() != null) {
+                if (handTile.getValue() != null && tile.getValue().equals(handTile.getValue()) && tile.getSuit().equals(handTile.getSuit())) {
+                    matchingTiles.add(handTile);
+                }
+            } else {
+                if (tile.getSuit().equals(handTile.getSuit())) {
+                    matchingTiles.add(handTile);
+                }
+            }
+        }
+
+        if (matchingTiles.size() >= 3) {
+            System.out.println("Player's hand contains three matching tiles for gang: " + matchingTiles);
+            isGang = true;
+            return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1), matchingTiles.get(2)};
+        } else {
+            System.out.println("Player's hand does not contain matching tiles for gang.");
+            isGang = false;
+        }
+
+        return null;
+    }
+
+    public void gang(MahjongTile tile) {
+        System.out.println("Attempting to execute gang with tile: " + tile);
+
+        List<MahjongTile> matchingTiles = handTiles.stream()
+                .filter(t -> t.equals(tile))
+                .collect(Collectors.toList());
+
+        if (matchingTiles.size() >= 3) {
+            System.out.println("Matching tiles found for gang: " + matchingTiles);
+
+            // 确保要移除的牌在手牌中
+            if (handTiles.contains(matchingTiles.get(0)) && handTiles.contains(matchingTiles.get(1)) && handTiles.contains(matchingTiles.get(2))) {
+                handTiles.remove(matchingTiles.get(0));
+                handTiles.remove(matchingTiles.get(1));
+                handTiles.remove(matchingTiles.get(2));
+                inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1), matchingTiles.get(2)});
+                System.out.println("Gang executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1) + ", " + matchingTiles.get(2));
+                isGang = false;
+            } else {
+                System.out.println("Error: Matching tiles are not found in handTiles.");
+            }
+        } else {
+            System.out.println("Unable to execute gang. Matching tiles not found.");
+            isGang = false;
+        }
+    }
+
 
 
     public MahjongTile[] ifKong(MahjongTile tile){
