@@ -338,9 +338,9 @@ public class GameScreenController implements Initializable {
     }
 
 
-    private void playersTurn(){
+    public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
-
+        System.out.println("GameController playerindex = "+ currentPlayerIndex);
         if(currentPlayerIndex==1){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
@@ -356,7 +356,7 @@ public class GameScreenController implements Initializable {
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else {
+        }else if(currentPlayerIndex==0){
             south.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
@@ -371,7 +371,8 @@ public class GameScreenController implements Initializable {
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
-            gameRules.dealerNextRound(this);
+            //gameRules.dealerNextRound(this);
+            //gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);
