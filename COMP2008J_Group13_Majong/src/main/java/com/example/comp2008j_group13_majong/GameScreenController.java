@@ -186,6 +186,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void playBottonAction(ActionEvent event) {
+        boolean moveToNext = true;
         if(index!=-1){
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -198,6 +199,16 @@ public class GameScreenController implements Initializable {
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
             currentRaisedTile = null;
+            for (int i = 0; i < gameRules.computers.size(); i++) {
+                Computer computer = gameRules.computers.get(i);
+                if (computer.justHu || computer.justPenged || computer.justChi) {
+                    moveToNext = false;
+                    break;
+                }
+            }
+            if (moveToNext) {
+                GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
+            }
         }
     }
 

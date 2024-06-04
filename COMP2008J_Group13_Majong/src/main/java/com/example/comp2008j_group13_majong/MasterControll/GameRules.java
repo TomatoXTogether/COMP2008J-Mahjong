@@ -24,7 +24,7 @@ public class GameRules {
     private List<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
-    public int currentPlayerIndex;
+    public static int currentPlayerIndex;
     private MahjongTile lastDiscardedTile;
 
     public int dealerIndex;
@@ -218,25 +218,13 @@ public class GameRules {
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Invalid player index"));
 
-            // 检查当前玩家是否已经进行了吃、碰或胡牌操作
-            if (!currentPlayer.justChi && !currentPlayer.justPenged) {
-                // 给当前玩家发一张牌
-                MahjongTile tile = remainingTiles.remove(0);
-                currentPlayer.handTiles.add(tile);
+            // 给当前玩家发一张牌
+            MahjongTile tile = remainingTiles.remove(0);
+            currentPlayer.handTiles.add(tile);
 
-                // 打印当前玩家信息和收到的牌
-                System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
-            } else {
-                // 重置标志
-                if (currentPlayer.justChi) {
-                    currentPlayer.justChi = false;
-                }
-                if (currentPlayer.justPenged) {
-                    currentPlayer.justPenged = false;
-                }
-            }
+            // 打印当前玩家信息和收到的牌
+            System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
 
-            User last = last(currentPlayerIndex);
             // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
                 //if (currentPlayer.isChi){
@@ -277,10 +265,12 @@ public class GameRules {
                     next(currentPlayerIndex).ifPeng(discardedTile);
                 }
 
-            } else {
-                // 人类玩家不需要出牌，只更新currentPlayerIndex
-                currentPlayerIndex = (currentPlayerIndex + 1) % 4;
             }
+            //else {
+                // 人类玩家不需要出牌，只更新currentPlayerIndex
+            //    currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+            //}
+
             //else {
             //    if (currentPlayer.isChi){
             //        currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
@@ -299,6 +289,7 @@ public class GameRules {
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isPeng) {
+            currentPlayerIndex = currentPlayer.getIndex();
             System.out.println(currentPlayer.getName() + " isPeng is true");
             MahjongTile pengTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
             System.out.println(currentPlayer.getName() + " is attempting to peng with tile: " + pengTile);
@@ -332,7 +323,7 @@ public class GameRules {
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                     gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
-                    currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    currentPlayerIndex = (currentPlayer.getIndex() + 1) % 4;
                     gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
@@ -345,10 +336,12 @@ public class GameRules {
 
     public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isHu) {
+            currentPlayerIndex = currentPlayer.index;
             MahjongTile huTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
             ArrayList<MahjongTile> huTiles = currentPlayer.ifHu(huTile);
             if (huTiles != null) {
                 currentPlayer.hu(huTile);
+                currentPlayer.justHu = true;
 
                 // 在界面上更新胡操作后的牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());

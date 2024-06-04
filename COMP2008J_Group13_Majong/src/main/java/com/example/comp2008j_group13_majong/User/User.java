@@ -25,6 +25,7 @@ public abstract class User {
     public boolean isChi;
     public boolean justChi = false;
     public boolean justPenged = false;
+    public boolean justHu = false;
     public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
