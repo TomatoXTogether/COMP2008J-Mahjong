@@ -175,7 +175,14 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void huBottonAction(ActionEvent event) {
-
+        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.huAction(this, humanPlayer, currentUser);
+        hu.setVisible(false);
+        huImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
+        animation("hu",3);
     }
 
     @FXML
@@ -203,7 +210,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             if (moveToNext) {
-                //GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
+                gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
             }
         }
     }
@@ -277,7 +284,14 @@ public class GameScreenController implements Initializable {
                 if (player != lastPlayer) {
                     ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
                     if (tilesToCheck != null) {
-                        gameRules.huAction(this, player, lastPlayer);
+                        if (player == humanPlayer) {
+                            hu.setVisible(true);
+                            huImage.setVisible(true);
+                            pass.setVisible(true);
+                            passImage.setVisible(true);
+                        } else {
+                            gameRules.huAction(this, player, lastPlayer);
+                        }
                         return true;
                     }
                 }
