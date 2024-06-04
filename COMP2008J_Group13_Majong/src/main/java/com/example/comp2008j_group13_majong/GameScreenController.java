@@ -27,6 +27,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class GameScreenController implements Initializable {
@@ -446,18 +447,26 @@ public class GameScreenController implements Initializable {
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
-        int col = 0;
-        for (int row = 0; row < usedTiles.size(); row++) {
+        int maxCols = 6;
+        int rowIndex = 0;
+        int colIndex = 0;
 
-            MahjongTile tile = usedTiles.get(row);
+        for (MahjongTile tile : usedTiles) {
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
+            pane.add(tileDisplay, colIndex, rowIndex);
 
-            pane.add(tileDisplay, row  ,0 ); // 将行数除以7决定在第几行
+            colIndex++;
+            if (colIndex >= maxCols) {
+                colIndex = 0;
+                rowIndex++;
+            }
 
+            if(rowIndex > 6) {
+                break;
+            }
         }
-
-
     }
+
 
     public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
         for (int row = 0; row < inOrderTiles.size(); row++) {
@@ -594,11 +603,11 @@ public class GameScreenController implements Initializable {
 
     public void animation(String operation, int playerIndex){
         Image image;
-        if(operation=="chi"){
+        if(Objects.equals(operation, "chi")){
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
-        }else if(operation=="peng"){
+        }else if(Objects.equals(operation, "peng")){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else if(operation=="gang"){
+        }else if(Objects.equals(operation, "gang")){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
         }else {
             image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
@@ -607,7 +616,7 @@ public class GameScreenController implements Initializable {
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        if(operation=="hu"){
+        if(Objects.equals(operation, "hu")){
             imageView.setFitWidth(500);  // 设置图像宽度
             imageView.setFitHeight(500); // 设置图像高度
         }else {
