@@ -313,6 +313,7 @@ public class GameScreenController implements Initializable {
         playersTurn();
         updateAllPlayerHands();
         updateRemainTiles();
+        updateScore();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
     }
 
@@ -367,6 +368,10 @@ public class GameScreenController implements Initializable {
 
     private void updateRemainTiles(){
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
+    }
+
+    public void updateScore(){
+        score.setText("Score: "+ humanPlayer.getScore());
     }
 
     @FXML

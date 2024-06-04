@@ -33,22 +33,6 @@ public abstract class User {
 
 
     public int getScore(){
-        if (isKong){
-            score += 30;
-            isKong = false;
-        }
-        if (isChi){
-            score += 10;
-            isChi = false;
-        }
-        if (isPeng){
-            score += 10;
-            isPeng = false;
-        }
-        if (isHu) {
-            score += 100;
-            isHu = false;
-        }
         return score;
     }
 
