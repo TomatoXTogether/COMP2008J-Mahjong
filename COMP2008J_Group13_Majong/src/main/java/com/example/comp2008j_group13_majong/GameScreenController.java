@@ -1,6 +1,7 @@
 package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
+import com.example.comp2008j_group13_majong.MasterControll.PlayerAction;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
@@ -139,9 +140,10 @@ public class GameScreenController implements Initializable {
 
     private ImageView currentRaisedTile;
 
-    int index;
+    public int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
     private GameRules gameRules=new GameRules();
+    private PlayerAction playerAction = new PlayerAction();
 
     private Player humanPlayer;
     private Computer computer1;
@@ -154,6 +156,7 @@ public class GameScreenController implements Initializable {
     @FXML
     void chiBottonAction(ActionEvent event) {
             if (index != -1) {
+                //playerAction.chi();
                 User last = gameRules.last(humanPlayer.index);
                 MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
                 if (humanPlayer.isChi) {
@@ -188,6 +191,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             play.setVisible(false);
+            playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
         }
@@ -235,6 +239,7 @@ public class GameScreenController implements Initializable {
         MahjongTile[] gangzi = humanPlayer.ifGang(usedTile);
         if (gangzi != null) {
             gang.setVisible(true);
+            gangImage.setVisible(true);
             return true;
         }
 
@@ -289,6 +294,8 @@ public class GameScreenController implements Initializable {
 //        gameRules.gangAction(this, currentUser, lastUser);
 //        gang.setVisible(false);
         gangImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         animation("gang",3);
     }
 
@@ -631,7 +638,7 @@ public class GameScreenController implements Initializable {
 
 
         // 创建平移动画
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.2), imageView);
 
         if(playerIndex==0){
             //east
