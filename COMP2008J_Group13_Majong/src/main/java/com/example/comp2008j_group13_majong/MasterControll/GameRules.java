@@ -237,9 +237,10 @@ public class GameRules {
                 if (currentPlayer.isChi){
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
-                    gameScreenController.animation("chi", currentPlayerIndex);
-                }
 
+                }
+                System.out.println("chi333333333333333333333333333");
+                gameScreenController.animation("chi", currentPlayerIndex);
                 // 电脑从牌堆中随机出一张牌
                 int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
                 MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
