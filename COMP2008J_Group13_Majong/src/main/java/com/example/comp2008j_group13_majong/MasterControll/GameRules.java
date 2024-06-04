@@ -7,7 +7,10 @@ import com.example.comp2008j_group13_majong.User.Player;
 import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
+import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
 
 import java.util.*;
 
@@ -249,6 +252,13 @@ public class GameRules {
                 gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                 gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+
+
+                PauseTransition pause = new PauseTransition(Duration.seconds(2)); // 1 second interval
+                pause.setOnFinished(e -> {
+                    gameScreenController.drawButtonAction(new ActionEvent());
+                });
+                pause.play();
 
                 next(currentPlayerIndex).ifChi(discardedTile);
                 Boolean humanPengOrGang = false;
