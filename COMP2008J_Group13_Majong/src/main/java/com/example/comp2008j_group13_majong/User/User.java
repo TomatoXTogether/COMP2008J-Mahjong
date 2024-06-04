@@ -18,7 +18,6 @@ public abstract class User {
     public int index;
     public int score;
     public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
-    //public ArrayList<MahjongTile[]> inPengTiles;// tiles in peng
     public ArrayList<MahjongTile> handTiles; // tiles in hand
     public ArrayList<MahjongTile> usedTiles;
     public boolean isTurn;
@@ -28,7 +27,6 @@ public abstract class User {
     public boolean justPenged = false;
     public boolean justGangged = false;
     public boolean justHu = false;
-    public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
     public boolean isGang;

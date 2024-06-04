@@ -142,7 +142,7 @@ public class GameScreenController implements Initializable {
 
     public int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules(scoreCalculator);
+    private GameRules gameRules=new GameRules();
     private PlayerAction playerAction = new PlayerAction();
 
     private Player humanPlayer;
@@ -203,7 +203,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             if (moveToNext) {
-                GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
+                //GameRules.currentPlayerIndex = (GameRules.currentPlayerIndex + 1) % 4;
             }
         }
     }
@@ -322,7 +322,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void drawButtonAction(ActionEvent event) {
-        gameRules.dealerNextRound(this, event);
+        gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         mahjongDeck.sortHandTiles(computer1.handTiles);
@@ -395,7 +395,6 @@ public class GameScreenController implements Initializable {
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
-            gameRules.dealerNextRound(this, event);
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);

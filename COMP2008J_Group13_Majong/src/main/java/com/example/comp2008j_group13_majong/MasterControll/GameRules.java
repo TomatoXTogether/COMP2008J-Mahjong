@@ -36,7 +36,6 @@ public class GameRules {
         initializePlayers();
         dealTiles();
         printPlayerHands();
-        this.gameEndChecker = new GameEndChecker(this, scoreCalculator);
     }
 
     private void initializePlayers() {
