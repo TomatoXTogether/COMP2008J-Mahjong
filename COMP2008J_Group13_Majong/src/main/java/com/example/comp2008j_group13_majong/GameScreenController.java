@@ -287,6 +287,8 @@ public class GameScreenController implements Initializable {
 //        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
 //        gameRules.gangAction(this, currentUser, lastUser);
 //        gang.setVisible(false);
+        gangImage.setVisible(false);
+        animation("gang",3);
     }
 
     @FXML
@@ -295,6 +297,8 @@ public class GameScreenController implements Initializable {
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
+        pengImage.setVisible(false);
+        animation("peng",3);
     }
 
     @FXML
@@ -364,6 +368,29 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+    @FXML
+    void passButtonAction(ActionEvent event) {
+        if(index!=-1){
+            gameRules.dealerNextRound(this);
+            // 摸牌后重新排序玩家的手牌
+            mahjongDeck.sortHandTiles(humanPlayer.handTiles);
+            mahjongDeck.sortHandTiles(computer1.handTiles);
+            mahjongDeck.sortHandTiles(computer2.handTiles);
+            mahjongDeck.sortHandTiles(computer3.handTiles);
+            playersTurn();
+            updateAllPlayerHands();
+            updateRemainTiles();
+            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            pass.setVisible(false);
+            passImage.setVisible(false);
+            chi.setVisible(false);
+            chiImage.setVisible(false);
+            peng.setVisible(false);
+            pengImage.setVisible(false);
+            gang.setVisible(false);
+            gangImage.setVisible(false);
+        }
+    }
 
     private void loadTilesFromListsToPaneForHuman (List<MahjongTile> humanTiles) {
         for (int row = 0; row < humanTiles.size(); row++) {
