@@ -239,8 +239,8 @@ public class GameRules {
                 System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
 
                 // 在界面上显示这张牌
-                gameScreenController.updateUsedTiles(discardedTile, currentPlayer.getIndex());
-                gameScreenController.updateUsedTiles(discardedTile, last(currentPlayerIndex).getIndex());
+                gameScreenController.updateUsedTiles(currentPlayer.getIndex());
+                gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
                 //next(currentPlayerIndex).ifChi(discardedTile);
@@ -281,19 +281,8 @@ public class GameRules {
                     }
                     next(currentPlayerIndex).ifPeng(discardedTile);
                     next(currentPlayerIndex).ifGang(discardedTile); // 添加这行代码以确保检查杠的情况
-            } else {
-                if (currentPlayer.isChi){
-                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.chi.setVisible(true);;
-                    gameScreenController.chiImage.setVisible(true);
-                    gameScreenController.pass.setVisible(true);
-                    gameScreenController.passImage.setVisible(true);
                 }
-                // 更新currentPlayerIndex，使其在0到3之间循环
-                currentPlayerIndex = (currentPlayerIndex + 1) % 4;
             }
-
-         }
             //else {
             //    if (currentPlayer.isChi){
             //        currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
