@@ -28,6 +28,7 @@ public class GameRules {
     private MahjongTile lastDiscardedTile;
 
     public int dealerIndex;
+    private GameEndChecker gameEndChecker;
 
     public GameRules() {
         deck = new MahjongDeck();
@@ -35,6 +36,7 @@ public class GameRules {
         initializePlayers();
         dealTiles();
         printPlayerHands();
+        this.gameEndChecker = new GameEndChecker(this, scoreCalculator);
     }
 
     private void initializePlayers() {
@@ -103,11 +105,11 @@ public class GameRules {
 
         // 给每个玩家发放14张随机的牌
         /** for (int i = 0; i < 14; i++) {
-            humanPlayer.handTiles.add(remainingTiles.remove(0));
-            computer1.handTiles.add(remainingTiles.remove(0));
-            computer2.handTiles.add(remainingTiles.remove(0));
-            computer3.handTiles.add(remainingTiles.remove(0));
-        }**/
+         humanPlayer.handTiles.add(remainingTiles.remove(0));
+         computer1.handTiles.add(remainingTiles.remove(0));
+         computer2.handTiles.add(remainingTiles.remove(0));
+         computer3.handTiles.add(remainingTiles.remove(0));
+         }**/
 
         // test
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
@@ -135,7 +137,7 @@ public class GameRules {
             computer3.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
         }
-        for(int i = 0; i < 9; i++){
+        for(int i = 0; i < 12; i++){
             humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
 
@@ -182,6 +184,7 @@ public class GameRules {
                 }
             }
             System.out.println();
+            System.out.println(user.getName() + " 的分数是：" + user.getScore());
         }
     }
 
@@ -285,12 +288,6 @@ public class GameRules {
                         }
                     }
                 }
-//                if(currentPlayer.isPeng){
-//                    gameScreenController.peng.setVisible(true);;
-//                    gameScreenController.pengImage.setVisible(true);
-//                    gameScreenController.pass.setVisible(true);
-//                    gameScreenController.passImage.setVisible(true);
-//                }
                 if (!humanPengOrGang) {
                     // 更新currentPlayerIndex，使其在0到3之间循环
                     currentPlayerIndex = (currentPlayerIndex + 1) % 4;
@@ -308,16 +305,21 @@ public class GameRules {
                 // 更新currentPlayerIndex，使其在0到3之间循环
                 currentPlayerIndex = (currentPlayerIndex + 1) % 4;
             }
-        }
-        printPlayerHands();
-    }
 
+            // 更新currentPlayerIndex，使其在0到3之间循环
+            //currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+            printPlayerHands();
+        } else {
+            gameEndChecker.checkGameEnd();
+        }
+    }
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isGang) {
             gangAction(gameScreenController, currentPlayer, lastPlayer);
             return;
         }
+
         if (currentPlayer.isPeng) {
             System.out.println(currentPlayer.getName() + " isPeng is true");
             System.out.println(currentPlayerIndex);
@@ -346,6 +348,9 @@ public class GameRules {
                 lastPlayer.usedTiles.remove(pengTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
+                // get score
+                currentPlayer.score += 20;
+
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
@@ -359,6 +364,7 @@ public class GameRules {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
@@ -394,6 +400,9 @@ public class GameRules {
                 lastPlayer.usedTiles.remove(gangTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
+                // get score
+                currentPlayer.score += 50;
+
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile, currentPlayer.handTiles);
@@ -410,6 +419,7 @@ public class GameRules {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    gameScreenController.animation("gang", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for gang");
@@ -418,7 +428,6 @@ public class GameRules {
             System.out.println(currentPlayer.getName() + " isGang is false");
         }
     }
-
 
 
 
@@ -434,10 +443,10 @@ public class GameRules {
                 lastPlayer.usedTiles.remove(huTile);
 
                 // 在界面上显示赢家
-                GameEndChecker.checkWin(currentPlayer);
+                gameEndChecker.checkWin(currentPlayer);
 
                 // 结束游戏
-                GameEndChecker.endGame();
+                gameEndChecker.endGame();
             }
         }
     }
@@ -463,25 +472,25 @@ public class GameRules {
     }
 
     public User next(int currentIndex){
-       User next = null;
-       for (User user : players){
-           if (user.getIndex() == (currentIndex + 1 ) % 4){
-               next = user;
-           }
-       }
-       return next;
+        User next = null;
+        for (User user : players){
+            if (user.getIndex() == (currentIndex + 1 ) % 4){
+                next = user;
+            }
+        }
+        return next;
     }
 
     public User last(int currentIndex) {
-            User last = null;
-            for (User user : players){
-                if (user.getIndex() == (currentIndex + 3) % 4){
-                    last = user;
-                }
+        User last = null;
+        for (User user : players){
+            if (user.getIndex() == (currentIndex + 3) % 4){
+                last = user;
             }
-            return last;
         }
-     public User current(int currentIndex){
+        return last;
+    }
+    public User current(int currentIndex){
         User current = null;
         for (User user : players){
             if (user.getIndex() == currentIndex){
@@ -489,5 +498,5 @@ public class GameRules {
             }
         }
         return current;
-     }
+    }
 }

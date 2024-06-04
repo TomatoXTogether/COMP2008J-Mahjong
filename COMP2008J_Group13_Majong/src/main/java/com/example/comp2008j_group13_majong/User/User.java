@@ -107,6 +107,10 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
+            GameScreenController gameScreenController=new GameScreenController();
+            gameScreenController.animation("chi", index);
+            System.out.println("chi");
+            this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
                 handTiles.remove(getTile(shunzi[0][0]));
@@ -181,38 +185,7 @@ public abstract class User {
 
         return null;
     }
-    /*public MahjongTile[] ifPeng(MahjongTile tile, List<User> players, int currentPlayerIndex) {
-        System.out.println("Entering ifPeng method with tile: " + tile);
-        for (int tempt = 1; tempt <= 3; tempt++) {
-            int newIndex = (currentPlayerIndex + tempt) % 4;
-            User nextUser = players.get(newIndex);
-            List<MahjongTile> matchingTiles = new ArrayList<>();
 
-            for (MahjongTile handTile : nextUser.handTiles) {
-                if (tile.getValue() != null) {
-                    if (handTile.getValue() != null && tile.getValue().equals(handTile.getValue()) && tile.getSuit().equals(handTile.getSuit())) {
-                        matchingTiles.add(handTile);
-                    }
-                } else {
-                    if (tile.getSuit().equals(handTile.getSuit())) {
-                        matchingTiles.add(handTile);
-                    }
-                }
-            }
-
-            if (matchingTiles.size() >= 2) {
-                System.out.println("Player " + nextUser.getName() + " can peng with tiles: " + matchingTiles);
-                nextUser.isPeng = true;
-                return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)};
-            } else {
-                System.out.println("Player " + nextUser.getName() + " cannot peng.");
-                nextUser.isPeng = false;
-            }
-        }
-
-
-        return null;
-    }*/
     public void peng(MahjongTile tile) {
         System.out.println("Attempting to execute peng with tile: " + tile);
 
@@ -361,7 +334,7 @@ public abstract class User {
 
         // 尝试找刻子
         if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-                && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
+         && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
@@ -371,7 +344,7 @@ public abstract class User {
 
         // 尝试找顺子
         if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-                && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
+         && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
