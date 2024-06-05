@@ -162,9 +162,12 @@ public class GameScreenController implements Initializable {
                 animation("chi",3);
                 chi.setVisible(false);
                 chiImage.setVisible(false);
+                pass.setVisible(false);
+                passImage.setVisible(false);
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
+                gameRules.dealerNextRound(this);
             }
     }
 
@@ -192,6 +195,7 @@ public class GameScreenController implements Initializable {
                 }
             }
             play.setVisible(false);
+            playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
         }
@@ -201,6 +205,7 @@ public class GameScreenController implements Initializable {
     public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
         if (gang.isVisible()) {
             peng.setVisible(false);
+            pengImage.setVisible(false);
             return false;
         }
 
@@ -218,6 +223,7 @@ public class GameScreenController implements Initializable {
         MahjongTile[] pengzi = humanPlayer.ifPeng(usedTile);
         if (pengzi != null) {
             peng.setVisible(true);
+            pengImage.setVisible(true);
             return true;
         }
 
@@ -239,6 +245,7 @@ public class GameScreenController implements Initializable {
         MahjongTile[] gangzi = humanPlayer.ifGang(usedTile);
         if (gangzi != null) {
             gang.setVisible(true);
+            gangImage.setVisible(true);
             return true;
         }
 
@@ -293,6 +300,8 @@ public class GameScreenController implements Initializable {
 //        gameRules.gangAction(this, currentUser, lastUser);
 //        gang.setVisible(false);
         gangImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         animation("gang",3);
     }
 
@@ -303,11 +312,13 @@ public class GameScreenController implements Initializable {
         gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
         pengImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         animation("peng",3);
     }
 
     @FXML
-    void drawButtonAction(ActionEvent event) {
+    public void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
