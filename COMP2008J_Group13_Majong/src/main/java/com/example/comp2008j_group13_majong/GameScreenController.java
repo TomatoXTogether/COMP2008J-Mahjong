@@ -1,7 +1,6 @@
 package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
-import com.example.comp2008j_group13_majong.MasterControll.PlayerAction;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
@@ -22,20 +21,18 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScreenController implements Initializable {
 
     @FXML
-    private AnchorPane animationPane=new AnchorPane();
+    private AnchorPane animationPane;
 
     @FXML
     private Label east;
@@ -80,7 +77,7 @@ public class GameScreenController implements Initializable {
     public ImageView pengImage;
 
     @FXML
-    public ImageView playImage;
+    private ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -107,7 +104,7 @@ public class GameScreenController implements Initializable {
     public Button peng;
 
     @FXML
-    public Button play;
+    private Button play;
 
     @FXML
     public GridPane playerHandPile;
@@ -141,10 +138,9 @@ public class GameScreenController implements Initializable {
 
     private ImageView currentRaisedTile;
 
-    public int index;
+    int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
     private GameRules gameRules=new GameRules();
-    private PlayerAction playerAction = new PlayerAction();
 
     private Player humanPlayer;
     private Computer computer1;
@@ -157,7 +153,6 @@ public class GameScreenController implements Initializable {
     @FXML
     void chiBottonAction(ActionEvent event) {
             if (index != -1) {
-                //playerAction.chi();
                 User last = gameRules.last(humanPlayer.index);
                 MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
                 if (humanPlayer.isChi) {
@@ -167,9 +162,12 @@ public class GameScreenController implements Initializable {
                 animation("chi",3);
                 chi.setVisible(false);
                 chiImage.setVisible(false);
+                pass.setVisible(false);
+                passImage.setVisible(false);
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
+                gameRules.dealerNextRound(this);
             }
     }
 
@@ -181,8 +179,6 @@ public class GameScreenController implements Initializable {
         gameRules.huAction(this, humanPlayer, currentUser);
         hu.setVisible(false);
         huImage.setVisible(false);
-        pass.setVisible(false);
-        passImage.setVisible(false);
         animation("hu",3);
     }
 
@@ -202,12 +198,6 @@ public class GameScreenController implements Initializable {
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
-            for (int i = 0; i < gameRules.computers.size(); i++) {
-                Computer computer = gameRules.computers.get(i);
-                if (computer.justHu || computer.justPenged || computer.justChi) {
-                    break;
-                }
-            }
         }
     }
 
@@ -215,6 +205,7 @@ public class GameScreenController implements Initializable {
     public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
         if (gang.isVisible()) {
             peng.setVisible(false);
+            pengImage.setVisible(false);
             return false;
         }
 
@@ -232,6 +223,7 @@ public class GameScreenController implements Initializable {
         MahjongTile[] pengzi = humanPlayer.ifPeng(usedTile);
         if (pengzi != null) {
             peng.setVisible(true);
+            pengImage.setVisible(true);
             return true;
         }
 
@@ -280,14 +272,7 @@ public class GameScreenController implements Initializable {
                 if (player != lastPlayer) {
                     ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
                     if (tilesToCheck != null) {
-                        if (player == humanPlayer) {
-                            hu.setVisible(true);
-                            huImage.setVisible(true);
-                            pass.setVisible(true);
-                            passImage.setVisible(true);
-                        } else {
-                            gameRules.huAction(this, player, lastPlayer);
-                        }
+                        gameRules.huAction(this, player, lastPlayer);
                         return true;
                     }
                 }
@@ -324,14 +309,16 @@ public class GameScreenController implements Initializable {
     void pengBottonAction(ActionEvent event) {
         User currentUser = gameRules.current(gameRules.currentPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        //gameRules.pengAction(this,humanPlayer,currentUser);
+        gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
         pengImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         animation("peng",3);
     }
 
     @FXML
-    void drawButtonAction(ActionEvent event) {
+    public void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
         // 摸牌后重新排序玩家的手牌
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
@@ -341,9 +328,7 @@ public class GameScreenController implements Initializable {
         playersTurn();
         updateAllPlayerHands();
         updateRemainTiles();
-        updateScore();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
-        gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
     }
 
     private void updateAllPlayerHands() {
@@ -371,22 +356,23 @@ public class GameScreenController implements Initializable {
 
     public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
-        if(currentPlayerIndex==0){
+        System.out.println("GameController playerindex = "+ currentPlayerIndex);
+        if(currentPlayerIndex==1){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==1){
+        }else if(currentPlayerIndex==2){
             north.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==2){
+        }else if(currentPlayerIndex==3){
             west.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else {
+        }else if(currentPlayerIndex==0){
             south.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
@@ -398,13 +384,11 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
-    public void updateScore(){
-        score.setText("Score: "+ humanPlayer.getScore());
-    }
-
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
+            //gameRules.dealerNextRound(this);
+            gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);
@@ -433,18 +417,19 @@ public class GameScreenController implements Initializable {
 
             playerHandPile.add(tileDisplay, row, 1);
             int finalRow = row;
+
+
             tileDisplay.setOnMouseClicked(event -> {
                 if (currentRaisedTile == null) {
                     // 没有当前上升的牌
                     playerHandPile.getChildren().remove(tileDisplay);
                     playerHandPile.add(tileDisplay, finalRow, 0);
-                    System.out.println(finalRow);
                     currentRaisedTile = tileDisplay;
-
                     index=finalRow;
                     play.setVisible(true);
                     playImage.setVisible(true);
-                } else if (currentRaisedTile == tileDisplay) {
+                }
+                else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
                     playerHandPile.getChildren().remove(tileDisplay);
                     playerHandPile.add(tileDisplay, finalRow, 1);
@@ -479,26 +464,18 @@ public class GameScreenController implements Initializable {
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
-        int maxCols = 6;
-        int rowIndex = 0;
-        int colIndex = 0;
+        int col = 0;
+        for (int row = 0; row < usedTiles.size(); row++) {
 
-        for (MahjongTile tile : usedTiles) {
+            MahjongTile tile = usedTiles.get(row);
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
-            pane.add(tileDisplay, colIndex, rowIndex);
 
-            colIndex++;
-            if (colIndex >= maxCols) {
-                colIndex = 0;
-                rowIndex++;
-            }
+            pane.add(tileDisplay, row  ,0 ); // 将行数除以7决定在第几行
 
-            if(rowIndex > 6) {
-                break;
-            }
         }
-    }
 
+
+    }
 
     public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
         for (int row = 0; row < inOrderTiles.size(); row++) {
@@ -628,18 +605,18 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-        animation("chi",0);
-        animation("peng",1);
+        animation("chi",1);
+        animation("peng",0);
         animation("hu",2);
     }
 
     public void animation(String operation, int playerIndex){
         Image image;
-        if(Objects.equals(operation, "chi")){
+        if(operation=="chi"){
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
-        }else if(Objects.equals(operation, "peng")){
+        }else if(operation=="peng"){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else if(Objects.equals(operation, "gang")){
+        }else if(operation=="gang"){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
         }else {
             image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
@@ -648,7 +625,7 @@ public class GameScreenController implements Initializable {
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        if(Objects.equals(operation, "hu")){
+        if(operation=="hu"){
             imageView.setFitWidth(500);  // 设置图像宽度
             imageView.setFitHeight(500); // 设置图像高度
         }else {
@@ -658,7 +635,7 @@ public class GameScreenController implements Initializable {
 
 
         // 创建平移动画
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), imageView);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
 
         if(playerIndex==0){
             //east
@@ -706,7 +683,7 @@ public class GameScreenController implements Initializable {
         });
         thread.start();
 
-        animationPane.getChildren().add(imageView);
+        //animationPane.getChildren().add(imageView);
 
 
     }
