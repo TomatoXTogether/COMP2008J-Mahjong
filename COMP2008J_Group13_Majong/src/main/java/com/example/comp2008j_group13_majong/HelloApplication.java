@@ -25,6 +25,7 @@ public class HelloApplication extends Application {
         BeginScreenController controller = loader.getController();
         Stage newStage = new Stage();
         newStage.setScene(new Scene(root));
+        newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
         newStage.show();
     }
 

@@ -133,8 +133,6 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
-            GameScreenController gameScreenController=new GameScreenController();
-            gameScreenController.animation("chi", index);
             System.out.println("chi");
             this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);

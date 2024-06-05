@@ -273,8 +273,10 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
+                    gameScreenController.animation("gang", currentPlayerIndex);
                 } else if (currentPlayer.isPeng) {
                     pengAction(gameScreenController, currentPlayer, lastPlayer);
+                    gameScreenController.animation("peng", currentPlayerIndex);
                 } else if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);

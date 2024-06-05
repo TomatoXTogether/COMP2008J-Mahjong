@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -641,11 +642,11 @@ public class GameScreenController implements Initializable {
 
     public void animation(String operation, int playerIndex){
         Image image;
-        if(operation=="chi"){
+        if(Objects.equals(operation, "chi")){
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
-        }else if(operation=="peng"){
+        }else if(Objects.equals(operation, "peng")){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else if(operation=="gang"){
+        }else if(Objects.equals(operation, "gang")){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
         }else {
             image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
@@ -654,7 +655,7 @@ public class GameScreenController implements Initializable {
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        if(operation=="hu"){
+        if(Objects.equals(operation, "hu")){
             imageView.setFitWidth(500);  // 设置图像宽度
             imageView.setFitHeight(500); // 设置图像高度
         }else {
@@ -712,7 +713,7 @@ public class GameScreenController implements Initializable {
         });
         thread.start();
 
-        //animationPane.getChildren().add(imageView);
+        animationPane.getChildren().add(imageView);
 
 
     }

@@ -3,37 +3,57 @@ package com.example.comp2008j_group13_majong;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class BeginScreenController implements Initializable {
+public class EndScreenController {
 
     @FXML
     private Button exit;
 
     @FXML
+    private Text firstPlayerName;
+
+    @FXML
+    private Text firstPlayerScore;
+
+    @FXML
+    private Text fourthPlayerName;
+
+    @FXML
+    private Text fourthPlayerScore;
+
+    @FXML
+    private Text humanLose;
+
+    @FXML
+    private Text humanWin;
+
+    @FXML
     private Button newGame;
 
-    Media pick = new Media(new File("src/main/resources/music/bgm.mp3").toURI().toString());
+    @FXML
+    private Text secondPlayerName;
 
-    public MediaPlayer player=new MediaPlayer(pick);
+    @FXML
+    private Text secondPlayerScore;
+
+    @FXML
+    private Text thirdPlayerName;
+
+    @FXML
+    private Text thirdPlayerScore;
 
     @FXML
     void exitBottonAction(ActionEvent event) {
         Stage currentStage = (Stage) exit.getScene().getWindow();
-        player.pause();
+        //player.pause();
         currentStage.close();
-
     }
 
     @FXML
@@ -49,12 +69,7 @@ public class BeginScreenController implements Initializable {
         newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
         newStage.show();
 
-        player.pause();
+        //player.pause();
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        player.play();
-    }
 }
