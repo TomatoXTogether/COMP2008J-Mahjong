@@ -71,13 +71,13 @@ public class GameScreenController implements Initializable {
     public ImageView gangImage;
 
     @FXML
-    private ImageView huImage;
+    public ImageView huImage;
 
     @FXML
     public ImageView pengImage;
 
     @FXML
-    private ImageView playImage;
+    public ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -95,7 +95,7 @@ public class GameScreenController implements Initializable {
     private GridPane handPile;
 
     @FXML
-    private Button hu;
+    public Button hu;
 
     @FXML
     private GridPane northHandPile;
@@ -104,7 +104,7 @@ public class GameScreenController implements Initializable {
     public Button peng;
 
     @FXML
-    private Button play;
+    public Button play;
 
     @FXML
     public GridPane playerHandPile;
@@ -174,11 +174,12 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void huBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.huAction(this, humanPlayer, currentUser);
+        User last = gameRules.lastPlayer;
+        //gameRules.currentPlayerIndex = humanPlayer.index;
+        huAction(this, humanPlayer, last);
         hu.setVisible(false);
         huImage.setVisible(false);
+        updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
     }
 
@@ -187,13 +188,13 @@ public class GameScreenController implements Initializable {
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
-            if (!huTestAction(event, usedTile, humanPlayer)) {
-                if (!gangTestAction(event, usedTile)) {
-                    if (!pengTestAction(event, usedTile)) {
-                        MahjongTile[][] shunzi = computer2.ifChi(usedTile);
-                    }
-                }
+            for (int i = 0; i < gameRules.computers.size(); i++) {
+                Computer computer = gameRules.computers.get(i);
+                computer.ifHu(usedTile);
+                computer.ifGang(usedTile);
+                computer.ifPeng(usedTile);
             }
+            computer2.ifChi(usedTile);
             play.setVisible(false);
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
@@ -252,13 +253,33 @@ public class GameScreenController implements Initializable {
         return false;
     }
 
+    public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
+        MahjongTile huTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
+        ArrayList<MahjongTile> huTiles = currentPlayer.ifHu(huTile);
+        if (huTiles != null) {
+            currentPlayer.hu(huTile);
+
+            // 在界面上更新胡操作后的牌
+            updateInOrderTiles(currentPlayer.getIndex());
+            lastPlayer.usedTiles.remove(huTile);
+            updateUsedTiles(lastPlayer.getIndex());
+
+            // 在界面上显示赢家
+            //GameEndChecker.checkWin(currentPlayer);
+
+            // 结束游戏
+            //GameEndChecker.endGame();
+        }
+    }
+
+
     public boolean huTestAction(ActionEvent event, MahjongTile usedTile, User lastPlayer) {
         if (lastPlayer instanceof Player) {
             for (int i = 0; i < gameRules.computers.size(); i++) {
                 Computer computer = gameRules.computers.get(i);
                 ArrayList<MahjongTile> tilesToCheck = computer.ifHu(usedTile);
                 if (tilesToCheck != null) {
-                    gameRules.huAction(this, computer, lastPlayer);
+                    huAction(this, computer, lastPlayer);
                     return true;
                 }
             }
@@ -272,7 +293,7 @@ public class GameScreenController implements Initializable {
                 if (player != lastPlayer) {
                     ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
                     if (tilesToCheck != null) {
-                        gameRules.huAction(this, player, lastPlayer);
+                        huAction(this, player, lastPlayer);
                         return true;
                     }
                 }

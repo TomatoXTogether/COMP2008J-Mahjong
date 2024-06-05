@@ -24,11 +24,8 @@ public abstract class User {
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
-    public boolean justChi = false;
     public boolean justPenged = false;
     public boolean justGangged = false;
-    public boolean justHu = false;
-    public boolean isPong;
     public boolean isHu;
     public boolean isPeng;
     public boolean isGang;
