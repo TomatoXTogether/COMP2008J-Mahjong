@@ -21,13 +21,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScreenController implements Initializable {
 
@@ -417,18 +417,19 @@ public class GameScreenController implements Initializable {
 
             playerHandPile.add(tileDisplay, row, 1);
             int finalRow = row;
+
+
             tileDisplay.setOnMouseClicked(event -> {
                 if (currentRaisedTile == null) {
                     // 没有当前上升的牌
                     playerHandPile.getChildren().remove(tileDisplay);
                     playerHandPile.add(tileDisplay, finalRow, 0);
-                    System.out.println(finalRow);
                     currentRaisedTile = tileDisplay;
-
                     index=finalRow;
                     play.setVisible(true);
                     playImage.setVisible(true);
-                } else if (currentRaisedTile == tileDisplay) {
+                }
+                else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
                     playerHandPile.getChildren().remove(tileDisplay);
                     playerHandPile.add(tileDisplay, finalRow, 1);

@@ -254,11 +254,11 @@ public class GameRules {
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
 
 
-                PauseTransition pause = new PauseTransition(Duration.seconds(2)); // 1 second interval
-                pause.setOnFinished(e -> {
-                    gameScreenController.drawButtonAction(new ActionEvent());
-                });
-                pause.play();
+//                PauseTransition pause = new PauseTransition(Duration.seconds(2)); // 1 second interval
+//                pause.setOnFinished(e -> {
+//                    gameScreenController.drawButtonAction(new ActionEvent());
+//                });
+//                pause.play();
 
                 next(currentPlayerIndex).ifChi(discardedTile);
                 Boolean humanPengOrGang = false;
