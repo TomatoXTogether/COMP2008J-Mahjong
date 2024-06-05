@@ -71,13 +71,13 @@ public class GameScreenController implements Initializable {
     public ImageView gangImage;
 
     @FXML
-    private ImageView huImage;
+    public ImageView huImage;
 
     @FXML
     public ImageView pengImage;
 
     @FXML
-    private ImageView playImage;
+    public ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -95,7 +95,7 @@ public class GameScreenController implements Initializable {
     private GridPane handPile;
 
     @FXML
-    private Button hu;
+    public Button hu;
 
     @FXML
     private GridPane northHandPile;
@@ -104,7 +104,7 @@ public class GameScreenController implements Initializable {
     public Button peng;
 
     @FXML
-    private Button play;
+    public Button play;
 
     @FXML
     public GridPane playerHandPile;
@@ -174,11 +174,12 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void huBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-        gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.huAction(this, humanPlayer, currentUser);
+        User last = gameRules.lastPlayer;
+        //gameRules.currentPlayerIndex = humanPlayer.index;
+        huAction(this, humanPlayer, last);
         hu.setVisible(false);
         huImage.setVisible(false);
+        updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
     }
 
@@ -187,13 +188,13 @@ public class GameScreenController implements Initializable {
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
-            if (!huTestAction(event, usedTile, humanPlayer)) {
-                if (!gangTestAction(event, usedTile)) {
-                    if (!pengTestAction(event, usedTile)) {
-                        MahjongTile[][] shunzi = computer2.ifChi(usedTile);
-                    }
-                }
+            for (int i = 0; i < gameRules.computers.size(); i++) {
+                Computer computer = gameRules.computers.get(i);
+                computer.ifHu(usedTile);
+                computer.ifGang(usedTile);
+                computer.ifPeng(usedTile);
             }
+            computer2.ifChi(usedTile);
             play.setVisible(false);
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
@@ -252,13 +253,33 @@ public class GameScreenController implements Initializable {
         return false;
     }
 
+    public void huAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
+        MahjongTile huTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
+        ArrayList<MahjongTile> huTiles = currentPlayer.ifHu(huTile);
+        if (huTiles != null) {
+            currentPlayer.hu(huTile);
+
+            // 在界面上更新胡操作后的牌
+            updateInOrderTiles(currentPlayer.getIndex());
+            lastPlayer.usedTiles.remove(huTile);
+            updateUsedTiles(lastPlayer.getIndex());
+
+            // 在界面上显示赢家
+            //GameEndChecker.checkWin(currentPlayer);
+
+            // 结束游戏
+            //GameEndChecker.endGame();
+        }
+    }
+
+
     public boolean huTestAction(ActionEvent event, MahjongTile usedTile, User lastPlayer) {
         if (lastPlayer instanceof Player) {
             for (int i = 0; i < gameRules.computers.size(); i++) {
                 Computer computer = gameRules.computers.get(i);
                 ArrayList<MahjongTile> tilesToCheck = computer.ifHu(usedTile);
                 if (tilesToCheck != null) {
-                    gameRules.huAction(this, computer, lastPlayer);
+                    huAction(this, computer, lastPlayer);
                     return true;
                 }
             }
@@ -272,7 +293,7 @@ public class GameScreenController implements Initializable {
                 if (player != lastPlayer) {
                     ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
                     if (tilesToCheck != null) {
-                        gameRules.huAction(this, player, lastPlayer);
+                        huAction(this, player, lastPlayer);
                         return true;
                     }
                 }
@@ -291,9 +312,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public void gangBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.gangAction(this,humanPlayer,currentUser);
+        gameRules.gangAction(this,humanPlayer,lastUser);
         gang.setVisible(false);
 //        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
 //        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
@@ -307,9 +328,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
+        gameRules.pengAction(this,humanPlayer,lastUser);
         peng.setVisible(false);
         pengImage.setVisible(false);
         pass.setVisible(false);
@@ -357,22 +378,22 @@ public class GameScreenController implements Initializable {
     public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
         System.out.println("GameController playerindex = "+ currentPlayerIndex);
-        if(currentPlayerIndex==1){
+        if(currentPlayerIndex==0){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==2){
+        }else if(currentPlayerIndex==1){
             north.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==3){
+        }else if(currentPlayerIndex==2){
             west.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==0){
+        }else if(currentPlayerIndex==3){
             south.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
@@ -388,7 +409,7 @@ public class GameScreenController implements Initializable {
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
             //gameRules.dealerNextRound(this);
-            gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
+            gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);
@@ -406,6 +427,7 @@ public class GameScreenController implements Initializable {
             pengImage.setVisible(false);
             gang.setVisible(false);
             gangImage.setVisible(false);
+            humanPlayer.notifyPass();
         }
     }
 
@@ -686,6 +708,39 @@ public class GameScreenController implements Initializable {
         //animationPane.getChildren().add(imageView);
 
 
+    }
+
+    public void showActionButtons(boolean canPeng, boolean canGang) {
+        peng.setVisible(canPeng);
+        gang.setVisible(canGang);
+        pass.setVisible(true);
+    }
+
+    public void hideActionButtons() {
+        peng.setVisible(false);
+        gang.setVisible(false);
+        pass.setVisible(false);
+    }
+
+    public void onPengButtonClicked() {
+        // 调用玩家的pengAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.pengAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onGangButtonClicked() {
+        // 调用玩家的gangAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.gangAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onPassButtonClicked() {
+        // 不进行任何操作，继续游戏
+        hideActionButtons();
+        // 更新顺序为下一玩家
+        gameRules.dealerNextRound(this);
     }
 
 

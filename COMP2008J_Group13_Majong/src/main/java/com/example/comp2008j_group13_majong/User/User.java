@@ -18,18 +18,19 @@ public abstract class User {
     public int index;
     public int score;
     public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
+    //public ArrayList<MahjongTile[]> inPengTiles;// tiles in peng
     public ArrayList<MahjongTile> handTiles; // tiles in hand
     public ArrayList<MahjongTile> usedTiles;
     public boolean isTurn;
     public boolean isKong;
     public boolean isChi;
-    public boolean justChi = false;
     public boolean justPenged = false;
     public boolean justGangged = false;
-    public boolean justHu = false;
     public boolean isHu;
     public boolean isPeng;
     public boolean isGang;
+
+    private List<PlayerActionObserver> observers = new ArrayList<>();
 
 
     public int getScore(){
@@ -50,6 +51,32 @@ public abstract class User {
             isHu = false;
         }
         return score;
+    }
+
+    public void addObserver(PlayerActionObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(PlayerActionObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyPeng() {
+        for (PlayerActionObserver observer : observers) {
+            observer.onPeng(this);
+        }
+    }
+
+    private void notifyGang() {
+        for (PlayerActionObserver observer : observers) {
+            observer.onGang(this);
+        }
+    }
+
+    public void notifyPass() {
+        for (PlayerActionObserver observer : observers) {
+            observer.onPass(this);
+        }
     }
 
     public MahjongTile[][] ifChi(MahjongTile tile){
@@ -171,6 +198,8 @@ public abstract class User {
                 }
             }
         }
+
+
         if (matchingTiles.size() >= 2) {
             System.out.println("Player's hand contains two matching tiles for peng: " + matchingTiles);
             isPeng = true;
@@ -207,6 +236,7 @@ public abstract class User {
             System.out.println("Unable to execute peng. Matching tiles not found.");
             isPeng = false;
         }
+        notifyPeng();
     }
 
 
@@ -262,6 +292,7 @@ public abstract class User {
             System.out.println("Unable to execute gang. Matching tiles not found.");
             isGang = false;
         }
+        notifyGang();
     }
 
 
