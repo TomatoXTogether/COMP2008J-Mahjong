@@ -312,9 +312,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public void gangBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.gangAction(this,humanPlayer,currentUser);
+        gameRules.gangAction(this,humanPlayer,lastUser);
         gang.setVisible(false);
 //        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
 //        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
@@ -328,9 +328,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
-        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
+        User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
+        gameRules.pengAction(this,humanPlayer,lastUser);
         peng.setVisible(false);
         pengImage.setVisible(false);
         pass.setVisible(false);
@@ -378,22 +378,22 @@ public class GameScreenController implements Initializable {
     public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
         System.out.println("GameController playerindex = "+ currentPlayerIndex);
-        if(currentPlayerIndex==1){
+        if(currentPlayerIndex==0){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==2){
+        }else if(currentPlayerIndex==1){
             north.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==3){
+        }else if(currentPlayerIndex==2){
             west.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==0){
+        }else if(currentPlayerIndex==3){
             south.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);

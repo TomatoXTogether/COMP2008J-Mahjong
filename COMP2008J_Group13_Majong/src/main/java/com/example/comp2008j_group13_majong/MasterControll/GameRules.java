@@ -29,6 +29,7 @@ public class GameRules {
     private ArrayList<MahjongTile> remainingTiles;
     public int currentPlayerIndex;
     private MahjongTile lastDiscardedTile;
+    public int lastPlayerIndex;
 
     public int dealerIndex;
     public User lastPlayer;
@@ -117,11 +118,11 @@ public class GameRules {
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.饼) {
-                for (int index = 1; index < 10; index++) {
-                    String value = numberValues[index - 1];
-                    MahjongTile tile = new MahjongTile(suit, value, index);
-                    computer1.handTiles.add(tile);
-                }
+//                for (int index = 1; index < 10; index++) {
+//                    String value = numberValues[index - 1];
+//                    MahjongTile tile = new MahjongTile(suit, value, index);
+//                    computer1.handTiles.add(tile);
+//                }
                 for (int index = 1; index < 3; index++) {
                     //String value = numberValues[index - 1];
                     MahjongTile t1 = new MahjongTile(MahjongTile.Suit.发财);
@@ -131,7 +132,7 @@ public class GameRules {
                 humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-                //humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
             }
         }
         for (int i = 0; i < 14; i++) {
@@ -233,6 +234,7 @@ public class GameRules {
                 for (User player : players) {
                     if (player != lastPlayer && player.isGang) {
                         currentPlayerIndex = player.getIndex();
+                        lastPlayerIndex = lastPlayer.index;
                         found = true;
                         break;
                     }
@@ -241,6 +243,7 @@ public class GameRules {
                     for (User player : players) {
                         if (player != lastPlayer && player.isPeng) {
                             currentPlayerIndex = player.getIndex();
+                            lastPlayerIndex = lastPlayer.index;
                             found = true;
                             break;
                         }
@@ -261,11 +264,10 @@ public class GameRules {
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
-                    return;
                 } else if (currentPlayer.isGang) {
-
+                    gangAction(gameScreenController, currentPlayer, lastPlayer);
                 } else if (currentPlayer.isPeng) {
-
+                    pengAction(gameScreenController, currentPlayer, lastPlayer);
                 } else if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
@@ -297,12 +299,15 @@ public class GameRules {
 //                });
 //                pause.play();
 
-                for (User player : players) {
-                    if (player != currentPlayer) {
-                        player.ifHu(discardedTile);
-                        player.ifGang(discardedTile);
-                        player.ifPeng(discardedTile);
-                    }
+                for (int tempt = 0; tempt < 3; tempt++) {
+                    int newIndex = (currentPlayerIndex + tempt) % 4;
+                    User nextUser = next(newIndex);
+                    nextUser.ifGang(discardedTile);
+                }
+                for (int tempt = 0; tempt < 3; tempt++) {
+                    int newIndex = (currentPlayerIndex + tempt) % 4;
+                    User nextUser = next(newIndex);
+                    nextUser.ifPeng(discardedTile);
                 }
                 next(currentPlayerIndex).ifChi(discardedTile);
                 /*
@@ -344,39 +349,38 @@ public class GameRules {
                 */
 
             } else {
-                if (currentPlayer.isHu) {
-                    gameScreenController.hu.setVisible(true);
-                    gameScreenController.huImage.setVisible(true);
-                    gameScreenController.pass.setVisible(true);
-                    gameScreenController.passImage.setVisible(true);
-                    return;
-                } else if (currentPlayer.isGang) {
-                    gameScreenController.gang.setVisible(true);
+                System.out.println("现在的玩家index（应该是真人） = " + currentPlayerIndex);
+                if (currentPlayer.isGang){
+                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    gameScreenController.gang.setVisible(true);;
                     gameScreenController.gangImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
-                    return;
-                } else if (currentPlayer.isPeng) {
-                    gameScreenController.peng.setVisible(true);
+                }
+                else if (currentPlayer.isPeng){
+                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    gameScreenController.peng.setVisible(true);;
                     gameScreenController.pengImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
-                    return;
-                } else if (currentPlayer.isChi){
-                    gameScreenController.chi.setVisible(true);
+                }
+                else if (currentPlayer.isChi){
+                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
+                    gameScreenController.chi.setVisible(true);;
                     gameScreenController.chiImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
-                    return;
-                } else {
-                    // 给当前玩家发一张牌
+                }
+                else {
                     MahjongTile tile = remainingTiles.remove(0);
                     currentPlayer.handTiles.add(tile);
-
-                    // 打印当前玩家信息和收到的牌
-                    System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
                 }
+                // 更新currentPlayerIndex，使其在0到3之间循环
+                //currentPlayerIndex = (currentPlayerIndex + 1) % 4;
             }
+
+            // 更新currentPlayerIndex，使其在0到3之间循环
+            //currentPlayerIndex = (currentPlayerIndex + 1) % 4;
         }
         printPlayerHands();
     }
@@ -421,7 +425,8 @@ public class GameRules {
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
-                    currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    currentPlayerIndex = (lastPlayerIndex + 1)%4;
+                    //currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
                     gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
@@ -458,6 +463,8 @@ public class GameRules {
 
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
+                    MahjongTile tile = remainingTiles.remove(0);
+                    currentPlayer.handTiles.add(tile);
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile, currentPlayer.handTiles);
                     currentPlayer.justGangged = true;
 
@@ -471,7 +478,7 @@ public class GameRules {
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
-                    currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
+                    currentPlayerIndex = (lastPlayerIndex +1) % 4;
                     gameScreenController.animation("gang", currentPlayer.getIndex());
                 }
             } else {
@@ -481,6 +488,7 @@ public class GameRules {
             System.out.println(currentPlayer.getName() + " isGang is false");
         }
     }
+
 
     public MahjongTile getLastDiscardedTile() {
         return lastDiscardedTile;
