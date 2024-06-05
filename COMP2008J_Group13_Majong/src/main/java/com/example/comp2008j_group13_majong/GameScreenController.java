@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class GameScreenController implements Initializable {
     public ImageView pengImage;
 
     @FXML
-    private ImageView playImage;
+    public ImageView playImage;
 
     @FXML
     private Label remainTilesNumber;
@@ -106,7 +107,7 @@ public class GameScreenController implements Initializable {
     public Button peng;
 
     @FXML
-    private Button play;
+    public Button play;
 
     @FXML
     public GridPane playerHandPile;
@@ -201,16 +202,11 @@ public class GameScreenController implements Initializable {
             playImage.setVisible(false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
-            boolean moveToNext = true;
             for (int i = 0; i < gameRules.computers.size(); i++) {
                 Computer computer = gameRules.computers.get(i);
                 if (computer.justHu || computer.justPenged || computer.justChi) {
-                    moveToNext = false;
                     break;
                 }
-            }
-            if (moveToNext) {
-                gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
             }
         }
     }
@@ -328,7 +324,7 @@ public class GameScreenController implements Initializable {
     void pengBottonAction(ActionEvent event) {
         User currentUser = gameRules.current(gameRules.currentPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
-        gameRules.pengAction(this,humanPlayer,currentUser);
+        //gameRules.pengAction(this,humanPlayer,currentUser);
         peng.setVisible(false);
         pengImage.setVisible(false);
         animation("peng",3);
@@ -347,6 +343,7 @@ public class GameScreenController implements Initializable {
         updateRemainTiles();
         updateScore();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
     }
 
     private void updateAllPlayerHands() {
@@ -372,20 +369,19 @@ public class GameScreenController implements Initializable {
     }
 
 
-    private void playersTurn(){
+    public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
-
-        if(currentPlayerIndex==1){
+        if(currentPlayerIndex==0){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==2){
+        }else if(currentPlayerIndex==1){
             north.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
-        }else if(currentPlayerIndex==3){
+        }else if(currentPlayerIndex==2){
             west.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);

@@ -171,8 +171,6 @@ public abstract class User {
                 }
             }
         }
-
-
         if (matchingTiles.size() >= 2) {
             System.out.println("Player's hand contains two matching tiles for peng: " + matchingTiles);
             isPeng = true;
