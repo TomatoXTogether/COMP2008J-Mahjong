@@ -486,17 +486,24 @@ public class GameScreenController implements Initializable {
 
     public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
-        int col = 0;
-        for (int row = 0; row < usedTiles.size(); row++) {
+        int maxCols = 6;
+        int rowIndex = 0;
+        int colIndex = 0;
 
-            MahjongTile tile = usedTiles.get(row);
+        for (MahjongTile tile : usedTiles) {
             ImageView tileDisplay = getTileDisplayForUsedTiles(tile);
+            pane.add(tileDisplay, colIndex, rowIndex);
 
-            pane.add(tileDisplay, row  ,0 ); // 将行数除以7决定在第几行
+            colIndex++;
+            if (colIndex >= maxCols) {
+                colIndex = 0;
+                rowIndex++;
+            }
 
+            if(rowIndex > 6) {
+                break;
+            }
         }
-
-
     }
 
     public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
