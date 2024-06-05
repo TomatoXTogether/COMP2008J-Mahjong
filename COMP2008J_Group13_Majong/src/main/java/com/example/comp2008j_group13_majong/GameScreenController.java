@@ -409,7 +409,7 @@ public class GameScreenController implements Initializable {
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
             //gameRules.dealerNextRound(this);
-            gameRules.currentPlayerIndex = (gameRules.currentPlayerIndex + 1) % 4;
+            gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
             // 摸牌后重新排序玩家的手牌
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);
