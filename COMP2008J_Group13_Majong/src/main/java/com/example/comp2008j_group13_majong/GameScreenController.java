@@ -219,24 +219,31 @@ public class GameScreenController implements Initializable {
     }
 
     public void setVisible(String name,boolean isVisible){
-        if(name.equals("chi")){
-            chi.setVisible(isVisible);
-            chiImage.setVisible(isVisible);
-        }else if(name.equals("peng")){
-            peng.setVisible(isVisible);
-            pengImage.setVisible(isVisible);
-        }else if(name.equals("gang")){
-            gang.setVisible(isVisible);
-            gangImage.setVisible(isVisible);
-        }else if(name.equals("hu")){
-            hu.setVisible(isVisible);
-            huImage.setVisible(isVisible);
-        }else if(name.equals("pass")){
-            pass.setVisible(isVisible);
-            passImage.setVisible(isVisible);
-        }else if(name.equals("play")){
-            play.setVisible(isVisible);
-            playImage.setVisible(isVisible);
+        switch (name) {
+            case "chi" -> {
+                chi.setVisible(isVisible);
+                chiImage.setVisible(isVisible);
+            }
+            case "peng" -> {
+                peng.setVisible(isVisible);
+                pengImage.setVisible(isVisible);
+            }
+            case "gang" -> {
+                gang.setVisible(isVisible);
+                gangImage.setVisible(isVisible);
+            }
+            case "hu" -> {
+                hu.setVisible(isVisible);
+                huImage.setVisible(isVisible);
+            }
+            case "pass" -> {
+                pass.setVisible(isVisible);
+                passImage.setVisible(isVisible);
+            }
+            case "play" -> {
+                play.setVisible(isVisible);
+                playImage.setVisible(isVisible);
+            }
         }
     }
 
@@ -402,14 +409,7 @@ public class GameScreenController implements Initializable {
     public void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
 
-        mahjongDeck.sortHandTiles(humanPlayer.handTiles);
-        mahjongDeck.sortHandTiles(computer1.handTiles);
-        mahjongDeck.sortHandTiles(computer2.handTiles);
-        mahjongDeck.sortHandTiles(computer3.handTiles);
-        playersTurn();
-        updateAllPlayerHands();
-        updateRemainTiles();
-        updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        sortTiles();
         updateScore();
     }
 
@@ -482,23 +482,28 @@ public class GameScreenController implements Initializable {
         if(index!=-1){
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
 
-            mahjongDeck.sortHandTiles(humanPlayer.handTiles);
-            mahjongDeck.sortHandTiles(computer1.handTiles);
-            mahjongDeck.sortHandTiles(computer2.handTiles);
-            mahjongDeck.sortHandTiles(computer3.handTiles);
-
-            playersTurn();
-            updateAllPlayerHands();
-            updateRemainTiles();
-            updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+            sortTiles();
 
             setVisible("pass",false);
             setVisible("chi",false);
             setVisible("peng",false);
             setVisible("gang",false);
 
+            timeStop();
             humanPlayer.notifyPass();
         }
+    }
+
+    private void sortTiles() {
+        mahjongDeck.sortHandTiles(humanPlayer.handTiles);
+        mahjongDeck.sortHandTiles(computer1.handTiles);
+        mahjongDeck.sortHandTiles(computer2.handTiles);
+        mahjongDeck.sortHandTiles(computer3.handTiles);
+
+        playersTurn();
+        updateAllPlayerHands();
+        updateRemainTiles();
+        updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
     }
 
     private void loadTilesFromListsToPaneForHuman (List<MahjongTile> humanTiles) {
@@ -588,15 +593,12 @@ public class GameScreenController implements Initializable {
     public void updateUsedTiles( int playerIndex) {
         switch (playerIndex) {
             case 1: // north
-                //computer1.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
                 break;
             case 0: // east
-                //computer2.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
                 break;
             case 2: // west
-                //computer3.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
                 break;
             case 3://south
@@ -627,15 +629,19 @@ public class GameScreenController implements Initializable {
         iv.setFitWidth(35);       // width
         iv.setFitHeight(80);      // height
 
+        return getImageView(tile, iv);
+
+    }
+
+    private ImageView getImageView(MahjongTile tile, ImageView iv) {
         if (tile.getValue() != null) {
-            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue() + tile.getSuit() + ".jpg"));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/" + tile.getValue() + tile.getSuit() + ".jpg")));
             iv.setImage(image);
         }else {
-            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg"));
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg")));
             iv.setImage(image);
         }
         return iv;
-
     }
 
     private ImageView getTileDisplayForHuman(MahjongTile tile) {
@@ -644,14 +650,7 @@ public class GameScreenController implements Initializable {
         iv.setFitHeight(100);      // height
         iv.setFitWidth(45);       // width
 
-        if(tile.getValue()!=null){
-            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue()+tile.getSuit() + ".jpg"));
-            iv.setImage(image);
-        }else {
-            Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg"));
-            iv.setImage(image);
-        }
-        return iv;
+        return getImageView(tile, iv);
     }
 
     private ImageView getTileDisplayForComputer(MahjongTile tile) {
