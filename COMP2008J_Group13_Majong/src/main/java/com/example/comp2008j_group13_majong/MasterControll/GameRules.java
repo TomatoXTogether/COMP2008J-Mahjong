@@ -319,29 +319,26 @@ public class GameRules implements PlayerActionObserver {
                 System.out.println("现在的玩家index（应该是真人） = " + currentPlayerIndex);
                 if (currentPlayer.isGang){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.gang.setVisible(true);;
-                    gameScreenController.gangImage.setVisible(true);
-                    gameScreenController.pass.setVisible(true);
-                    gameScreenController.passImage.setVisible(true);
+                    gameScreenController.setVisible("gang",true);
+                    gameScreenController.setVisible("pass",true);
                 }
                 else if (currentPlayer.isPeng){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.peng.setVisible(true);;
-                    gameScreenController.pengImage.setVisible(true);
-                    gameScreenController.pass.setVisible(true);
-                    gameScreenController.passImage.setVisible(true);
+                    gameScreenController.setVisible("peng",true);
+                    gameScreenController.setVisible("pass",true);
                 }
                 else if (currentPlayer.isChi){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.chi.setVisible(true);;
-                    gameScreenController.chiImage.setVisible(true);
-                    gameScreenController.pass.setVisible(true);
-                    gameScreenController.passImage.setVisible(true);
+                    gameScreenController.setVisible("chi",true);
+                    gameScreenController.setVisible("pass",true);
                 }
                 else {
                     MahjongTile tile = remainingTiles.remove(0);
                     currentPlayer.handTiles.add(tile);
+
                 }
+                gameScreenController.startAnimation();
+                gameScreenController.timeline.play();
             }
         }
         printPlayerHands();

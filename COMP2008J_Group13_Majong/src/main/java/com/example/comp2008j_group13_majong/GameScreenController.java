@@ -1,6 +1,7 @@
 package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
+import com.example.comp2008j_group13_majong.MasterControll.PlayerAction;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
@@ -12,6 +13,7 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -20,20 +22,22 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScreenController implements Initializable {
 
     @FXML
     private AnchorPane animationPane;
+
+    @FXML
+    public Label countDown;
 
     @FXML
     private Label east;
@@ -149,8 +153,59 @@ public class GameScreenController implements Initializable {
     private Computer computer3;
 
 
+
     public GameScreenController() {
     }
+
+    int timeLine=15;
+
+    private AtomicBoolean playing = new AtomicBoolean(false);
+
+    public Timeline timeline;
+    public void startAnimation() {
+        countDown.setVisible(true);
+            if (!playing.get()) {
+                timeline = new Timeline(
+                        new KeyFrame(Duration.seconds(1), event -> {
+                            if (timeLine >= 0) {
+                                countDown.setText("Count Down: " + timeLine--);
+                            } else {
+                                timeLine = 20;
+                            }
+                        })
+                );
+                timeline.setCycleCount(Animation.INDEFINITE);
+
+                timeline.play();
+
+                playing.set(true);
+            }
+
+    }
+
+    public void setVisible(String name,boolean isVisible){
+        if(name.equals("chi")){
+            chi.setVisible(isVisible);
+            chiImage.setVisible(isVisible);
+        }else if(name.equals("peng")){
+            peng.setVisible(isVisible);
+            pengImage.setVisible(isVisible);
+        }else if(name.equals("gang")){
+            gang.setVisible(isVisible);
+            gangImage.setVisible(isVisible);
+        }else if(name.equals("hu")){
+            hu.setVisible(isVisible);
+            huImage.setVisible(isVisible);
+        }else if(name.equals("pass")){
+            pass.setVisible(isVisible);
+            passImage.setVisible(isVisible);
+        }else if(name.equals("play")){
+            play.setVisible(isVisible);
+            playImage.setVisible(isVisible);
+        }
+    }
+
+
     @FXML
     void chiBottonAction(ActionEvent event) {
             if (index != -1) {
@@ -161,14 +216,17 @@ public class GameScreenController implements Initializable {
                     last.usedTiles.remove(last.usedTiles.size() - 1);
                 }
                 animation("chi",3);
-                chi.setVisible(false);
-                chiImage.setVisible(false);
-                pass.setVisible(false);
-                passImage.setVisible(false);
+                setVisible("chi",false);
+                setVisible("pass",false);
+
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
                 gameRules.dealerNextRound(this);
+
+                timeline.stop();
+                timeLine=15;
+                countDown.setVisible(false);
             }
     }
 
@@ -196,18 +254,19 @@ public class GameScreenController implements Initializable {
                 computer.ifPeng(usedTile);
             }
             computer2.ifChi(usedTile);
-            play.setVisible(false);
-            playImage.setVisible(false);
+            setVisible("play",false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
+            timeline.stop();
+            timeLine=15;
+            countDown.setVisible(false);
         }
     }
 
     @FXML
     public boolean pengTestAction(ActionEvent event,MahjongTile usedTile){
         if (gang.isVisible()) {
-            peng.setVisible(false);
-            pengImage.setVisible(false);
+            setVisible("peng",false);
             return false;
         }
 
@@ -224,8 +283,7 @@ public class GameScreenController implements Initializable {
         // 检查真人玩家是否可以碰
         MahjongTile[] pengzi = humanPlayer.ifPeng(usedTile);
         if (pengzi != null) {
-            peng.setVisible(true);
-            pengImage.setVisible(true);
+            setVisible("peng",true);
             return true;
         }
 
@@ -246,8 +304,7 @@ public class GameScreenController implements Initializable {
         // 检查真人玩家是否可以杠
         MahjongTile[] gangzi = humanPlayer.ifGang(usedTile);
         if (gangzi != null) {
-            gang.setVisible(true);
-            gangImage.setVisible(true);
+            setVisible("gang",true);
             return true;
         }
 
@@ -316,15 +373,15 @@ public class GameScreenController implements Initializable {
         User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.gangAction(this,humanPlayer,lastUser);
-        gang.setVisible(false);
-//        User currentUser = gameRules.current(gameRules.currentPlayerIndex);
-//        User lastUser = gameRules.last(gameRules.currentPlayerIndex);
-//        gameRules.gangAction(this, currentUser, lastUser);
-//        gang.setVisible(false);
-        gangImage.setVisible(false);
-        pass.setVisible(false);
-        passImage.setVisible(false);
+
         animation("gang",3);
+        setVisible("gang",false);
+        setVisible("pass",false);
+
+        timeline.stop();
+        timeLine=15;
+        countDown.setVisible(false);
+
     }
 
     @FXML
@@ -332,11 +389,15 @@ public class GameScreenController implements Initializable {
         User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,lastUser);
-        peng.setVisible(false);
-        pengImage.setVisible(false);
-        pass.setVisible(false);
-        passImage.setVisible(false);
+
         animation("peng",3);
+        setVisible("peng",false);
+        setVisible("pass",false);
+
+        timeline.stop();
+        timeLine=15;
+        countDown.setVisible(false);
+
     }
 
     @FXML
@@ -406,6 +467,7 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
@@ -420,14 +482,12 @@ public class GameScreenController implements Initializable {
             updateAllPlayerHands();
             updateRemainTiles();
             updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
-            pass.setVisible(false);
-            passImage.setVisible(false);
-            chi.setVisible(false);
-            chiImage.setVisible(false);
-            peng.setVisible(false);
-            pengImage.setVisible(false);
-            gang.setVisible(false);
-            gangImage.setVisible(false);
+
+            setVisible("pass",false);
+            setVisible("chi",false);
+            setVisible("peng",false);
+            setVisible("gang",false);
+
             humanPlayer.notifyPass();
         }
     }
@@ -449,8 +509,7 @@ public class GameScreenController implements Initializable {
                     playerHandPile.add(tileDisplay, finalRow, 0);
                     currentRaisedTile = tileDisplay;
                     index=finalRow;
-                    play.setVisible(true);
-                    playImage.setVisible(true);
+                    setVisible("play",true);
                 }
                 else if (currentRaisedTile == tileDisplay) {
                     // 点击的牌是当前上升的牌，下降它
@@ -458,8 +517,7 @@ public class GameScreenController implements Initializable {
                     playerHandPile.add(tileDisplay, finalRow, 1);
                     currentRaisedTile = null;
                     index=-1;
-                    play.setVisible(false);
-                    playImage.setVisible(false);
+                    setVisible("play",false);
                 }
             });
         }
@@ -617,6 +675,7 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        int timeLine=10;
 
         humanPlayer = gameRules.humanPlayer;
         computer1 = gameRules.computer1;
@@ -643,13 +702,13 @@ public class GameScreenController implements Initializable {
     public void animation(String operation, int playerIndex){
         Image image;
         if(Objects.equals(operation, "chi")){
-            image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/吃特效.png")));
         }else if(Objects.equals(operation, "peng")){
-            image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/碰特效.png")));
         }else if(Objects.equals(operation, "gang")){
-            image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/杠特效.png")));
         }else {
-            image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/胡特效.png")));
         }
 
         // 创建ImageView以显示图像
