@@ -258,7 +258,7 @@ public class GameScreenController implements Initializable {
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
-                gameRules.dealerNextRound(this);
+                //gameRules.dealerNextRound(this);
                 updateScore();
 
                 timeStop();
@@ -471,7 +471,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void updateScore(){
-        score.setText("Remain: "+humanPlayer.score);
+        score.setText("Score: "+humanPlayer.score);
     }
 
 

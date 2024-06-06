@@ -26,7 +26,7 @@ public class GameRules implements PlayerActionObserver {
 
     public List<Computer> computers;
     private User dealer;
-    public List<User> players;
+    public ArrayList<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
     public int currentPlayerIndex;
@@ -129,38 +129,38 @@ public class GameRules implements PlayerActionObserver {
          }**/
 
         // test
-        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
-        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
-            if (suit == MahjongTile.Suit.饼) {
-                for (int index = 1; index < 7; index++) {
-                    String value = numberValues[index - 1];
-                    MahjongTile tile = new MahjongTile(suit, value, index);
-                    humanPlayer.handTiles.add(tile);
-                }
-                for (int index = 1; index < 13; index++) {
-                    //String value = numberValues[index - 1];
-                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.白板);
-                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
-                    computer2.handTiles.add(t1);
-                }
-                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-                //humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-
-            }
-        }
+//        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
+//        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
+//            if (suit == MahjongTile.Suit.饼) {
+//                for (int index = 1; index < 7; index++) {
+//                    String value = numberValues[index - 1];
+//                    MahjongTile tile = new MahjongTile(suit, value, index);
+//                    humanPlayer.handTiles.add(tile);
+//                }
+//                for (int index = 1; index < 13; index++) {
+//                    //String value = numberValues[index - 1];
+//                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.白板);
+//                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
+//                    computer2.handTiles.add(t1);
+//                }
+//                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+//                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+//                //humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+//
+//            }
+//        }
         for (int i = 0; i < 13; i++) {
-
             computer3.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
-            //humanPlayer.handTiles.add(remainingTiles.remove(0));
+            computer2.handTiles.add(remainingTiles.remove(0));
+            humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
         /**for(int i = 0; i < 12; i++){
             humanPlayer.handTiles.add(remainingTiles.remove(0));
@@ -529,6 +529,16 @@ public class GameRules implements PlayerActionObserver {
             }
         }
         return current;
+    }
+
+    public ArrayList<User> sortPlayers(ArrayList<User> players){
+        Collections.sort(players, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return Integer.compare(u2.getScore(), u1.getScore());
+            }
+        });
+        return players;
     }
 
     @Override
