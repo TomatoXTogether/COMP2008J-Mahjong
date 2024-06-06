@@ -257,7 +257,7 @@ public class GameScreenController implements Initializable {
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
-                gameRules.dealerNextRound(this);
+                //gameRules.dealerNextRound(this);
                 updateScore();
 
                 timeline.stop();
