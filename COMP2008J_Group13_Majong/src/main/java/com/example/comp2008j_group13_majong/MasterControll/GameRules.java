@@ -459,6 +459,11 @@ public class GameRules implements PlayerActionObserver {
     }
 
 
+    public String getDealerName(){
+        int realDealerIndex = (dealerIndex +1 ) % 4;
+        return realDealerIndex == 1 ? "North" : realDealerIndex == 0 ? "East" : realDealerIndex == 3 ? "South" : "West";
+    }
+
     private void handleComputerHand(Computer computer, MahjongTile tile) {
         int computerIndex = computers.indexOf(computer);
         switch (computerIndex) {

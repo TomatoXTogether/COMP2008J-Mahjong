@@ -84,6 +84,9 @@ public class GameScreenController implements Initializable {
     private Label remainTilesNumber;
 
     @FXML
+    private Label dealer;
+
+    @FXML
     public Button chi;
 
     @FXML
@@ -406,6 +409,12 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+
+    @FXML
+    private void showDealer(){
+        dealer.setText("Dealer: "+gameRules.getDealerName());
+    }
+
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
@@ -638,6 +647,7 @@ public class GameScreenController implements Initializable {
         animation("chi",1);
         animation("peng",0);
         animation("hu",2);
+        showDealer();
     }
 
     public void animation(String operation, int playerIndex){
