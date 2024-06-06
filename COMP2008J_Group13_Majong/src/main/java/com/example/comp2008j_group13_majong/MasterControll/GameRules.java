@@ -118,31 +118,39 @@ public class GameRules {
         String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
         for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
             if (suit == MahjongTile.Suit.饼) {
-//                for (int index = 1; index < 10; index++) {
-//                    String value = numberValues[index - 1];
-//                    MahjongTile tile = new MahjongTile(suit, value, index);
-//                    computer1.handTiles.add(tile);
-//                }
-                for (int index = 1; index < 3; index++) {
-                    //String value = numberValues[index - 1];
-                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.发财);
-                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
-                    computer1.handTiles.add(t1);
+                for (int index = 1; index < 7; index++) {
+                    String value = numberValues[index - 1];
+                    MahjongTile tile = new MahjongTile(suit, value, index);
+                    humanPlayer.handTiles.add(tile);
                 }
-                humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
+                for (int index = 1; index < 13; index++) {
+                    //String value = numberValues[index - 1];
+                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.白板);
+                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
+                    computer2.handTiles.add(t1);
+                }
+                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
                 humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                //humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+
             }
         }
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 13; i++) {
 
             computer3.handTiles.add(remainingTiles.remove(0));
-            computer2.handTiles.add(remainingTiles.remove(0));
+            computer1.handTiles.add(remainingTiles.remove(0));
+            //humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
-        for(int i = 0; i < 12; i++){
+        /**for(int i = 0; i < 12; i++){
             humanPlayer.handTiles.add(remainingTiles.remove(0));
-        }
+        }**/
 
     }
 
@@ -264,6 +272,7 @@ public class GameRules {
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
+                    return;
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
                 } else if (currentPlayer.isPeng) {
@@ -302,11 +311,8 @@ public class GameRules {
                 for (int tempt = 0; tempt < 3; tempt++) {
                     int newIndex = (currentPlayerIndex + tempt) % 4;
                     User nextUser = next(newIndex);
+                    nextUser.ifHu(discardedTile);
                     nextUser.ifGang(discardedTile);
-                }
-                for (int tempt = 0; tempt < 3; tempt++) {
-                    int newIndex = (currentPlayerIndex + tempt) % 4;
-                    User nextUser = next(newIndex);
                     nextUser.ifPeng(discardedTile);
                 }
                 next(currentPlayerIndex).ifChi(discardedTile);
@@ -350,23 +356,29 @@ public class GameRules {
 
             } else {
                 System.out.println("现在的玩家index（应该是真人） = " + currentPlayerIndex);
-                if (currentPlayer.isGang){
+                if (currentPlayer.isHu) {
+                    gameScreenController.hu.setVisible(true);
+                    gameScreenController.huImage.setVisible(true);
+                    //gameScreenController.pass.setVisible(true);
+                    //gameScreenController.passImage.setVisible(true);
+                }
+                else if (currentPlayer.isGang){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.gang.setVisible(true);;
+                    gameScreenController.gang.setVisible(true);
                     gameScreenController.gangImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
                 }
                 else if (currentPlayer.isPeng){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.peng.setVisible(true);;
+                    gameScreenController.peng.setVisible(true);
                     gameScreenController.pengImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
                 }
                 else if (currentPlayer.isChi){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.chi.setVisible(true);;
+                    gameScreenController.chi.setVisible(true);
                     gameScreenController.chiImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);

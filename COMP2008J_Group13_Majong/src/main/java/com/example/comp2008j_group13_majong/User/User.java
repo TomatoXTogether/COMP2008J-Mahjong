@@ -293,8 +293,16 @@ public abstract class User {
     }
 
     public ArrayList<MahjongTile> ifHu(MahjongTile tile) {
+        // 将 inOrderTiles 中的所有牌展平为一个列表
         ArrayList<MahjongTile> tilesToCheck = new ArrayList<>(handTiles);
+        for (MahjongTile[] set : inOrderTiles) {
+            tilesToCheck.addAll(Arrays.asList(set));
+        }
+
+        // 将新出的牌加入到合并后的牌列表中
         tilesToCheck.add(tile);
+
+        // 检查是否是胡牌
         if (isWinningHand(tilesToCheck)) {
             isHu = true;
             return tilesToCheck;
@@ -315,11 +323,18 @@ public abstract class User {
     private boolean canFormWinningHand(ArrayList<MahjongTile> tiles) {
         // 尝试找到一对（将牌）
         for (int i = 0; i < tiles.size() - 1; i++) {
-            if (tiles.get(i).equals(tiles.get(i + 1))) {
+            if ((tiles.get(i).getSuit() == tiles.get(i + 1).getSuit() && tiles.get(i).getSuit() == MahjongTile.Suit.发财)
+                    || (tiles.get(i).getSuit() == tiles.get(i + 1).getSuit() && tiles.get(i).getSuit() == MahjongTile.Suit.白板)
+                || tiles.get(i).getSuit().equals(tiles.get(i + 1).getSuit()) &&
+                    tiles.get(i).getValue().equals(tiles.get(i + 1).getValue())) {
+
                 ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
                 remainingTiles.remove(i);
                 remainingTiles.remove(i);
-                return canFormSets(remainingTiles);
+                // 递归检查剩余的牌是否能组成有效的组合
+                if (canFormSets(remainingTiles)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -330,10 +345,29 @@ public abstract class User {
             return true; // 所有牌都被分组完
         }
 
-        // 尝试找刻子
-        if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-         && tiles.get(0).getValue().equals(tiles.get(1).getValue()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())) {
+        // 尝试找刻子或杠
+        if (tiles.size() >= 3 &&
+                ((tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) &&
+                        (tiles.get(0).getSuit() == MahjongTile.Suit.发财 || tiles.get(0).getSuit() == MahjongTile.Suit.白板))
+                        || (tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getValue().equals(tiles.get(1).getValue()) &&
+                        tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) && tiles.get(0).getValue().equals(tiles.get(2).getValue())))) {
+
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            remainingTiles.remove(0);
+            return canFormSets(remainingTiles);
+        }
+
+        if (tiles.size() >= 4 &&
+                ((tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(3).getSuit()) &&
+                        (tiles.get(0).getSuit() == MahjongTile.Suit.发财 || tiles.get(0).getSuit() == MahjongTile.Suit.白板))
+                        || (tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getValue().equals(tiles.get(1).getValue()) &&
+                        tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) && tiles.get(0).getValue().equals(tiles.get(2).getValue()) &&
+                        tiles.get(0).getSuit().equals(tiles.get(3).getSuit()) && tiles.get(0).getValue().equals(tiles.get(3).getValue())))) {
+
+            ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
+            remainingTiles.remove(0);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
@@ -341,28 +375,33 @@ public abstract class User {
         }
 
         // 尝试找顺子
-        if (tiles.size() >= 3 && tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit())
-         && tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 && tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
+        if (tiles.size() >= 3 &&
+                tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) &&
+                tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) &&
+                tiles.get(1).getIndex() == tiles.get(0).getIndex() + 1 &&
+                tiles.get(2).getIndex() == tiles.get(0).getIndex() + 2) {
+
             ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
             remainingTiles.remove(0);
             return canFormSets(remainingTiles);
         }
+
         return false;
     }
 
     public void hu(MahjongTile tile) {
         ArrayList<MahjongTile> winningTiles = ifHu(tile);
-        for (MahjongTile t: handTiles) {
-            handTiles.remove(t);
+        if (winningTiles != null) {
+            // 将胡的牌从手牌移除
+            handTiles.clear();
+            // 将胡的牌添加到 inOrderTiles 中
+            MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
+            inOrderTiles.add(winningTilesArray);
+            // 更新状态
+            isHu = false;
         }
-
-        // 将胡的牌添加到 inOrderTiles 中
-        MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
-        inOrderTiles.add(winningTilesArray);
-        // 更新状态
-        isHu = false;
     }
 
     public boolean ifWin(){

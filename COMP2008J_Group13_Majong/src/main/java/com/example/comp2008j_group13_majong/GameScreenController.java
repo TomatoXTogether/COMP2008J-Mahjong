@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong;
 
+import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
@@ -175,10 +176,12 @@ public class GameScreenController implements Initializable {
     @FXML
     void huBottonAction(ActionEvent event) {
         User last = gameRules.lastPlayer;
-        //gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
         hu.setVisible(false);
         huImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
     }
@@ -265,10 +268,10 @@ public class GameScreenController implements Initializable {
             updateUsedTiles(lastPlayer.getIndex());
 
             // 在界面上显示赢家
-            //GameEndChecker.checkWin(currentPlayer);
+            GameEndChecker.checkWin(currentPlayer);
 
             // 结束游戏
-            //GameEndChecker.endGame();
+            GameEndChecker.endGame();
         }
     }
 
