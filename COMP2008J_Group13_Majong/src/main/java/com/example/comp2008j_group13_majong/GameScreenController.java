@@ -258,7 +258,6 @@ public class GameScreenController implements Initializable {
                 updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
-                //gameRules.dealerNextRound(this);
                 updateScore();
 
                 timeStop();
@@ -319,16 +318,13 @@ public class GameScreenController implements Initializable {
         if (huTiles != null) {
             currentPlayer.hu(huTile);
 
-            // 在界面上更新胡操作后的牌
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
             updateScore();
 
-            // 在界面上显示赢家
             GameEndChecker.checkWin(currentPlayer);
 
-            // 结束游戏
             GameEndChecker.endGame();
         }
     }
@@ -405,7 +401,7 @@ public class GameScreenController implements Initializable {
     @FXML
     public void drawButtonAction(ActionEvent event) {
         gameRules.dealerNextRound(this);
-        // 摸牌后重新排序玩家的手牌
+
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
         mahjongDeck.sortHandTiles(computer1.handTiles);
         mahjongDeck.sortHandTiles(computer2.handTiles);
@@ -418,13 +414,11 @@ public class GameScreenController implements Initializable {
     }
 
     private void updateAllPlayerHands() {
-        // 清空所有玩家手牌的显示
         playerHandPile.getChildren().clear();
         northHandPile.getChildren().clear();
         eastHandPile.getChildren().clear();
         westHandPile.getChildren().clear();
 
-        // 重新加载每个玩家的手牌
         loadTilesFromListsToPaneForHuman(humanPlayer.handTiles);
         loadTilesFromListsToPaneForComputer(computer1.handTiles, northHandPile);
         loadTilesFromListsToPaneForComputer(computer2.handTiles, eastHandPile);
@@ -434,7 +428,7 @@ public class GameScreenController implements Initializable {
 
     public void updateOnePlayerHand(GridPane pane, ArrayList<MahjongTile> pile) {
         pane.getChildren().clear();
-        // 重新加载每个玩家的手牌
+
         loadTilesFromListsToPaneForHuman(pile);
         loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
     }
@@ -442,22 +436,25 @@ public class GameScreenController implements Initializable {
 
     public void playersTurn(){
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
-        System.out.println("GameController playerindex = "+ currentPlayerIndex);
+
         if(currentPlayerIndex==0){
             east.setTextFill(Color.RED);
             north.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
+
         }else if(currentPlayerIndex==1){
             north.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             west.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
+
         }else if(currentPlayerIndex==2){
             west.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
             north.setTextFill(Color.BLACK);
             south.setTextFill(Color.BLACK);
+
         }else if(currentPlayerIndex==3){
             south.setTextFill(Color.RED);
             east.setTextFill(Color.BLACK);
@@ -483,13 +480,13 @@ public class GameScreenController implements Initializable {
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
-            //gameRules.dealerNextRound(this);
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
-            // 摸牌后重新排序玩家的手牌
+
             mahjongDeck.sortHandTiles(humanPlayer.handTiles);
             mahjongDeck.sortHandTiles(computer1.handTiles);
             mahjongDeck.sortHandTiles(computer2.handTiles);
             mahjongDeck.sortHandTiles(computer3.handTiles);
+
             playersTurn();
             updateAllPlayerHands();
             updateRemainTiles();
@@ -590,19 +587,19 @@ public class GameScreenController implements Initializable {
 
     public void updateUsedTiles( int playerIndex) {
         switch (playerIndex) {
-            case 1: // 北玩家
+            case 1: // north
                 //computer1.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
                 break;
-            case 0: // 东玩家
+            case 0: // east
                 //computer2.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
                 break;
-            case 2: // 西玩家
+            case 2: // west
                 //computer3.handTiles.add(tile);
                 loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
                 break;
-            case 3:
+            case 3://south
                 loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
         }
     }
@@ -691,58 +688,53 @@ public class GameScreenController implements Initializable {
         }
 
         player.play();
-        // 创建ImageView以显示图像
+
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         if(Objects.equals(operation, "hu")){
-            imageView.setFitWidth(500);  // 设置图像宽度
-            imageView.setFitHeight(500); // 设置图像高度
+            imageView.setFitWidth(500);
+            imageView.setFitHeight(500);
         }else {
-            imageView.setFitWidth(300);  // 设置图像宽度
-            imageView.setFitHeight(300); // 设置图像高度
+            imageView.setFitWidth(300);
+            imageView.setFitHeight(300);
         }
 
-
-        // 创建平移动画
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(0.5), imageView);
 
         if(playerIndex==0){
             //east
             imageView.setLayoutX(700);
             imageView.setLayoutY(300);
-            translateTransition.setToX(-100); // 将图像水平向右平移200个像素
+            translateTransition.setToX(-100);
 
         }else if(playerIndex==1){
             //north
             imageView.setLayoutX(470);
             imageView.setLayoutY(150);
-            translateTransition.setToY(100); // 将图像水平向右平移200个像素
+            translateTransition.setToY(100);
 
         }else if(playerIndex==2){
             //west
             imageView.setLayoutX(300);
             imageView.setLayoutY(300);
-            translateTransition.setToX(100); // 将图像水平向右平移200个像素
+            translateTransition.setToX(100);
 
         }else {
             //south
             imageView.setLayoutX(470);
             imageView.setLayoutY(450);
-            translateTransition.setToY(-100); // 将图像水平向右平移200个像素
+            translateTransition.setToY(-100);
         }
 
-        // 开始动画
         translateTransition.play();
 
-        // 创建 FadeTransition 来处理图像消失动画
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), imageView);
         fadeOut.setFromValue(2.0);
         fadeOut.setToValue(0.0);
         fadeOut.setCycleCount(1);
 
-        fadeOut.playFromStart(); //立即开始动画
+        fadeOut.playFromStart();
 
-        // 让程序在3秒后结束运行（模拟图像的消失）
         Thread thread = new Thread(() -> {
             try {
                 Thread.sleep(3000);
@@ -755,39 +747,6 @@ public class GameScreenController implements Initializable {
         animationPane.getChildren().add(imageView);
 
 
-    }
-
-    public void showActionButtons(boolean canPeng, boolean canGang) {
-        peng.setVisible(canPeng);
-        gang.setVisible(canGang);
-        pass.setVisible(true);
-    }
-
-    public void hideActionButtons() {
-        peng.setVisible(false);
-        gang.setVisible(false);
-        pass.setVisible(false);
-    }
-
-    public void onPengButtonClicked() {
-        // 调用玩家的pengAction方法
-        // 这里需要引用当前玩家和当前牌
-        // e.g., currentPlayer.pengAction(this, currentTile);
-        hideActionButtons();
-    }
-
-    public void onGangButtonClicked() {
-        // 调用玩家的gangAction方法
-        // 这里需要引用当前玩家和当前牌
-        // e.g., currentPlayer.gangAction(this, currentTile);
-        hideActionButtons();
-    }
-
-    public void onPassButtonClicked() {
-        // 不进行任何操作，继续游戏
-
-        // 更新顺序为下一玩家
-        gameRules.dealerNextRound(this);
     }
 
     @Override
@@ -807,7 +766,6 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer2.handTiles,eastHandPile);
         loadTilesFromListsToPaneForComputer(computer3.handTiles,westHandPile);
 
-        animation("gang",1);
         showDealer();
         player.play();
     }
