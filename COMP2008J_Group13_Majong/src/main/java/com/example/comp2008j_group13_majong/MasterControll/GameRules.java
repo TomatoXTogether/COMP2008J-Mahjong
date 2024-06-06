@@ -340,21 +340,33 @@ public class GameRules implements PlayerActionObserver {
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("gang",true);
                     gameScreenController.setVisible("pass",true);
+
+                    gameScreenController.startAnimationForOperation();
+                    gameScreenController.timeline.play();
                 }
                 else if (currentPlayer.isPeng){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("peng",true);
                     gameScreenController.setVisible("pass",true);
+
+                    gameScreenController.startAnimationForOperation();
+                    gameScreenController.timeline.play();
                 }
                 else if (currentPlayer.isChi){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("chi",true);
                     gameScreenController.setVisible("pass",true);
+                    gameScreenController.startAnimationForOperation();
+                    gameScreenController.timeline.play();
                 }
                 else {
                     MahjongTile tile = remainingTiles.remove(0);
                     currentPlayer.handTiles.add(tile);
+
+                    gameScreenController.startAnimationForPlay();
+                    gameScreenController.timeline.play();
                 }
+
             }
         }
         printPlayerHands();

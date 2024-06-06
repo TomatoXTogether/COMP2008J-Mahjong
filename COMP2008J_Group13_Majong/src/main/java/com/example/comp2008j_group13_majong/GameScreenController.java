@@ -176,7 +176,7 @@ public class GameScreenController implements Initializable {
     private AtomicBoolean playing = new AtomicBoolean(false);
 
     public Timeline timeline;
-    public void startAnimation() {
+    public void startAnimationForPlay() {
         countDown.setVisible(true);
             if (!playing.get()) {
                 timeline = new Timeline(
@@ -184,6 +184,8 @@ public class GameScreenController implements Initializable {
                             if (timeLine >= 0) {
                                 countDown.setText("Count Down: " + timeLine--);
                             } else {
+                                index = new Random().nextInt(playerHandPile.getColumnCount());
+                                playBottonAction(new ActionEvent());
                                 timeLine = 20;
                             }
                         })
@@ -194,6 +196,27 @@ public class GameScreenController implements Initializable {
 
                 playing.set(true);
             }
+
+    }
+    public void startAnimationForOperation() {
+        countDown.setVisible(true);
+        if (!playing.get()) {
+            timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(1), event -> {
+                        if (timeLine >= 0) {
+                            countDown.setText("Count Down: " + timeLine--);
+                        } else {
+                            passButtonAction(new ActionEvent());
+                            timeLine = 20;
+                        }
+                    })
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+
+            timeline.play();
+
+            playing.set(true);
+        }
 
     }
 
