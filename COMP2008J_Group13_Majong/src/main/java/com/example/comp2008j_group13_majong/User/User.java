@@ -1,12 +1,8 @@
 package com.example.comp2008j_group13_majong.User;
 
-import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
-import com.example.comp2008j_group13_majong.GameScreenController;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -519,7 +515,7 @@ public abstract class User {
         handTiles.add(tile);
     }
 
-    abstract MahjongTile selectTiles(MahjongTile tile);
+    public abstract MahjongTile playTiles();
 
     public MahjongTile removeTile(int index) {
         MahjongTile tile = handTiles.get(index);

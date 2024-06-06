@@ -20,9 +20,10 @@ public class Computer extends User {
 
 
     @Override
-    MahjongTile selectTiles(MahjongTile tile) {
+    public MahjongTile playTiles() {
         Random random = new Random();
         int randomIndex = random.nextInt(handTiles.size());
+        removeTile(randomIndex);
         return handTiles.get(randomIndex);
     }
 
