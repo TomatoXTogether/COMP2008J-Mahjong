@@ -79,6 +79,18 @@ public abstract class User {
         }
     }
 
+    private void notifyHu() {
+        for (PlayerActionObserver observer : observers) {
+            observer.onHU(this);
+        }
+    }
+
+    private void notifyChi() {
+        for (PlayerActionObserver observer : observers) {
+            observer.onChi(this);
+        }
+    }
+
     public MahjongTile[][] ifChi(MahjongTile tile){
         if (tile.ifNum){
             String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
@@ -155,6 +167,7 @@ public abstract class User {
                 inOrderTiles.add(shunzi[2]);
                 isChi = false;
             }
+            notifyChi();
         }
     }
 
@@ -389,6 +402,7 @@ public abstract class User {
         // 将胡的牌添加到 inOrderTiles 中
         MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
         inOrderTiles.add(winningTilesArray);
+        notifyHu();
         // 更新状态
         isHu = false;
     }

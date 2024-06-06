@@ -141,7 +141,7 @@ public class GameScreenController implements Initializable {
 
     int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules();
+    public GameRules gameRules = GameRules.getInstance();
 
     private Player humanPlayer;
     private Computer computer1;
@@ -151,6 +151,7 @@ public class GameScreenController implements Initializable {
 
     public GameScreenController() {
     }
+
     @FXML
     void chiBottonAction(ActionEvent event) {
             if (index != -1) {
@@ -169,6 +170,7 @@ public class GameScreenController implements Initializable {
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
                 gameRules.dealerNextRound(this);
+                updateScore();
             }
     }
 
@@ -182,6 +184,7 @@ public class GameScreenController implements Initializable {
         huImage.setVisible(false);
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
+        updateScore();
     }
 
     @FXML
@@ -264,6 +267,7 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
+            updateScore();
 
             // 在界面上显示赢家
             //GameEndChecker.checkWin(currentPlayer);
@@ -325,6 +329,7 @@ public class GameScreenController implements Initializable {
         pass.setVisible(false);
         passImage.setVisible(false);
         animation("gang",3);
+        updateScore();
     }
 
     @FXML
@@ -337,6 +342,7 @@ public class GameScreenController implements Initializable {
         pass.setVisible(false);
         passImage.setVisible(false);
         animation("peng",3);
+        updateScore();
     }
 
     @FXML
@@ -351,6 +357,7 @@ public class GameScreenController implements Initializable {
         updateAllPlayerHands();
         updateRemainTiles();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        updateScore();
     }
 
     private void updateAllPlayerHands() {
@@ -404,6 +411,10 @@ public class GameScreenController implements Initializable {
 
     private void updateRemainTiles(){
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
+    }
+
+    public void updateScore(){
+        score.setText("Remain: "+humanPlayer.score);
     }
 
     @FXML
@@ -717,39 +728,4 @@ public class GameScreenController implements Initializable {
 
 
     }
-
-    public void showActionButtons(boolean canPeng, boolean canGang) {
-        peng.setVisible(canPeng);
-        gang.setVisible(canGang);
-        pass.setVisible(true);
-    }
-
-    public void hideActionButtons() {
-        peng.setVisible(false);
-        gang.setVisible(false);
-        pass.setVisible(false);
-    }
-
-    public void onPengButtonClicked() {
-        // 调用玩家的pengAction方法
-        // 这里需要引用当前玩家和当前牌
-        // e.g., currentPlayer.pengAction(this, currentTile);
-        hideActionButtons();
-    }
-
-    public void onGangButtonClicked() {
-        // 调用玩家的gangAction方法
-        // 这里需要引用当前玩家和当前牌
-        // e.g., currentPlayer.gangAction(this, currentTile);
-        hideActionButtons();
-    }
-
-    public void onPassButtonClicked() {
-        // 不进行任何操作，继续游戏
-        hideActionButtons();
-        // 更新顺序为下一玩家
-        gameRules.dealerNextRound(this);
-    }
-
-
 }
