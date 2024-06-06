@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong;
 
+import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.MasterControll.PlayerAction;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
@@ -12,7 +13,10 @@ import com.example.comp2008j_group13_majong.User.User;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -88,6 +93,9 @@ public class GameScreenController implements Initializable {
     private Label remainTilesNumber;
 
     @FXML
+    private Label dealer;
+
+    @FXML
     public Button chi;
 
     @FXML
@@ -145,13 +153,13 @@ public class GameScreenController implements Initializable {
 
     int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules();
+    public GameRules gameRules = GameRules.getInstance();
+    private EndScreenController endScreenController;
 
     private Player humanPlayer;
     private Computer computer1;
     private Computer computer2;
     private Computer computer3;
-
 
 
     public GameScreenController() {
@@ -223,6 +231,7 @@ public class GameScreenController implements Initializable {
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
                 gameRules.dealerNextRound(this);
+                updateScore();
 
                 timeline.stop();
                 timeLine=15;
@@ -232,14 +241,26 @@ public class GameScreenController implements Initializable {
 
 
     @FXML
-    void huBottonAction(ActionEvent event) {
+    void huBottonAction(ActionEvent event) throws IOException {
         User last = gameRules.lastPlayer;
-        //gameRules.currentPlayerIndex = humanPlayer.index;
+        gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
         hu.setVisible(false);
         huImage.setVisible(false);
+        pass.setVisible(false);
+        passImage.setVisible(false);
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
+        updateScore();
+        Stage currentStage = (Stage) hu.getScene().getWindow();
+        currentStage.close();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+        Parent root;
+        root = loader.load();
+        EndScreenController controller = loader.getController();
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.show();
     }
 
     @FXML
@@ -321,12 +342,13 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
+            updateScore();
 
             // 在界面上显示赢家
-            //GameEndChecker.checkWin(currentPlayer);
+            GameEndChecker.checkWin(currentPlayer);
 
             // 结束游戏
-            //GameEndChecker.endGame();
+            GameEndChecker.endGame();
         }
     }
 
@@ -382,6 +404,7 @@ public class GameScreenController implements Initializable {
         timeLine=15;
         countDown.setVisible(false);
 
+        updateScore();
     }
 
     @FXML
@@ -398,6 +421,7 @@ public class GameScreenController implements Initializable {
         timeLine=15;
         countDown.setVisible(false);
 
+        updateScore();
     }
 
     @FXML
@@ -412,6 +436,7 @@ public class GameScreenController implements Initializable {
         updateAllPlayerHands();
         updateRemainTiles();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        updateScore();
     }
 
     private void updateAllPlayerHands() {
@@ -467,6 +492,15 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+    public void updateScore(){
+        score.setText("Remain: "+humanPlayer.score);
+    }
+
+
+    @FXML
+    private void showDealer(){
+        dealer.setText("Dealer: "+gameRules.getDealerName());
+    }
 
     @FXML
     void passButtonAction(ActionEvent event) {
@@ -675,7 +709,6 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        int timeLine=10;
 
         humanPlayer = gameRules.humanPlayer;
         computer1 = gameRules.computer1;
@@ -697,6 +730,7 @@ public class GameScreenController implements Initializable {
         animation("chi",1);
         animation("peng",0);
         animation("hu",2);
+        showDealer();
     }
 
     public void animation(String operation, int playerIndex){

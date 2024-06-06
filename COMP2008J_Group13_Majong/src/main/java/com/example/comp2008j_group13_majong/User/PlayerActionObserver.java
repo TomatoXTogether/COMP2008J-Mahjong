@@ -6,4 +6,6 @@ public interface PlayerActionObserver {
     void onPeng(User player);
     void onGang(User player);
     void onPass(User player);
+    void onChi(User player);
+    void onHU(User player);
 }

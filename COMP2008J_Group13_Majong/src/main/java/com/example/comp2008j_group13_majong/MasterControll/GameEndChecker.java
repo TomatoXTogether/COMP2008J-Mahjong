@@ -29,7 +29,7 @@ public class GameEndChecker {
         }
     }
 
-    public void checkWin(User user) {
+    public static void checkWin(User user) {
         if (user instanceof Player) {
             if (user.ifWin()) {
                 System.out.println( " 人类玩家赢了！");
@@ -41,7 +41,7 @@ public class GameEndChecker {
         }
     }
 
-    public void endGame() {
+    public static void endGame() {
         // 实现游戏结束的逻辑，例如清理资源、重置游戏等
         System.out.println("游戏结束。");
         // 在这里你可以做一些额外的清理工作或者游戏重置工作
