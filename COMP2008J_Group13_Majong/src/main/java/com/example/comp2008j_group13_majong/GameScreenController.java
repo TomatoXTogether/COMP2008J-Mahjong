@@ -84,6 +84,9 @@ public class GameScreenController implements Initializable {
     private Label remainTilesNumber;
 
     @FXML
+    private Label dealer;
+
+    @FXML
     public Button chi;
 
     @FXML
@@ -417,6 +420,12 @@ public class GameScreenController implements Initializable {
         score.setText("Remain: "+humanPlayer.score);
     }
 
+
+    @FXML
+    private void showDealer(){
+        dealer.setText("Dealer: "+gameRules.getDealerName());
+    }
+
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
@@ -649,6 +658,7 @@ public class GameScreenController implements Initializable {
         animation("chi",1);
         animation("peng",0);
         animation("hu",2);
+        showDealer();
     }
 
     public void animation(String operation, int playerIndex){
@@ -728,4 +738,39 @@ public class GameScreenController implements Initializable {
 
 
     }
+
+    public void showActionButtons(boolean canPeng, boolean canGang) {
+        peng.setVisible(canPeng);
+        gang.setVisible(canGang);
+        pass.setVisible(true);
+    }
+
+    public void hideActionButtons() {
+        peng.setVisible(false);
+        gang.setVisible(false);
+        pass.setVisible(false);
+    }
+
+    public void onPengButtonClicked() {
+        // 调用玩家的pengAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.pengAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onGangButtonClicked() {
+        // 调用玩家的gangAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.gangAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onPassButtonClicked() {
+        // 不进行任何操作，继续游戏
+        hideActionButtons();
+        // 更新顺序为下一玩家
+        gameRules.dealerNextRound(this);
+    }
+
+
 }

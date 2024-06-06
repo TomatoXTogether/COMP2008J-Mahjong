@@ -157,6 +157,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -377,5 +378,10 @@
             <Image url="@../../../images/play.png" />
          </image>
       </ImageView>
+      <Label fx:id="dealer" layoutX="1039.0" layoutY="17.0" prefHeight="18.0" prefWidth="127.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Dealer:   ">
+         <font>
+            <Font name="Rockwell Extra Bold" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
