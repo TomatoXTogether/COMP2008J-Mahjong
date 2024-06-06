@@ -164,6 +164,9 @@ public class GameScreenController implements Initializable {
     private Computer computer2;
     private Computer computer3;
 
+    Media pick = new Media(new File("src/main/resources/music/bgm.mp3").toURI().toString());
+
+    public MediaPlayer player=new MediaPlayer(pick);
 
     public GameScreenController() {
     }
@@ -735,6 +738,7 @@ public class GameScreenController implements Initializable {
         animation("gang",1);
         //animation("hu",2);
         showDealer();
+        player.play();
     }
 
     public void animation(String operation, int playerIndex){
@@ -752,11 +756,11 @@ public class GameScreenController implements Initializable {
         }else if(Objects.equals(operation, "gang")){
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/杠特效.png")));
             Media pick = new Media(new File("src/main/resources/music/杠音效.m4a").toURI().toString());
-            player=new MediaPlayer(pick);
+             player=new MediaPlayer(pick);
         }else {
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/胡特效.png")));
             Media pick = new Media(new File("src/main/resources/music/胡音效.m4a").toURI().toString());
-            player=new MediaPlayer(pick);
+             player=new MediaPlayer(pick);
         }
 
         player.play();
