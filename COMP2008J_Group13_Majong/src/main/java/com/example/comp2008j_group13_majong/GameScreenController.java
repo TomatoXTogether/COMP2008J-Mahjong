@@ -27,6 +27,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -82,6 +83,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     private Label remainTilesNumber;
+
+    @FXML
+    private Label dealer;
 
     @FXML
     public Button chi;
@@ -141,7 +145,7 @@ public class GameScreenController implements Initializable {
 
     int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
-    private GameRules gameRules=new GameRules();
+    public GameRules gameRules = GameRules.getInstance();
 
     private Player humanPlayer;
     private Computer computer1;
@@ -151,6 +155,7 @@ public class GameScreenController implements Initializable {
 
     public GameScreenController() {
     }
+
     @FXML
     void chiBottonAction(ActionEvent event) {
             if (index != -1) {
@@ -169,6 +174,7 @@ public class GameScreenController implements Initializable {
                 updateUsedTiles(last.index);
                 updateInOrderTiles(3);
                 gameRules.dealerNextRound(this);
+                updateScore();
             }
     }
 
@@ -184,6 +190,7 @@ public class GameScreenController implements Initializable {
         passImage.setVisible(false);
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
+        updateScore();
     }
 
     @FXML
@@ -266,6 +273,7 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
+            updateScore();
 
             // 在界面上显示赢家
             GameEndChecker.checkWin(currentPlayer);
@@ -327,6 +335,7 @@ public class GameScreenController implements Initializable {
         pass.setVisible(false);
         passImage.setVisible(false);
         animation("gang",3);
+        updateScore();
     }
 
     @FXML
@@ -339,6 +348,7 @@ public class GameScreenController implements Initializable {
         pass.setVisible(false);
         passImage.setVisible(false);
         animation("peng",3);
+        updateScore();
     }
 
     @FXML
@@ -353,6 +363,7 @@ public class GameScreenController implements Initializable {
         updateAllPlayerHands();
         updateRemainTiles();
         updateOnePlayerHand(playerHandPile,humanPlayer.handTiles);
+        updateScore();
     }
 
     private void updateAllPlayerHands() {
@@ -408,6 +419,16 @@ public class GameScreenController implements Initializable {
         remainTilesNumber.setText("Remain: "+gameRules.getRemainingTilesNumber());
     }
 
+    public void updateScore(){
+        score.setText("Remain: "+humanPlayer.score);
+    }
+
+
+    @FXML
+    private void showDealer(){
+        dealer.setText("Dealer: "+gameRules.getDealerName());
+    }
+
     @FXML
     void passButtonAction(ActionEvent event) {
         if(index!=-1){
@@ -430,6 +451,7 @@ public class GameScreenController implements Initializable {
             pengImage.setVisible(false);
             gang.setVisible(false);
             gangImage.setVisible(false);
+            humanPlayer.notifyPass();
         }
     }
 
@@ -639,15 +661,16 @@ public class GameScreenController implements Initializable {
         animation("chi",1);
         animation("peng",0);
         animation("hu",2);
+        showDealer();
     }
 
     public void animation(String operation, int playerIndex){
         Image image;
-        if(operation=="chi"){
+        if(Objects.equals(operation, "chi")){
             image = new Image(getClass().getResourceAsStream("/images/吃特效.png"));
-        }else if(operation=="peng"){
+        }else if(Objects.equals(operation, "peng")){
             image = new Image(getClass().getResourceAsStream("/images/碰特效.png"));
-        }else if(operation=="gang"){
+        }else if(Objects.equals(operation, "gang")){
             image = new Image(getClass().getResourceAsStream("/images/杠特效.png"));
         }else {
             image = new Image(getClass().getResourceAsStream("/images/胡特效.png"));
@@ -656,7 +679,7 @@ public class GameScreenController implements Initializable {
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        if(operation=="hu"){
+        if(Objects.equals(operation, "hu")){
             imageView.setFitWidth(500);  // 设置图像宽度
             imageView.setFitHeight(500); // 设置图像高度
         }else {
@@ -714,9 +737,42 @@ public class GameScreenController implements Initializable {
         });
         thread.start();
 
-        //animationPane.getChildren().add(imageView);
+        animationPane.getChildren().add(imageView);
 
 
+    }
+
+    public void showActionButtons(boolean canPeng, boolean canGang) {
+        peng.setVisible(canPeng);
+        gang.setVisible(canGang);
+        pass.setVisible(true);
+    }
+
+    public void hideActionButtons() {
+        peng.setVisible(false);
+        gang.setVisible(false);
+        pass.setVisible(false);
+    }
+
+    public void onPengButtonClicked() {
+        // 调用玩家的pengAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.pengAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onGangButtonClicked() {
+        // 调用玩家的gangAction方法
+        // 这里需要引用当前玩家和当前牌
+        // e.g., currentPlayer.gangAction(this, currentTile);
+        hideActionButtons();
+    }
+
+    public void onPassButtonClicked() {
+        // 不进行任何操作，继续游戏
+        hideActionButtons();
+        // 更新顺序为下一玩家
+        gameRules.dealerNextRound(this);
     }
 
 
