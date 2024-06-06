@@ -208,7 +208,6 @@
             <Font name="Rockwell Extra Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="drawButton" layoutX="491.0" layoutY="373.0" mnemonicParsing="false" onAction="#drawButtonAction" text="Button" />
       <Label fx:id="remainTilesNumber" layoutX="24.0" layoutY="26.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;" text="Remain: 110">
          <font>
             <Font name="Rockwell Extra Bold" size="14.0" />

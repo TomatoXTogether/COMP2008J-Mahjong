@@ -315,6 +315,8 @@ public class GameScreenController implements Initializable {
             currentRaisedTile = null;
 
             timeStop();
+
+            autoPlayAction();
         }
     }
 
@@ -405,8 +407,7 @@ public class GameScreenController implements Initializable {
         updateScore();
     }
 
-    @FXML
-    public void drawButtonAction(ActionEvent event) {
+    public void autoPlayAction() {
         gameRules.dealerNextRound(this);
 
         sortTiles();
@@ -491,8 +492,42 @@ public class GameScreenController implements Initializable {
 
             timeStop();
             humanPlayer.notifyPass();
+            autoPlayAction();
         }
     }
+
+    public void updateUsedTiles( int playerIndex) {
+        switch (playerIndex) {
+            case 1: // north
+                loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
+                break;
+            case 0: // east
+                loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
+                break;
+            case 2: // west
+                loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
+                break;
+            case 3://south
+                loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
+        }
+    }
+
+    public void updateInOrderTiles( int playerIndex) {
+        switch (playerIndex) {
+            case 1:
+                loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
+                break;
+            case 0:
+                loadTilesFromListsToPaneForInOrderTiles(computer2.inOrderTiles, pairingTilesInEast);
+                break;
+            case 2:
+                loadTilesFromListsToPaneForInOrderTiles(computer3.inOrderTiles, pairingTilesInWest);
+                break;
+            case 3:
+                loadTilesFromListsToPaneForInOrderTiles(humanPlayer.inOrderTiles, pairingTilesInSouth);
+        }
+    }
+
 
     private void sortTiles() {
         mahjongDeck.sortHandTiles(humanPlayer.handTiles);
@@ -590,37 +625,7 @@ public class GameScreenController implements Initializable {
     }
 
 
-    public void updateUsedTiles( int playerIndex) {
-        switch (playerIndex) {
-            case 1: // north
-                loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
-                break;
-            case 0: // east
-                loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
-                break;
-            case 2: // west
-                loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-                break;
-            case 3://south
-                loadTilesFromListsToPaneForUsedTiles(humanPlayer.usedTiles, usedTiles);
-        }
-    }
 
-    public void updateInOrderTiles( int playerIndex) {
-        switch (playerIndex) {
-            case 1:
-                loadTilesFromListsToPaneForInOrderTiles(computer1.inOrderTiles, pairingTilesInNorth);
-                break;
-            case 0:
-                loadTilesFromListsToPaneForInOrderTiles(computer2.inOrderTiles, pairingTilesInEast);
-                break;
-            case 2:
-                loadTilesFromListsToPaneForInOrderTiles(computer3.inOrderTiles, pairingTilesInWest);
-                break;
-            case 3:
-                loadTilesFromListsToPaneForInOrderTiles(humanPlayer.inOrderTiles, pairingTilesInSouth);
-        }
-    }
 
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
@@ -727,7 +732,7 @@ public class GameScreenController implements Initializable {
 
         translateTransition.play();
 
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), imageView);
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(2.5), imageView);
         fadeOut.setFromValue(2.0);
         fadeOut.setToValue(0.0);
         fadeOut.setCycleCount(1);
@@ -767,6 +772,8 @@ public class GameScreenController implements Initializable {
 
         showDealer();
         player.play();
+
+        autoPlayAction();
     }
 
 }
