@@ -48,8 +48,8 @@ public class BeginScreenController implements Initializable {
         newStage.setScene(new Scene(root));
         newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
         newStage.show();
-
         player.pause();
+
     }
 
 

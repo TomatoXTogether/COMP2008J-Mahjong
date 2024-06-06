@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-    //Media pick = new Media(new File("src/main/resources/music/bgm.mp3").toURI().toString());
 
-    //public MediaPlayer player=new MediaPlayer(pick);
     @Override
     public void start(Stage stage) throws IOException {
 
