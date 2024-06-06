@@ -409,8 +409,9 @@ public class GameRules implements PlayerActionObserver {
 
                 if(currentPlayer != humanPlayer){
                     //电脑随机出牌
-                    int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
-                    MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
+                    //int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
+                    //MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
+                    MahjongTile discardedTile = currentPlayer.playTiles();
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (lastPlayerIndex + 1)%4;

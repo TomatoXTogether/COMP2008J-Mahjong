@@ -19,8 +19,8 @@ public class Player extends User{
     }
 
     @Override
-    MahjongTile selectTiles(MahjongTile tile) {
-        return tile;
+    public MahjongTile playTiles() {
+        return null;
     }
 
     @Override
