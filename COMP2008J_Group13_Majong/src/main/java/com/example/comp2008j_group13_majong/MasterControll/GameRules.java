@@ -331,10 +331,7 @@ public class GameRules implements PlayerActionObserver {
             } else {
                 System.out.println("现在的玩家index（应该是真人） = " + currentPlayerIndex);
                 if (currentPlayer.isHu) {
-                    gameScreenController.hu.setVisible(true);
-                    gameScreenController.huImage.setVisible(true);
-                    //gameScreenController.pass.setVisible(true);
-                    //gameScreenController.passImage.setVisible(true);
+                    gameScreenController.setVisible("hu",true);
                 }
                 else if (currentPlayer.isGang){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
