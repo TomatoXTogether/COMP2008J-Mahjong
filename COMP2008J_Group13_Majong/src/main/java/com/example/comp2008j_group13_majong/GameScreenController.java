@@ -27,10 +27,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -727,24 +730,36 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForUsedTiles(computer1.usedTiles, usedTilesInNorth);
         loadTilesFromListsToPaneForUsedTiles(computer2.usedTiles, usedTilesInEast);
         loadTilesFromListsToPaneForUsedTiles(computer3.usedTiles, usedTilesInWest);
-        animation("chi",1);
-        animation("peng",0);
-        animation("hu",2);
+        //animation("chi",1);
+        //animation("peng",0);
+        animation("gang",1);
+        //animation("hu",2);
         showDealer();
     }
 
     public void animation(String operation, int playerIndex){
         Image image;
+        MediaPlayer player;
+
         if(Objects.equals(operation, "chi")){
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/吃特效.png")));
+            Media pick = new Media(new File("src/main/resources/music/吃音效.m4a").toURI().toString());
+            player=new MediaPlayer(pick);
         }else if(Objects.equals(operation, "peng")){
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/碰特效.png")));
+            Media pick = new Media(new File("src/main/resources/music/碰音效.m4a").toURI().toString());
+            player=new MediaPlayer(pick);
         }else if(Objects.equals(operation, "gang")){
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/杠特效.png")));
+            Media pick = new Media(new File("src/main/resources/music/杠音效.m4a").toURI().toString());
+            player=new MediaPlayer(pick);
         }else {
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/胡特效.png")));
+            Media pick = new Media(new File("src/main/resources/music/胡音效.m4a").toURI().toString());
+            player=new MediaPlayer(pick);
         }
 
+        player.play();
         // 创建ImageView以显示图像
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
