@@ -1,8 +1,11 @@
 package com.example.comp2008j_group13_majong;
 
+import com.example.comp2008j_group13_majong.MasterControll.GameRules;
+import com.example.comp2008j_group13_majong.User.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,8 +13,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-public class EndScreenController {
+public class EndScreenController implements Initializable {
 
     @FXML
     private Button exit;
@@ -49,6 +55,10 @@ public class EndScreenController {
     @FXML
     private Text thirdPlayerScore;
 
+    private GameRules gameRules = GameRules.getInstance();
+
+    private ArrayList<User> players;
+
     @FXML
     void exitBottonAction(ActionEvent event) {
         Stage currentStage = (Stage) exit.getScene().getWindow();
@@ -72,4 +82,20 @@ public class EndScreenController {
         //player.pause();
     }
 
+    public void updateScoreBoard(){
+        firstPlayerName.setText( players.get(0).name);
+        firstPlayerScore.setText(String.valueOf(players.get(0).score));
+        secondPlayerName.setText( players.get(1).name);
+        secondPlayerScore.setText(String.valueOf(players.get(1).score));
+        thirdPlayerName.setText( players.get(2).name);
+        thirdPlayerScore.setText(String.valueOf(players.get(2).score));
+        fourthPlayerName.setText( players.get(3).name);
+        fourthPlayerScore.setText(String.valueOf(players.get(3).score));
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        players = gameRules.sortPlayers(gameRules.players);
+        updateScoreBoard();
+    }
 }

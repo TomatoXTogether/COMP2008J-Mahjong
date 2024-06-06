@@ -466,7 +466,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void updateScore(){
-        score.setText("Remain: "+humanPlayer.score);
+        score.setText("Score: "+humanPlayer.score);
     }
 
 

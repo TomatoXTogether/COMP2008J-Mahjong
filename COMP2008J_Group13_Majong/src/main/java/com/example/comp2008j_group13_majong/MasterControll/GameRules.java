@@ -26,7 +26,7 @@ public class GameRules implements PlayerActionObserver {
 
     public List<Computer> computers;
     private User dealer;
-    public List<User> players;
+    public ArrayList<User> players;
     private MahjongDeck deck;
     private ArrayList<MahjongTile> remainingTiles;
     public int currentPlayerIndex;
@@ -529,6 +529,16 @@ public class GameRules implements PlayerActionObserver {
             }
         }
         return current;
+    }
+
+    public ArrayList<User> sortPlayers(ArrayList<User> players){
+        Collections.sort(players, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return Integer.compare(u2.getScore(), u1.getScore());
+            }
+        });
+        return players;
     }
 
     @Override
