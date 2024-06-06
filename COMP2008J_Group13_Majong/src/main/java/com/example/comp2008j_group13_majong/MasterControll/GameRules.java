@@ -286,6 +286,7 @@ public class GameRules implements PlayerActionObserver {
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
+                    gameScreenController.animation("hu", currentPlayerIndex);
                     return;
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
@@ -343,14 +344,14 @@ public class GameRules implements PlayerActionObserver {
                 }
                 else if (currentPlayer.isPeng){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.peng.setVisible(true);;
+                    gameScreenController.peng.setVisible(true);
                     gameScreenController.pengImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);
                 }
                 else if (currentPlayer.isChi){
                     //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
-                    gameScreenController.chi.setVisible(true);;
+                    gameScreenController.chi.setVisible(true);
                     gameScreenController.chiImage.setVisible(true);
                     gameScreenController.pass.setVisible(true);
                     gameScreenController.passImage.setVisible(true);

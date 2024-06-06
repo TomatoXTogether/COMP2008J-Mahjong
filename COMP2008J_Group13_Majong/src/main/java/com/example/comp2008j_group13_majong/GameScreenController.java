@@ -12,7 +12,10 @@ import com.example.comp2008j_group13_majong.User.User;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -22,8 +25,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +87,9 @@ public class GameScreenController implements Initializable {
     public ImageView playImage;
 
     @FXML
+    public ImageView exitImage;
+
+    @FXML
     private Label remainTilesNumber;
 
     @FXML
@@ -110,6 +118,9 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public Button play;
+
+    @FXML
+    public Button exit;
 
     @FXML
     public GridPane playerHandPile;
@@ -146,6 +157,7 @@ public class GameScreenController implements Initializable {
     int index;
     private ScoreCalculator scoreCalculator = new ScoreCalculator();
     public GameRules gameRules = GameRules.getInstance();
+    private EndScreenController endScreenController;
 
     private Player humanPlayer;
     private Computer computer1;
@@ -180,7 +192,7 @@ public class GameScreenController implements Initializable {
 
 
     @FXML
-    void huBottonAction(ActionEvent event) {
+    void huBottonAction(ActionEvent event) throws IOException {
         User last = gameRules.lastPlayer;
         gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
@@ -191,6 +203,15 @@ public class GameScreenController implements Initializable {
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
         updateScore();
+        Stage currentStage = (Stage) hu.getScene().getWindow();
+        currentStage.close();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+        Parent root;
+        root = loader.load();
+        EndScreenController controller = loader.getController();
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.show();
     }
 
     @FXML
