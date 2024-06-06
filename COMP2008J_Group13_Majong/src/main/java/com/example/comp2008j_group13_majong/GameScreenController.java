@@ -250,6 +250,7 @@ public class GameScreenController implements Initializable {
                     humanPlayer.chi(chiTile);
                     last.usedTiles.remove(last.usedTiles.size() - 1);
                 }
+
                 animation("chi",3);
                 setVisible("chi",false);
                 setVisible("pass",false);
@@ -260,9 +261,7 @@ public class GameScreenController implements Initializable {
                 gameRules.dealerNextRound(this);
                 updateScore();
 
-                timeline.stop();
-                timeLine=15;
-                countDown.setVisible(false);
+                timeStop();
             }
     }
 
@@ -279,12 +278,15 @@ public class GameScreenController implements Initializable {
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
         animation("hu",3);
         updateScore();
+
         Stage currentStage = (Stage) hu.getScene().getWindow();
         currentStage.close();
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
         Parent root;
         root = loader.load();
         EndScreenController controller = loader.getController();
+
         Stage newStage = new Stage();
         newStage.setScene(new Scene(root));
         newStage.show();
@@ -305,9 +307,8 @@ public class GameScreenController implements Initializable {
             setVisible("play",false);
             updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
             currentRaisedTile = null;
-            timeline.stop();
-            timeLine=15;
-            countDown.setVisible(false);
+
+            timeStop();
         }
     }
 
@@ -362,6 +363,12 @@ public class GameScreenController implements Initializable {
         return false;
     }
 
+    private void timeStop(){
+        timeline.stop();
+        timeLine=15;
+        countDown.setVisible(false);
+    }
+
 
     @FXML
     public void gangBottonAction(ActionEvent event) {
@@ -370,12 +377,11 @@ public class GameScreenController implements Initializable {
         gameRules.gangAction(this,humanPlayer,lastUser);
 
         animation("gang",3);
+
         setVisible("gang",false);
         setVisible("pass",false);
 
-        timeline.stop();
-        timeLine=15;
-        countDown.setVisible(false);
+        timeStop();
 
         updateScore();
     }
@@ -387,12 +393,11 @@ public class GameScreenController implements Initializable {
         gameRules.pengAction(this,humanPlayer,lastUser);
 
         animation("peng",3);
+
         setVisible("peng",false);
         setVisible("pass",false);
 
-        timeline.stop();
-        timeLine=15;
-        countDown.setVisible(false);
+        timeStop();
 
         updateScore();
     }
@@ -620,43 +625,36 @@ public class GameScreenController implements Initializable {
 
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
+        ImageView iv = new ImageView();
+        iv.setPreserveRatio(true); // ratio
+        iv.setFitWidth(35);       // width
+        iv.setFitHeight(80);      // height
+
         if (tile.getValue() != null) {
             Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue() + tile.getSuit() + ".jpg"));
-            ImageView iv = new ImageView();
-            iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(35);       // 宽度
-            iv.setFitHeight(80);      // 高度
-            iv.setImage(image);         // 关联图像
-            return iv;
+            iv.setImage(image);
         }else {
             Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg"));
-            ImageView iv = new ImageView();
-            iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(35);       // 宽度
-            iv.setFitHeight(80);      // 高度
-            iv.setImage(image);         // 关联图像
-            return iv;
+            iv.setImage(image);
         }
+        return iv;
+
     }
 
     private ImageView getTileDisplayForHuman(MahjongTile tile) {
+        ImageView iv = new ImageView();
+        iv.setPreserveRatio(true); // ratio
+        iv.setFitHeight(100);      // height
+        iv.setFitWidth(45);       // width
+
         if(tile.getValue()!=null){
             Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getValue()+tile.getSuit() + ".jpg"));
-            ImageView iv = new ImageView();
-            iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(45);       // 宽度
-            iv.setFitHeight(100);      // 高度
-            iv.setImage(image);         // 关联图像
-            return iv;
+            iv.setImage(image);
         }else {
             Image image = new Image(getClass().getResourceAsStream("/images/" + tile.getSuit() + ".jpg"));
-            ImageView iv = new ImageView();
-            iv.setPreserveRatio(true); // 保持比例
-            iv.setFitWidth(45);       // 宽度
-            iv.setFitHeight(100);      // 高度
-            iv.setImage(image);         // 关联图像
-            return iv;
+            iv.setImage(image);
         }
+        return iv;
     }
 
     private ImageView getTileDisplayForComputer(MahjongTile tile) {
