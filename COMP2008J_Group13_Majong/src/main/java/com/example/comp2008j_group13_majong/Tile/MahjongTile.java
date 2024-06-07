@@ -1,15 +1,9 @@
 package com.example.comp2008j_group13_majong.Tile;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MahjongTile implements MouseListener {
-    public MahjongTile(String value, String suit) {
-        this.value = value;
-        this.suit = Suit.valueOf(suit);
-    }
-
     public enum Suit {
         万, 条, 饼, 风, 发财, 白板
     }
@@ -46,31 +40,6 @@ public class MahjongTile implements MouseListener {
         this(suit, null, 0);
     }
 
-    // 根据牌的状态（正面或背面）设置外观
-//    private void setTileAppearance() {
-//        if (this.up) {
-//            this.turnFront();
-//        } else {
-//            this.turnRear();
-//        }
-//    }
-
-    // 显示正面
-//    public void turnFront() {
-//        if (value != null) {
-//            this.setIcon(new ImageIcon("path_to_images/" + suit + "_" + value + ".png"));
-//        } else {
-//            this.setIcon(new ImageIcon("path_to_images/" + suit + ".png"));
-//        }
-//        this.up = true;
-//    }
-
-    // 显示背面
-//    public void turnRear() {
-//        this.setIcon(new ImageIcon("path_to_images/rear.png")); // 修改图片路径
-//        this.up = false;
-//    }
-
     public Suit getSuit() {
         return suit;
     }
@@ -79,37 +48,8 @@ public class MahjongTile implements MouseListener {
         return value;
     }
 
-    public boolean isUp() {
-        return up;
-    }
-
     public int getIndex() {
         return index;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-//    public void setUp(boolean up) {
-//        this.up = up;
-//        setTileAppearance();
-//    }
-
-    public boolean isCanClick() {
-        return canClick;
-    }
-
-    public void setCanClick(boolean canClick) {
-        this.canClick = canClick;
-    }
-
-    public boolean isClicked() {
-        return clicked;
-    }
-
-    public void setClicked(boolean clicked) {
-        this.clicked = clicked;
     }
 
     @Override

@@ -217,10 +217,6 @@ public class GameRules implements PlayerActionObserver {
         }
     }
 
-    public ArrayList<MahjongTile> getHumanPlayerHand() {
-        return humanPlayer.handTiles;
-    }
-
     public ArrayList<MahjongTile> getComputerHand(int index) {
         switch (index) {
             case 0:
@@ -232,10 +228,6 @@ public class GameRules implements PlayerActionObserver {
             default:
                 return new ArrayList<>();
         }
-    }
-
-    public ArrayList<MahjongTile> getRemainingTiles() {
-        return remainingTiles;
     }
 
     public int getRemainingTilesNumber(){return remainingTiles.size();}
@@ -543,29 +535,9 @@ public class GameRules implements PlayerActionObserver {
     }
 
 
-    public MahjongTile getLastDiscardedTile() {
-        return lastDiscardedTile;
-    }
-
-
     public String getDealerName(){
         int realDealerIndex = (dealerIndex +1 ) % 4;
         return realDealerIndex == 1 ? "North" : realDealerIndex == 0 ? "East" : realDealerIndex == 3 ? "South" : "West";
-    }
-
-    private void handleComputerHand(Computer computer, MahjongTile tile) {
-        int computerIndex = computers.indexOf(computer);
-        switch (computerIndex) {
-            case 0:
-                computer1.handTiles.add(tile);
-                break;
-            case 1:
-                computer2.handTiles.add(tile);
-                break;
-            case 2:
-                computer3.handTiles.add(tile);
-                break;
-        }
     }
 
     public User next(int currentIndex){
