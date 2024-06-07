@@ -271,7 +271,7 @@ public class GameScreenController implements Initializable {
 
 
     @FXML
-    void huBottonAction(ActionEvent event) throws IOException {
+    public void huBottonAction(ActionEvent event) throws IOException {
         User last = gameRules.lastPlayer;
         gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
