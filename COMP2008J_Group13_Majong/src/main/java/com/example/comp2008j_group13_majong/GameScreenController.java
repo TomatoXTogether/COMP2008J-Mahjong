@@ -2,7 +2,6 @@ package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
-import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
@@ -87,7 +86,7 @@ public class GameScreenController implements Initializable {
     private ImageView gangImage;
 
     @FXML
-    private Button hu;
+    public Button hu;
 
     @FXML
     private ImageView huImage;
@@ -144,7 +143,6 @@ public class GameScreenController implements Initializable {
 
     private int index;
     private GameRules gameRules = GameRules.getInstance();
-    private EndScreenController endScreenController;
 
     private Player humanPlayer;
     private Computer computer1;
@@ -158,7 +156,7 @@ public class GameScreenController implements Initializable {
     public GameScreenController() {
     }
 
-    private int timeLine=15;
+    private int timeLine = 15;
 
     private AtomicBoolean playing = new AtomicBoolean(false);
 
@@ -172,7 +170,11 @@ public class GameScreenController implements Initializable {
                                 countDown.setText("Count Down: " + timeLine--);
                             } else {
                                 index = new Random().nextInt(playerHandPile.getColumnCount());
-                                playBottonAction(new ActionEvent());
+                                try {
+                                    playBottonAction(new ActionEvent());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 timeLine = 20;
                             }
                         })
@@ -194,7 +196,11 @@ public class GameScreenController implements Initializable {
                         if (timeLine >= 0) {
                             countDown.setText("Count Down: " + timeLine--);
                         } else {
-                            passButtonAction(new ActionEvent());
+                            try {
+                                passButtonAction(new ActionEvent());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             timeLine = 20;
                         }
                     })
@@ -263,7 +269,7 @@ public class GameScreenController implements Initializable {
 
 
     @FXML
-    void huBottonAction(ActionEvent event) throws IOException {
+    public void huBottonAction(ActionEvent event) throws IOException {
         User last = gameRules.lastPlayer;
         gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
@@ -289,7 +295,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void playBottonAction(ActionEvent event) {
+    void playBottonAction(ActionEvent event) throws IOException {
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -393,7 +399,7 @@ public class GameScreenController implements Initializable {
         updateScore();
     }
 
-    public void autoPlayAction() {
+    public void autoPlayAction() throws IOException {
         gameRules.dealerNextRound(this);
 
         sortTiles();
@@ -465,7 +471,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void passButtonAction(ActionEvent event) {
+    void passButtonAction(ActionEvent event) throws IOException {
         if(index!=-1){
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
 
@@ -757,7 +763,11 @@ public class GameScreenController implements Initializable {
         showDealer();
         player.play();
 
-        autoPlayAction();
+        try {
+            autoPlayAction();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

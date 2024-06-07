@@ -14,7 +14,6 @@ public abstract class User {
     public int index;
     public int score;
     public ArrayList<MahjongTile[]> inOrderTiles; // tiles in order
-    //public ArrayList<MahjongTile[]> inPengTiles;// tiles in peng
     public ArrayList<MahjongTile> handTiles; // tiles in hand
     public ArrayList<MahjongTile> usedTiles;
     public boolean isTurn;
@@ -51,10 +50,6 @@ public abstract class User {
 
     public void addObserver(PlayerActionObserver observer) {
         observers.add(observer);
-    }
-
-    public void removeObserver(PlayerActionObserver observer) {
-        observers.remove(observer);
     }
 
     private void notifyPeng() {
@@ -165,30 +160,6 @@ public abstract class User {
         }
     }
 
-    /*public MahjongTile[] ifPeng(MahjongTile tile){
-        MahjongTile[] pongzi = new MahjongTile[3];
-        if (getTileNum(tile) == 2){
-            int i = 0;
-            for (MahjongTile t : handTiles){
-                if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
-                    pongzi[i] = t;
-                    i ++;
-                }
-            }
-            isPeng = true;
-        }else {
-            isPeng = false;
-        }
-        return pongzi;
-    }*/
-
-        public void peng(MahjongTile[] pengTiles) {
-        for (MahjongTile tile : pengTiles) {
-            handTiles.remove(tile);
-        }
-        inOrderTiles.add(pengTiles);
-        isPeng = false;
-    }
     public MahjongTile[] ifPeng(MahjongTile tile) {
         System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
@@ -423,10 +394,6 @@ public abstract class User {
         return inOrderTiles;
     }
 
-    public void setInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles) {
-        this.inOrderTiles = inOrderTiles;
-    }
-
     public String getPosition() {
         return position;
     }
@@ -437,15 +404,6 @@ public abstract class User {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    // 添加设置玩家位置的方法
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public boolean isTurn() {
-        return isTurn;
     }
 
     // 设置是否是玩家的回合的方法
@@ -479,10 +437,6 @@ public abstract class User {
 
     public ArrayList<MahjongTile> getTiles(){
         return handTiles;
-    }
-
-    public void addTile(MahjongTile tile){
-        handTiles.add(tile);
     }
 
     public abstract MahjongTile playTiles();
