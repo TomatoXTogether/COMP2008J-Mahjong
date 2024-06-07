@@ -23,7 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-//import javafx.scene.media.Media;
+import javafx.scene.media.Media;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -113,20 +113,14 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane eastHandPile;
 
-
     @FXML
     private GridPane northHandPile;
-
 
     @FXML
     public GridPane playerHandPile;
 
-
     @FXML
     private GridPane westHandPile;
-
-    @FXML
-    private Button drawButton;
 
     @FXML
     private Label score;

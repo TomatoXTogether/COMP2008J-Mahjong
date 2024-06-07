@@ -9,9 +9,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,6 +62,8 @@ public class EndScreenController implements Initializable {
 
     private ArrayList<User> players;
 
+
+
     @FXML
     void exitBottonAction(ActionEvent event) {
         Stage currentStage = (Stage) exit.getScene().getWindow();
@@ -97,5 +102,20 @@ public class EndScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         players = gameRules.sortPlayers(gameRules.players);
         updateScoreBoard();
+        MediaPlayer player;
+
+        if(players.get(0).equals(gameRules.humanPlayer)){
+            humanWin.setVisible(true);
+            humanLose.setVisible(false);
+            Media pick = new Media(new File("src/main/resources/music/win.mp3").toURI().toString());
+            player=new MediaPlayer(pick);
+        }else {
+            humanWin.setVisible(false);
+            humanLose.setVisible(true);
+            Media pick = new Media(new File("src/main/resources/music/lose.mp3").toURI().toString());
+            player=new MediaPlayer(pick);
+        }
+        player.play();
+
     }
 }
