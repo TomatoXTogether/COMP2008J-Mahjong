@@ -2,7 +2,6 @@ package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
-import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 
@@ -126,9 +125,6 @@ public class GameScreenController implements Initializable {
     private GridPane westHandPile;
 
     @FXML
-    private Button drawButton;
-
-    @FXML
     private Label score;
 
     @FXML
@@ -150,7 +146,6 @@ public class GameScreenController implements Initializable {
 
     private int index;
     private GameRules gameRules = GameRules.getInstance();
-    private EndScreenController endScreenController;
 
     private Player humanPlayer;
     private Computer computer1;
@@ -164,7 +159,7 @@ public class GameScreenController implements Initializable {
     public GameScreenController() {
     }
 
-    private int timeLine=15;
+    private int timeLine = 15;
 
     private AtomicBoolean playing = new AtomicBoolean(false);
 

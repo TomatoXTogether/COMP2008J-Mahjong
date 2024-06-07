@@ -63,16 +63,4 @@ public class MahjongDeck {
     public void shuffle() {
         Collections.shuffle(tiles);
     }
-
-    public MahjongTile drawTile() {
-        if (!tiles.isEmpty()) {
-            return tiles.remove(0);
-        }
-        return null; // If no tiles are left, return null
-    }
-    public int tilesLeft() {
-        return tiles.size();
-    }
-
-
 }
