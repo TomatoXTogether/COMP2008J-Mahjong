@@ -44,9 +44,6 @@ public class EndScreenController implements Initializable {
     private Text humanWin;
 
     @FXML
-    private Button newGame;
-
-    @FXML
     private Text secondPlayerName;
 
     @FXML
@@ -67,24 +64,7 @@ public class EndScreenController implements Initializable {
     @FXML
     void exitBottonAction(ActionEvent event) {
         Stage currentStage = (Stage) exit.getScene().getWindow();
-        //player.pause();
         currentStage.close();
-    }
-
-    @FXML
-    void newGameBottonAction(ActionEvent event) throws IOException {
-        Stage currentStage = (Stage) newGame.getScene().getWindow();
-        currentStage.close();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("GameScreen.fxml"));
-        Parent root;
-        root = loader.load();
-        GameScreenController controller = loader.getController();
-        Stage newStage = new Stage();
-        newStage.setScene(new Scene(root));
-        newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
-        newStage.show();
-
-        //player.pause();
     }
 
     public void updateScoreBoard(){

@@ -82,12 +82,7 @@
             <Font name="Berlin Sans FB Demi Bold" size="25.0" />
          </font>
       </Text>
-      <Button fx:id="newGame" layoutX="527.0" layoutY="612.0" mnemonicParsing="false" onAction="#newGameBottonAction" prefHeight="56.0" prefWidth="245.0" style="-fx-background-color: #ffffff;" text="One More Game">
-         <font>
-            <Font name="Berlin Sans FB Demi Bold" size="28.0" />
-         </font>
-      </Button>
-      <Button fx:id="exit" layoutX="240.0" layoutY="612.0" mnemonicParsing="false" onAction="#exitBottonAction" prefHeight="56.0" prefWidth="245.0" style="-fx-background-color: #ffffff;" text="Exit">
+      <Button fx:id="exit" layoutX="386.0" layoutY="611.0" mnemonicParsing="false" onAction="#exitBottonAction" prefHeight="56.0" prefWidth="245.0" style="-fx-background-color: #ffffff;" text="Exit">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="28.0" />
          </font>
