@@ -322,6 +322,19 @@ public class GameRules implements PlayerActionObserver {
                         currentPlayer.hu(tile);
                         gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                         currentPlayer.notifyHu();
+                        
+                        Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
+                        currentStage.close();
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+                        Parent root;
+                        root = loader.load();
+                        EndScreenController controller = loader.getController();
+
+                        Stage newStage = new Stage();
+                        newStage.setScene(new Scene(root));
+                        newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
+                        newStage.show();
                         gameScreenController.animation("hu", currentPlayerIndex);
                         return;
                     }
@@ -396,6 +409,8 @@ public class GameRules implements PlayerActionObserver {
                         gameScreenController.updateScore();
                         currentPlayer.notifyHu();
                         gameScreenController.animation("hu", currentPlayerIndex);
+
+                        gameScreenController.huBottonAction(new ActionEvent());
                     } else {
                         gameScreenController.startAnimationForPlay();
                         gameScreenController.timeline.play();
