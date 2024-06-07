@@ -2,7 +2,6 @@ package com.example.comp2008j_group13_majong;
 
 import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
-import com.example.comp2008j_group13_majong.MasterControll.PlayerAction;
 import com.example.comp2008j_group13_majong.MasterControll.ScoreCalculator;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
@@ -17,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -26,7 +24,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 //import javafx.scene.media.Media;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -152,7 +149,6 @@ public class GameScreenController implements Initializable {
     private ImageView currentRaisedTile;
 
     private int index;
-    private ScoreCalculator scoreCalculator = new ScoreCalculator();
     private GameRules gameRules = GameRules.getInstance();
     private EndScreenController endScreenController;
 

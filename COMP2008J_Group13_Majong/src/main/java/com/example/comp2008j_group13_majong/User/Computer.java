@@ -17,8 +17,6 @@ public class Computer extends User {
         this.inOrderTiles = new ArrayList<>();
     }
 
-
-
     @Override
     public MahjongTile playTiles() {
         Random random = new Random();
