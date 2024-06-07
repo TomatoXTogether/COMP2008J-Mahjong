@@ -326,11 +326,6 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
-            updateScore();
-
-            GameEndChecker.checkWin(currentPlayer);
-
-            GameEndChecker.endGame();
             humanPlayer.notifyHu();
         }
     }
