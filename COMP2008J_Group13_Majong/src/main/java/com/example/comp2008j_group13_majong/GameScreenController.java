@@ -581,7 +581,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+    private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
         int maxCols = 6;
         int rowIndex = 0;
@@ -603,7 +603,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
+    private void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
         for (int row = 0; row < inOrderTiles.size(); row++) {
             MahjongTile[] tiles = inOrderTiles.get(row);
             int col = 0;
@@ -614,8 +614,6 @@ public class GameScreenController implements Initializable {
             }
         }
     }
-
-
 
 
 
