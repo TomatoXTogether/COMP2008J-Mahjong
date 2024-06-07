@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
+import com.example.comp2008j_group13_majong.EndScreenController;
 import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 import com.example.comp2008j_group13_majong.User.Computer;
@@ -10,10 +11,15 @@ import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.example.comp2008j_group13_majong.Tile.MahjongTile.Suit.发财;
@@ -129,37 +135,37 @@ public class GameRules implements PlayerActionObserver {
          }**/
 
 
-//        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
-//        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
-//            if (suit == MahjongTile.Suit.饼) {
-////                for (int index = 1; index < 7; index++) {
-////                    String value = numberValues[index - 1];
-////                    MahjongTile tile = new MahjongTile(suit, value, index);
-////                    humanPlayer.handTiles.add(tile);
-////                }
+        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
+        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
+            if (suit == MahjongTile.Suit.饼) {
+                for (int index = 1; index < 7; index++) {
+                    String value = numberValues[index - 1];
+                    MahjongTile tile = new MahjongTile(suit, value, index);
+                    humanPlayer.handTiles.add(tile);
+                }
 //                for (int index = 1; index < 13; index++) {
 //                    //String value = numberValues[index - 1];
 //                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.白板);
 //                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
 //                    computer2.handTiles.add(t1);
 //                }
-//                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                //humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-//
-//            }
-//        }
+                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
+
+            }
+        }
         for (int i = 0; i < 13; i++) {
             computer3.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
-            humanPlayer.handTiles.add(remainingTiles.remove(0));
+            //humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
         /**for(int i = 0; i < 12; i++){
             humanPlayer.handTiles.add(remainingTiles.remove(0));
@@ -227,9 +233,8 @@ public class GameRules implements PlayerActionObserver {
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
 
-    public void dealerNextRound(GameScreenController gameScreenController) {
+    public void dealerNextRound(GameScreenController gameScreenController) throws IOException {
         if (!remainingTiles.isEmpty()) {
-            int maybeIndex = -1;
             lastPlayer = current(currentPlayerIndex);
             List<User> players = new ArrayList<>();
             players.add(humanPlayer);
@@ -279,7 +284,21 @@ public class GameRules implements PlayerActionObserver {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
                     gameScreenController.animation("hu", currentPlayerIndex);
+
+                    Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
+                    currentStage.close();
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+                    Parent root;
+                    root = loader.load();
+                    EndScreenController controller = loader.getController();
+
+                    Stage newStage = new Stage();
+                    newStage.setScene(new Scene(root));
+                    newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
+                    newStage.show();
                     return;
+
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
                     gameScreenController.animation("gang", currentPlayerIndex);
@@ -294,10 +313,18 @@ public class GameRules implements PlayerActionObserver {
                 } else {
                     // 给当前玩家发一张牌
                     MahjongTile tile = remainingTiles.remove(0);
+                    currentPlayer.ifHu(tile);
                     currentPlayer.handTiles.add(tile);
-
                     // 打印当前玩家信息和收到的牌
                     System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
+
+                    if (currentPlayer.isHu) {
+                        currentPlayer.hu(tile);
+                        gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                        currentPlayer.notifyHu();
+                        gameScreenController.animation("hu", currentPlayerIndex);
+                        return;
+                    }
                 }
 
                 // 电脑从牌堆中随机出一张牌
@@ -313,7 +340,11 @@ public class GameRules implements PlayerActionObserver {
 
                 PauseTransition pause = new PauseTransition(Duration.seconds(2)); // 2 second interval
                 pause.setOnFinished(e -> {
-                    gameScreenController.autoPlayAction();
+                    try {
+                        gameScreenController.autoPlayAction();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
                 pause.play();
 
@@ -355,11 +386,21 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.timeline.play();
                 }
                 else {
-                    MahjongTile tile = remainingTiles.remove(0);
+                    //MahjongTile tile = remainingTiles.remove(0);
+                    MahjongTile tile = new MahjongTile(MahjongTile.Suit.发财);
+                    currentPlayer.ifHu(tile);
                     currentPlayer.handTiles.add(tile);
+                    if (currentPlayer.isHu) {
+                        currentPlayer.hu(tile);
+                        gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
+                        gameScreenController.updateScore();
+                        currentPlayer.notifyHu();
+                        gameScreenController.animation("hu", currentPlayerIndex);
+                    } else {
+                        gameScreenController.startAnimationForPlay();
+                        gameScreenController.timeline.play();
+                    }
 
-                    gameScreenController.startAnimationForPlay();
-                    gameScreenController.timeline.play();
                 }
 
             }

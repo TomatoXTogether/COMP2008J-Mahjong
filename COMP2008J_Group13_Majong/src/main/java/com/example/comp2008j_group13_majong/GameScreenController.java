@@ -22,7 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-//import javafx.scene.media.Media;
+import javafx.scene.media.Media;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -86,7 +86,7 @@ public class GameScreenController implements Initializable {
     private ImageView gangImage;
 
     @FXML
-    private Button hu;
+    public Button hu;
 
     @FXML
     private ImageView huImage;
@@ -112,14 +112,11 @@ public class GameScreenController implements Initializable {
     @FXML
     private GridPane eastHandPile;
 
-
     @FXML
     private GridPane northHandPile;
 
-
     @FXML
     public GridPane playerHandPile;
-
 
     @FXML
     private GridPane westHandPile;
@@ -173,7 +170,11 @@ public class GameScreenController implements Initializable {
                                 countDown.setText("Count Down: " + timeLine--);
                             } else {
                                 index = new Random().nextInt(playerHandPile.getColumnCount());
-                                playBottonAction(new ActionEvent());
+                                try {
+                                    playBottonAction(new ActionEvent());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 timeLine = 20;
                             }
                         })
@@ -195,7 +196,11 @@ public class GameScreenController implements Initializable {
                         if (timeLine >= 0) {
                             countDown.setText("Count Down: " + timeLine--);
                         } else {
-                            passButtonAction(new ActionEvent());
+                            try {
+                                passButtonAction(new ActionEvent());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             timeLine = 20;
                         }
                     })
@@ -290,7 +295,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void playBottonAction(ActionEvent event) {
+    void playBottonAction(ActionEvent event) throws IOException {
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -321,11 +326,6 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
-            updateScore();
-
-            GameEndChecker.checkWin(currentPlayer);
-
-            GameEndChecker.endGame();
             humanPlayer.notifyHu();
         }
     }
@@ -399,7 +399,7 @@ public class GameScreenController implements Initializable {
         updateScore();
     }
 
-    public void autoPlayAction() {
+    public void autoPlayAction() throws IOException {
         gameRules.dealerNextRound(this);
 
         sortTiles();
@@ -471,7 +471,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void passButtonAction(ActionEvent event) {
+    void passButtonAction(ActionEvent event) throws IOException {
         if(index!=-1){
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
 
@@ -582,7 +582,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+    private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
         pane.getChildren().clear();
         int maxCols = 6;
         int rowIndex = 0;
@@ -604,7 +604,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
+    private void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
         for (int row = 0; row < inOrderTiles.size(); row++) {
             MahjongTile[] tiles = inOrderTiles.get(row);
             int col = 0;
@@ -615,8 +615,6 @@ public class GameScreenController implements Initializable {
             }
         }
     }
-
-
 
 
 
@@ -765,7 +763,11 @@ public class GameScreenController implements Initializable {
         showDealer();
         player.play();
 
-        autoPlayAction();
+        try {
+            autoPlayAction();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
