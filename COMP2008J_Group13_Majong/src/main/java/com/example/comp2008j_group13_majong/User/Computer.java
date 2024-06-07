@@ -22,7 +22,7 @@ public class Computer extends User {
     @Override
     public MahjongTile playTiles() {
         Random random = new Random();
-        int randomIndex = random.nextInt(handTiles.size());
+        int randomIndex = random.nextInt(handTiles.size()-1);
         removeTile(randomIndex);
         return handTiles.get(randomIndex);
     }

@@ -75,7 +75,7 @@ public abstract class User {
         }
     }
 
-    private void notifyHu() {
+    public void notifyHu() {
         for (PlayerActionObserver observer : observers) {
             observer.onHU(this);
         }
@@ -141,23 +141,21 @@ public abstract class User {
 
     public void chi(MahjongTile tile) {
         if (isChi){
-            System.out.println("chi");
-            this.score += 10;
             MahjongTile[][] shunzi = ifChi(tile);
             if (shunzi[0][0] != null){
                 handTiles.remove(getTile(shunzi[0][0]));
                 handTiles.remove(getTile(shunzi[0][1]));
-                handTiles.remove(getTile(shunzi[0][2]));
+                //handTiles.remove(getTile(shunzi[0][2]));
                 inOrderTiles.add(shunzi[0]);
                 isChi = false;
             }else if (shunzi[1][0] != null){
                 handTiles.remove(getTile(shunzi[1][0]));
-                handTiles.remove(getTile(shunzi[1][1]));
+                //handTiles.remove(getTile(shunzi[1][1]));
                 handTiles.remove(getTile(shunzi[1][2]));
                 inOrderTiles.add(shunzi[1]);
                 isChi = false;
             }else if (shunzi[2][0] != null){
-                handTiles.remove(getTile(shunzi[2][0]));
+                //handTiles.remove(getTile(shunzi[2][0]));
                 handTiles.remove(getTile(shunzi[2][1]));
                 handTiles.remove(getTile(shunzi[2][2]));
                 inOrderTiles.add(shunzi[2]);
@@ -302,33 +300,6 @@ public abstract class User {
         notifyGang();
     }
 
-
-
-    public MahjongTile[] ifKong(MahjongTile tile){
-        MahjongTile[] kongzi = new MahjongTile[4];
-        if (getTileNum(tile) == 3){
-            int i = 0;
-            for (MahjongTile t : handTiles){
-                if (t.getValue().equals(tile.getValue()) && t.getSuit().equals(tile.getSuit())){
-                    kongzi[i] = t;
-                    i ++;
-                }
-            }
-            isKong = true;
-        }else {
-            isKong = false;
-        }
-        return null;
-    }
-
-    public void kong(MahjongTile[] kongzi) {
-        for (MahjongTile t : kongzi){
-            handTiles.remove(t);
-        }
-        inOrderTiles.add(kongzi);
-        isKong = false;
-    }
-
     public ArrayList<MahjongTile> ifHu(MahjongTile tile) {
         // 将 inOrderTiles 中的所有牌展平为一个列表
         ArrayList<MahjongTile> tilesToCheck = new ArrayList<>(handTiles);
@@ -351,7 +322,6 @@ public abstract class User {
     private boolean isWinningHand(ArrayList<MahjongTile> tiles) {
         // 对手牌进行排序，便于后续判断
         tiles.sort(new MahjongTileComparator());
-
         // 判断是否可以胡牌的逻辑
         // 这里我们使用递归回溯法来检查所有可能的顺子和刻子组合
         return canFormWinningHand(tiles);

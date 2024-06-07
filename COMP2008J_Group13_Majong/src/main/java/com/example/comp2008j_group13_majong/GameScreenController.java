@@ -335,6 +335,7 @@ public class GameScreenController implements Initializable {
             GameEndChecker.checkWin(currentPlayer);
 
             GameEndChecker.endGame();
+            humanPlayer.notifyHu();
         }
     }
 
