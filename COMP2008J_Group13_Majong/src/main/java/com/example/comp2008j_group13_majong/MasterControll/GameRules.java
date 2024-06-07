@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
+import com.example.comp2008j_group13_majong.EndScreenController;
 import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 import com.example.comp2008j_group13_majong.User.Computer;
@@ -10,10 +11,15 @@ import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.example.comp2008j_group13_majong.Tile.MahjongTile.Suit.发财;
@@ -235,7 +241,7 @@ public class GameRules implements PlayerActionObserver {
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
 
-    public void dealerNextRound(GameScreenController gameScreenController) {
+    public void dealerNextRound(GameScreenController gameScreenController) throws IOException {
         if (!remainingTiles.isEmpty()) {
             lastPlayer = current(currentPlayerIndex);
             List<User> players = new ArrayList<>();
@@ -286,7 +292,21 @@ public class GameRules implements PlayerActionObserver {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
                     gameScreenController.animation("hu", currentPlayerIndex);
+
+                    Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
+                    currentStage.close();
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+                    Parent root;
+                    root = loader.load();
+                    EndScreenController controller = loader.getController();
+
+                    Stage newStage = new Stage();
+                    newStage.setScene(new Scene(root));
+                    newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
+                    newStage.show();
                     return;
+
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
                     gameScreenController.animation("gang", currentPlayerIndex);
@@ -328,7 +348,11 @@ public class GameRules implements PlayerActionObserver {
 
                 PauseTransition pause = new PauseTransition(Duration.seconds(2)); // 2 second interval
                 pause.setOnFinished(e -> {
-                    gameScreenController.autoPlayAction();
+                    try {
+                        gameScreenController.autoPlayAction();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
                 pause.play();
 

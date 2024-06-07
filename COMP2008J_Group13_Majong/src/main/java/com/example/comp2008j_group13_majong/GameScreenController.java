@@ -87,7 +87,7 @@ public class GameScreenController implements Initializable {
     private ImageView gangImage;
 
     @FXML
-    private Button hu;
+    public Button hu;
 
     @FXML
     private ImageView huImage;
@@ -172,7 +172,11 @@ public class GameScreenController implements Initializable {
                                 countDown.setText("Count Down: " + timeLine--);
                             } else {
                                 index = new Random().nextInt(playerHandPile.getColumnCount());
-                                playBottonAction(new ActionEvent());
+                                try {
+                                    playBottonAction(new ActionEvent());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 timeLine = 20;
                             }
                         })
@@ -194,7 +198,11 @@ public class GameScreenController implements Initializable {
                         if (timeLine >= 0) {
                             countDown.setText("Count Down: " + timeLine--);
                         } else {
-                            passButtonAction(new ActionEvent());
+                            try {
+                                passButtonAction(new ActionEvent());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             timeLine = 20;
                         }
                     })
@@ -289,7 +297,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void playBottonAction(ActionEvent event) {
+    void playBottonAction(ActionEvent event) throws IOException {
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -393,7 +401,7 @@ public class GameScreenController implements Initializable {
         updateScore();
     }
 
-    public void autoPlayAction() {
+    public void autoPlayAction() throws IOException {
         gameRules.dealerNextRound(this);
 
         sortTiles();
@@ -465,7 +473,7 @@ public class GameScreenController implements Initializable {
     }
 
     @FXML
-    void passButtonAction(ActionEvent event) {
+    void passButtonAction(ActionEvent event) throws IOException {
         if(index!=-1){
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
 
@@ -757,7 +765,11 @@ public class GameScreenController implements Initializable {
         showDealer();
         player.play();
 
-        autoPlayAction();
+        try {
+            autoPlayAction();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
