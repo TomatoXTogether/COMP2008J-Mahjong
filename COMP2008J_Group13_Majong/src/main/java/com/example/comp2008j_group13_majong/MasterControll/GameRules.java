@@ -1,5 +1,6 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
+import com.example.comp2008j_group13_majong.EndScreenController;
 import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 import com.example.comp2008j_group13_majong.User.Computer;
@@ -9,6 +10,10 @@ import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import javafx.animation.PauseTransition;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -312,6 +317,8 @@ public class GameRules implements PlayerActionObserver {
                 }
 
             }
+        } else {
+            gameScreenController.handleEndGame(gameScreenController);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.comp2008j_group13_majong;
 
-import com.example.comp2008j_group13_majong.MasterControll.GameEndChecker;
 import com.example.comp2008j_group13_majong.MasterControll.GameRules;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
@@ -22,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -725,6 +723,20 @@ public class GameScreenController implements Initializable {
         animationPane.getChildren().add(imageView);
 
 
+    }
+
+    public void handleEndGame(GameScreenController gameScreenController) throws IOException {
+        Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
+        currentStage.close();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+        Parent root = loader.load();
+        EndScreenController controller = loader.getController();
+
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
+        newStage.show();
     }
 
     @Override
