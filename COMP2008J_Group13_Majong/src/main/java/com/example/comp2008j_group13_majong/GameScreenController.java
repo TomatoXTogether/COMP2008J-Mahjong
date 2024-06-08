@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScreenController implements Initializable {
 
+    // FXML-declared UI elements
     @FXML
     private AnchorPane animationPane;
 
@@ -136,10 +137,9 @@ public class GameScreenController implements Initializable {
 
     private MahjongDeck mahjongDeck = new MahjongDeck();
 
+    private ImageView currentRaisedTile; //the tile that player is about to play
 
-    private ImageView currentRaisedTile;
-
-    private int index;
+    private int index; //index of human player's hand tile to play
     private GameRules gameRules = GameRules.getInstance();
 
     private Player humanPlayer;
@@ -147,13 +147,18 @@ public class GameScreenController implements Initializable {
     private Computer computer2;
     private Computer computer3;
 
+    //bgm
     Media pick = new Media(new File("src/main/resources/music/bgm.mp3").toURI().toString());
 
     public MediaPlayer player=new MediaPlayer(pick);
 
+    /**
+     * Constructor for GameScreenController
+     */
     public GameScreenController() {
     }
 
+    // count down
     private int timeLine = 15;
 
     private AtomicBoolean playing = new AtomicBoolean(false);
@@ -167,6 +172,7 @@ public class GameScreenController implements Initializable {
                             if (timeLine >= 0) {
                                 countDown.setText("Count Down: " + timeLine--);
                             } else {
+                                // if player does not play a tile, system will randomly play a tile from player's hand tiles
                                 index = new Random().nextInt(playerHandPile.getColumnCount());
                                 try {
                                     playBottonAction(new ActionEvent());
@@ -195,6 +201,7 @@ public class GameScreenController implements Initializable {
                             countDown.setText("Count Down: " + timeLine--);
                         } else {
                             try {
+                                // if player does not choose, system will pass
                                 passButtonAction(new ActionEvent());
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
@@ -213,6 +220,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void setVisible(String name,boolean isVisible){
+        // set visibility of buttons
         switch (name) {
             case "chi" -> {
                 chi.setVisible(isVisible);
@@ -244,6 +252,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void chiBottonAction(ActionEvent event) {
+        // chi
             if (index != -1) {
                 User last = gameRules.last(humanPlayer.index);
                 MahjongTile chiTile = last.usedTiles.get(last.usedTiles.size() - 1);
@@ -271,6 +280,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public void huBottonAction(ActionEvent event) throws IOException {
+        //hu
         User last = gameRules.lastPlayer;
         gameRules.currentPlayerIndex = humanPlayer.index;
         huAction(this, humanPlayer, last);
@@ -285,6 +295,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void playBottonAction(ActionEvent event) throws IOException {
+        //play one tile from hand tiles
         if (index != -1) {
             MahjongTile usedTile = humanPlayer.removeTile(index);
             playerHandPile.getChildren().remove(currentRaisedTile);
@@ -320,19 +331,18 @@ public class GameScreenController implements Initializable {
     }
 
     public void handleHu(GameScreenController gameScreenController, User currentPlayer) throws IOException {
-        // 播放胡牌动画
+        // animation of hu
         gameScreenController.animation("hu", currentPlayer.getIndex());
 
-        // 关闭当前游戏窗口
+        // close current stage
         Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
         currentStage.close();
 
-        // 加载结束界面
+        // load end screen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
         Parent root = loader.load();
         EndScreenController controller = loader.getController();
 
-        // 创建新的结束界面窗口并显示
         Stage newStage = new Stage();
         newStage.setScene(new Scene(root));
         newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
@@ -340,6 +350,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void timeStop(){
+        //stop and reset the count down
         timeline.stop();
         timeLine=15;
         countDown.setVisible(false);
@@ -348,6 +359,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     public void gangBottonAction(ActionEvent event) {
+        // gang
         User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.gangAction(this,humanPlayer,lastUser);
@@ -365,6 +377,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void pengBottonAction(ActionEvent event) {
+        //peng
         User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,lastUser);
@@ -381,6 +394,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void autoPlayAction() throws IOException {
+        // auto play
         gameRules.dealerNextRound(this);
 
         sortTiles();
@@ -409,6 +423,7 @@ public class GameScreenController implements Initializable {
 
 
     public void playersTurn(){
+        // change the color of the player's name to notice whose turn it is
         int currentPlayerIndex=gameRules.getCurrentPlayerIndex();
 
         if(currentPlayerIndex==0){
@@ -453,6 +468,7 @@ public class GameScreenController implements Initializable {
 
     @FXML
     void passButtonAction(ActionEvent event) throws IOException {
+        // pass
         if(index!=-1){
             gameRules.currentPlayerIndex = (gameRules.lastPlayerIndex+1)%4;
 
@@ -516,6 +532,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void loadTilesFromListsToPaneForHuman (List<MahjongTile> humanTiles) {
+        // load tiles images for human hand tiles
         for (int row = 0; row < humanTiles.size(); row++) {
             MahjongTile tile = humanTiles.get(row);
             ImageView tileDisplay = getTileDisplayForHuman(tile);
@@ -549,6 +566,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void loadTilesFromListsToPaneForComputer(List<MahjongTile> computerTiles, GridPane pane){
+        // load tiles images for computer hand tiles
         if(computerTiles==computer1.handTiles){
             for (int row = 0; row < computerTiles.size(); row++) {
                 MahjongTile tile = computerTiles.get(row);
@@ -565,6 +583,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void loadTilesFromListsToPaneForUsedTiles(List<MahjongTile> usedTiles, GridPane pane){
+        // load tiles images for used tiles
         pane.getChildren().clear();
         int maxCols = 6;
         int rowIndex = 0;
@@ -587,6 +606,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void loadTilesFromListsToPaneForInOrderTiles(ArrayList<MahjongTile[]> inOrderTiles, GridPane pane) {
+        // load tiles images for in order tiles
         for (int row = 0; row < inOrderTiles.size(); row++) {
             MahjongTile[] tiles = inOrderTiles.get(row);
             int col = 0;
@@ -601,16 +621,18 @@ public class GameScreenController implements Initializable {
 
 
     private ImageView getTileDisplayForUsedTiles(MahjongTile tile) {
+        // get image view for used tiles
         ImageView iv = new ImageView();
         iv.setPreserveRatio(true); // ratio
         iv.setFitWidth(35);       // width
-        iv.setFitHeight(80);      // height
+        iv.setFitHeight(75);      // height
 
         return getImageView(tile, iv);
 
     }
 
     private ImageView getImageView(MahjongTile tile, ImageView iv) {
+        // get image view for used tiles
         if (tile.getValue() != null) {
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/" + tile.getValue() + tile.getSuit() + ".jpg")));
             iv.setImage(image);
@@ -622,6 +644,7 @@ public class GameScreenController implements Initializable {
     }
 
     private ImageView getTileDisplayForHuman(MahjongTile tile) {
+        // get image view for human hand tiles
         ImageView iv = new ImageView();
         iv.setPreserveRatio(true); // ratio
         iv.setFitHeight(100);      // height
@@ -631,6 +654,7 @@ public class GameScreenController implements Initializable {
     }
 
     private ImageView getTileDisplayForComputer(MahjongTile tile) {
+        // get image view for computer hand tiles
             Image image = new Image(getClass().getResourceAsStream("/images/背面.jpg"));
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true);
@@ -642,6 +666,7 @@ public class GameScreenController implements Initializable {
 
 
     public void animation(String operation, int playerIndex){
+        //animation for "chi", "peng", "gang", "hu" and following media
         Image image;
         MediaPlayer player;
 
@@ -741,7 +766,7 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        // initialize game
         humanPlayer = gameRules.humanPlayer;
         computer1 = gameRules.computer1;
         computer2 = gameRules.computer2;
