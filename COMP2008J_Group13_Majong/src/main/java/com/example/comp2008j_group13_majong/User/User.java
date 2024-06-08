@@ -140,17 +140,14 @@ public abstract class User {
             if (shunzi[0][0] != null){
                 handTiles.remove(getTile(shunzi[0][0]));
                 handTiles.remove(getTile(shunzi[0][1]));
-                //handTiles.remove(getTile(shunzi[0][2]));
                 inOrderTiles.add(shunzi[0]);
                 isChi = false;
             }else if (shunzi[1][0] != null){
                 handTiles.remove(getTile(shunzi[1][0]));
-                //handTiles.remove(getTile(shunzi[1][1]));
                 handTiles.remove(getTile(shunzi[1][2]));
                 inOrderTiles.add(shunzi[1]);
                 isChi = false;
             }else if (shunzi[2][0] != null){
-                //handTiles.remove(getTile(shunzi[2][0]));
                 handTiles.remove(getTile(shunzi[2][1]));
                 handTiles.remove(getTile(shunzi[2][2]));
                 inOrderTiles.add(shunzi[2]);
@@ -161,7 +158,6 @@ public abstract class User {
     }
 
     public MahjongTile[] ifPeng(MahjongTile tile) {
-        System.out.println("Entering ifPeng method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
         for(MahjongTile handTile : handTiles){
             if(tile.getValue() != null){
@@ -177,11 +173,9 @@ public abstract class User {
 
 
         if (matchingTiles.size() >= 2) {
-            System.out.println("Player's hand contains two matching tiles for peng: " + matchingTiles);
             isPeng = true;
             return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)};
         } else {
-            System.out.println("Player's hand does not contain matching tiles for peng.");
             isPeng = false;
         }
 
@@ -189,27 +183,19 @@ public abstract class User {
     }
 
     public void peng(MahjongTile tile) {
-        System.out.println("Attempting to execute peng with tile: " + tile);
 
         List<MahjongTile> matchingTiles = handTiles.stream()
                 .filter(t -> t.equals(tile))
                 .collect(Collectors.toList());
 
         if (matchingTiles.size() >= 2) {
-            System.out.println("Matching tiles found for peng: " + matchingTiles);
-
-            // 确保要移除的牌在手牌中
             if (handTiles.contains(matchingTiles.get(0)) && handTiles.contains(matchingTiles.get(1))) {
                 handTiles.remove(matchingTiles.get(0));
                 handTiles.remove(matchingTiles.get(1));
                 inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1)});
-                System.out.println("Peng executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1));
                 isPeng = false;
-            } else {
-                System.out.println("Error: Matching tiles are not found in handTiles.");
             }
         } else {
-            System.out.println("Unable to execute peng. Matching tiles not found.");
             isPeng = false;
         }
         notifyPeng();
@@ -217,7 +203,6 @@ public abstract class User {
 
 
     public MahjongTile[] ifGang(MahjongTile tile) {
-        System.out.println("Entering ifGang method with tile: " + tile);
         List<MahjongTile> matchingTiles = new ArrayList<>();
         for (MahjongTile handTile : handTiles) {
             if (tile.getValue() != null) {
@@ -232,11 +217,9 @@ public abstract class User {
         }
 
         if (matchingTiles.size() >= 3) {
-            System.out.println("Player's hand contains three matching tiles for gang: " + matchingTiles);
             isGang = true;
             return new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1), matchingTiles.get(2)};
         } else {
-            System.out.println("Player's hand does not contain matching tiles for gang.");
             isGang = false;
         }
 
@@ -244,44 +227,33 @@ public abstract class User {
     }
 
     public void gang(MahjongTile tile) {
-        System.out.println("Attempting to execute gang with tile: " + tile);
-
         List<MahjongTile> matchingTiles = handTiles.stream()
                 .filter(t -> t.equals(tile))
                 .collect(Collectors.toList());
 
         if (matchingTiles.size() >= 3) {
-            System.out.println("Matching tiles found for gang: " + matchingTiles);
 
-            // 确保要移除的牌在手牌中
             if (handTiles.contains(matchingTiles.get(0)) && handTiles.contains(matchingTiles.get(1)) && handTiles.contains(matchingTiles.get(2))) {
                 handTiles.remove(matchingTiles.get(0));
                 handTiles.remove(matchingTiles.get(1));
                 handTiles.remove(matchingTiles.get(2));
                 inOrderTiles.add(new MahjongTile[]{tile, matchingTiles.get(0), matchingTiles.get(1), matchingTiles.get(2)});
-                System.out.println("Gang executed with tiles: " + tile + ", " + matchingTiles.get(0) + ", " + matchingTiles.get(1) + ", " + matchingTiles.get(2));
                 isGang = false;
-            } else {
-                System.out.println("Error: Matching tiles are not found in handTiles.");
             }
         } else {
-            System.out.println("Unable to execute gang. Matching tiles not found.");
             isGang = false;
         }
         notifyGang();
     }
 
     public ArrayList<MahjongTile> ifHu(MahjongTile tile) {
-        // 将 inOrderTiles 中的所有牌展平为一个列表
         ArrayList<MahjongTile> tilesToCheck = new ArrayList<>(handTiles);
         for (MahjongTile[] set : inOrderTiles) {
             tilesToCheck.addAll(Arrays.asList(set));
         }
 
-        // 将新出的牌加入到合并后的牌列表中
         tilesToCheck.add(tile);
 
-        // 检查是否是胡牌
         if (isWinningHand(tilesToCheck)) {
             isHu = true;
             return tilesToCheck;
@@ -291,15 +263,11 @@ public abstract class User {
     }
 
     private boolean isWinningHand(ArrayList<MahjongTile> tiles) {
-        // 对手牌进行排序，便于后续判断
         tiles.sort(new MahjongTileComparator());
-        // 判断是否可以胡牌的逻辑
-        // 这里我们使用递归回溯法来检查所有可能的顺子和刻子组合
         return canFormWinningHand(tiles);
     }
 
     private boolean canFormWinningHand(ArrayList<MahjongTile> tiles) {
-        // 尝试找到一对（将牌）
         for (int i = 0; i < tiles.size() - 1; i++) {
             if ((tiles.get(i).getSuit() == tiles.get(i + 1).getSuit() && tiles.get(i).getSuit() == MahjongTile.Suit.发财)
                     || (tiles.get(i).getSuit() == tiles.get(i + 1).getSuit() && tiles.get(i).getSuit() == MahjongTile.Suit.白板)
@@ -309,7 +277,6 @@ public abstract class User {
                 ArrayList<MahjongTile> remainingTiles = new ArrayList<>(tiles);
                 remainingTiles.remove(i);
                 remainingTiles.remove(i);
-                // 递归检查剩余的牌是否能组成有效的组合
                 if (canFormSets(remainingTiles)) {
                     return true;
                 }
@@ -320,10 +287,9 @@ public abstract class User {
 
     private boolean canFormSets(ArrayList<MahjongTile> tiles) {
         if (tiles.isEmpty()) {
-            return true; // 所有牌都被分组完
+            return true;
         }
 
-        // 尝试找刻子或杠
         if (tiles.size() >= 3 &&
                 ((tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) && tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) &&
                         (tiles.get(0).getSuit() == MahjongTile.Suit.发财 || tiles.get(0).getSuit() == MahjongTile.Suit.白板))
@@ -352,7 +318,6 @@ public abstract class User {
             return canFormSets(remainingTiles);
         }
 
-        // 尝试找顺子
         if (tiles.size() >= 3 &&
                 tiles.get(0).getSuit().equals(tiles.get(1).getSuit()) &&
                 tiles.get(0).getSuit().equals(tiles.get(2).getSuit()) &&
@@ -372,12 +337,9 @@ public abstract class User {
     public void hu(MahjongTile tile) {
         ArrayList<MahjongTile> winningTiles = ifHu(tile);
         if (winningTiles != null) {
-            // 将胡的牌从手牌移除
             handTiles.clear();
-            // 将胡的牌添加到 inOrderTiles 中
             MahjongTile[] winningTilesArray = winningTiles.toArray(new MahjongTile[0]);
             inOrderTiles.add(winningTilesArray);
-            // 更新状态
             isHu = false;
         }
     }
@@ -406,7 +368,6 @@ public abstract class User {
         this.index = index;
     }
 
-    // 设置是否是玩家的回合的方法
     public void setTurn(boolean turn) {
         isTurn = turn;
     }

@@ -8,7 +8,6 @@ public class MahjongTileComparator implements Comparator<MahjongTile> {
     private static final Map<MahjongTile.Suit, Integer> suitMap = new HashMap<>();
 
     static {
-        // 初始化花色映射
         suitMap.put(MahjongTile.Suit.万, 1);
         suitMap.put(MahjongTile.Suit.条, 2);
         suitMap.put(MahjongTile.Suit.饼, 3);

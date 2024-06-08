@@ -50,7 +50,6 @@ public class GameRules implements PlayerActionObserver {
         remainingTiles = new ArrayList<>();
         initializePlayers();
         dealTiles();
-        printPlayerHands();
     }
 
     public static GameRules getInstance() {
@@ -62,7 +61,7 @@ public class GameRules implements PlayerActionObserver {
         ArrayList<MahjongTile> computer1Hand = new ArrayList<>();
         ArrayList<MahjongTile> computer2Hand = new ArrayList<>();
         ArrayList<MahjongTile> computer3Hand = new ArrayList<>();
-        // 创建玩家
+
         humanPlayer = new Player("Player", humanPlayerHand, "South");
 
         computers = new ArrayList<>();
@@ -73,18 +72,15 @@ public class GameRules implements PlayerActionObserver {
         computers.add(computer2);
         computers.add(computer3);
 
-        // 设置玩家索引
         humanPlayer.setIndex(3);
         computer1.setIndex(1);
         computer2.setIndex(0);
         computer3.setIndex(2);
 
-        // 将所有玩家添加到players列表
         players = new ArrayList<>();
         players.add(humanPlayer);
         players.addAll(computers);
 
-        // 随机选择庄家
         selectDealer();
 
         humanPlayer.addObserver(this);
@@ -96,8 +92,7 @@ public class GameRules implements PlayerActionObserver {
 
     public void selectDealer() {
         Random random = new Random();
-        //dealerIndex = random.nextInt(4) ; //0-3
-        dealerIndex = 3;
+        dealerIndex = random.nextInt(4) ; //0-3
 
         if (dealerIndex == 3) {
             dealer = humanPlayer;
@@ -111,7 +106,6 @@ public class GameRules implements PlayerActionObserver {
         }
 
         dealer.setTurn(true);
-        System.out.println("庄家是：" + dealer.getPosition());
         currentPlayerIndex = dealerIndex;
     }
 
@@ -120,83 +114,36 @@ public class GameRules implements PlayerActionObserver {
     }
 
     private void dealTiles() {
-        // 打乱牌堆中的牌的顺序
         deck.shuffle();
         remainingTiles.addAll(deck.getAllTiles());
-        System.out.println("剩余牌堆里有： " + remainingTiles.size() + " 张牌");
 
-
-        // 给每个玩家发放14张随机的牌
-        /** for (int i = 0; i < 14; i++) {
-         humanPlayer.handTiles.add(remainingTiles.remove(0));
-         computer1.handTiles.add(remainingTiles.remove(0));
-         computer2.handTiles.add(remainingTiles.remove(0));
-         computer3.handTiles.add(remainingTiles.remove(0));
-         }**/
-
-
-//        String[] numberValues = {"一", "二", "三", "四", "五", "六", "七", "八", "九"};
-//        for (MahjongTile.Suit suit : MahjongTile.Suit.values()) {
-//            if (suit == MahjongTile.Suit.饼) {
-//                for (int index = 1; index < 7; index++) {
-//                    String value = numberValues[index - 1];
-//                    MahjongTile tile = new MahjongTile(suit, value, index);
-//                    humanPlayer.handTiles.add(tile);
-//                }
-//                for (int index = 1; index < 13; index++) {
-//                    //String value = numberValues[index - 1];
-//                    MahjongTile t1 = new MahjongTile(MahjongTile.Suit.发财);
-//                    //MahjongTile t2 = new MahjongTile(MahjongTile.Suit.白板);
-//                    computer2.handTiles.add(t1);
-//                }
-//                //computer2.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                //humanPlayer.handTiles.add(new MahjongTile(suit, numberValues[0], 1));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.发财));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.白板));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-//                humanPlayer.handTiles.add(new MahjongTile(MahjongTile.Suit.饼,numberValues[8],9));
-//
-//            }
-//        }
         for (int i = 0; i < 13; i++) {
             computer3.handTiles.add(remainingTiles.remove(0));
             computer1.handTiles.add(remainingTiles.remove(0));
             computer2.handTiles.add(remainingTiles.remove(0));
             humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
-        /**for(int i = 0; i < 12; i++){
-            humanPlayer.handTiles.add(remainingTiles.remove(0));
-        }**/
 
  }
-
+ // Print to test tiles of player and computers
     private void printPlayerHands() {
         MahjongTileComparator comparator = new MahjongTileComparator();
         humanPlayer.handTiles.sort(comparator);
 
-        // 打印玩家的手牌
-        System.out.print(humanPlayer.getName() + " 的手牌: ");
         for (MahjongTile tile : humanPlayer.handTiles) {
             System.out.print(tile.toString() + ", ");
         }
         System.out.println();
 
-        // 打印庄家的手牌
-        System.out.print(dealer.getName() + " 的手牌: ");
         for (MahjongTile tile : dealer.getTiles()) {
             System.out.print(tile.toString() + ", ");
         }
         System.out.println();
 
-        // 打印电脑玩家的手牌
         for (int i = 0; i < computers.size(); i++) {
             Computer computer = computers.get(i);
             ArrayList<MahjongTile> hand = getComputerHand(i);
             computer.handTiles.sort(comparator);
-            System.out.print(computer.getName() + " 的手牌: ");
             for (MahjongTile tile : hand) {
                 System.out.print(tile.toString() + ", ");
             }
@@ -207,7 +154,6 @@ public class GameRules implements PlayerActionObserver {
         for (int i = 0; i < players.size(); i++) {
             User user = players.get(i);
             ArrayList<MahjongTile[]> inOrderTiles = user.getInOrderTiles();
-            System.out.print(user.getName() + " 的顺子牌: ");
             for (MahjongTile[] tiles : inOrderTiles) {
                 for (MahjongTile tile : tiles) {
                     System.out.print(tile.toString() + ",");
@@ -273,13 +219,11 @@ public class GameRules implements PlayerActionObserver {
                 }
             }
 
-            // 获取当前玩家
             User currentPlayer = players.stream()
                     .filter(player -> player.getIndex() == currentPlayerIndex)
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException("Invalid player index"));
 
-            // 更新当前玩家的手牌列表
             if (currentPlayer instanceof Computer) {
                 if (currentPlayer.isHu) {
                     gameScreenController.huAction(gameScreenController, currentPlayer, lastPlayer);
@@ -297,12 +241,9 @@ public class GameRules implements PlayerActionObserver {
                     MahjongTile chiTile = last.usedTiles.remove(last.usedTiles.size() - 1);
                     currentPlayer.chi(chiTile);
                 } else {
-                    // 给当前玩家发一张牌
                     MahjongTile tile = remainingTiles.remove(0);
                     currentPlayer.ifHu(tile);
                     currentPlayer.handTiles.add(tile);
-                    // 打印当前玩家信息和收到的牌
-                    System.out.println(currentPlayer.getName() + " is player " + currentPlayer.getIndex() + ", received: " + tile.getValue() + tile.getSuit());
 
                     if (currentPlayer.isHu) {
                         currentPlayer.hu(tile);
@@ -313,12 +254,9 @@ public class GameRules implements PlayerActionObserver {
                     }
                 }
 
-                // 电脑从牌堆中随机出一张牌
                 int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
                 MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
-                System.out.println(currentPlayer.getName() + " discarded: " + discardedTile.getValue() + discardedTile.getSuit());
 
-                // 在界面上显示这张牌
                 gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                 gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
@@ -344,12 +282,10 @@ public class GameRules implements PlayerActionObserver {
                 next(currentPlayerIndex).ifChi(discardedTile);
 
             } else {
-                System.out.println("现在的玩家index（应该是真人） = " + currentPlayerIndex);
                 if (currentPlayer.isHu) {
                     gameScreenController.setVisible("hu",true);
                 }
                 else if (currentPlayer.isGang){
-                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("gang",true);
                     gameScreenController.setVisible("pass",true);
 
@@ -357,7 +293,6 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.timeline.play();
                 }
                 else if (currentPlayer.isPeng){
-                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("peng",true);
                     gameScreenController.setVisible("pass",true);
 
@@ -365,7 +300,6 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.timeline.play();
                 }
                 else if (currentPlayer.isChi){
-                    //currentPlayer.chi(last(currentPlayerIndex).usedTiles.get(last(currentPlayerIndex).usedTiles.size()-1));
                     gameScreenController.setVisible("chi",true);
                     gameScreenController.setVisible("pass",true);
                     gameScreenController.startAnimationForOperation();
@@ -390,7 +324,6 @@ public class GameRules implements PlayerActionObserver {
 
             }
         }
-        printPlayerHands();
     }
 
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
@@ -401,46 +334,31 @@ public class GameRules implements PlayerActionObserver {
 
         if (currentPlayer.isPeng) {
             gameScreenController.animation("peng", currentPlayer.getIndex());
-            System.out.println(currentPlayer.getName() + " isPeng is true");
             MahjongTile pengTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
-            System.out.println(currentPlayer.getName() + " is attempting to peng with tile: " + pengTile);
             MahjongTile[] pengTiles = currentPlayer.ifPeng(pengTile);
             if (pengTiles != null) {
-                System.out.println(currentPlayer.getName() + " has valid tiles for peng: " + Arrays.toString(pengTiles));
                 currentPlayer.peng(pengTile);
-                System.out.println(currentPlayer.getName() + " executed peng with tiles: " + Arrays.toString(pengTiles));
                 for (MahjongTile tile : pengTiles) {
                     currentPlayer.handTiles.remove(tile);
                 }
 
-                // 添加到顺序牌中
                 currentPlayer.inOrderTiles.add(pengTiles);
-                //currentPlayer.inOrderTiles.add(new MahjongTile[]{pengTile});
 
-                // 更新界面上的顺序牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(pengTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
                 if (currentPlayer == humanPlayer) {
-                    // 更新真人玩家手牌
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
-
-                    //gameScreenController.startAnimationForPlay();
-                    //gameScreenController.timeline.play();
 
                     currentPlayer.justPenged = true;
                 }
 
                 if(currentPlayer != humanPlayer){
-                    //电脑随机出牌
-                    //int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size());
-                    //MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                     MahjongTile discardedTile = currentPlayer.playTiles();
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (lastPlayerIndex + 1)%4;
-                    //currentPlayerIndex = (currentPlayer.getIndex() +1) % 4;
                     gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
@@ -468,10 +386,8 @@ public class GameRules implements PlayerActionObserver {
                     currentPlayer.handTiles.remove(tile);
                 }
 
-                // 添加到顺序牌中
                 currentPlayer.inOrderTiles.add(gangTiles);
 
-                // 更新界面上的顺序牌
                 gameScreenController.updateInOrderTiles(currentPlayer.getIndex());
                 lastPlayer.usedTiles.remove(gangTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
@@ -488,7 +404,6 @@ public class GameRules implements PlayerActionObserver {
                 }
 
                 if(currentPlayer != humanPlayer){
-                    //电脑随机出牌
                     int discardedTileIndex = new Random().nextInt(currentPlayer.handTiles.size()-1);
                     MahjongTile discardedTile = currentPlayer.removeTile(discardedTileIndex);
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
@@ -496,11 +411,7 @@ public class GameRules implements PlayerActionObserver {
                     currentPlayerIndex = (lastPlayerIndex +1) % 4;
                     gameScreenController.animation("gang", currentPlayer.getIndex());
                 }
-            } else {
-                System.out.println(currentPlayer.getName() + " does not have valid tiles for gang");
             }
-        } else {
-            System.out.println(currentPlayer.getName() + " isGang is false");
         }
     }
 

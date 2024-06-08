@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+// Test to check if game end
 public class GameEndChecker {
     private GameRules gameRules;
 
@@ -20,18 +21,15 @@ public class GameEndChecker {
     public static void checkWin(User user) {
         if (user instanceof Player) {
             if (user.ifWin()) {
-                System.out.println( " 人类玩家赢了！");
+                System.out.println( " Human win！");
             }
         } else if (user instanceof Computer) {
             if (user.ifWin()) {
-                System.out.println(user.getName() + "赢了！");
+                System.out.println(user.getName() + "win!！");
             }
         }
     }
 
     public static void endGame() {
-        // 实现游戏结束的逻辑，例如清理资源、重置游戏等
-        System.out.println("游戏结束。");
-        // 在这里你可以做一些额外的清理工作或者游戏重置工作
     }
 }

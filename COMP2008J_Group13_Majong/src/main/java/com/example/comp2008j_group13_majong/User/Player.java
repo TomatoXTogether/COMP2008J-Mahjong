@@ -30,7 +30,7 @@ public class Player extends User{
 
     @Override
     public void setTurn(boolean turn) {
-        // 实现设置是否是当前玩家的逻辑
+
     }
     @Override
     public int getIndex() {
