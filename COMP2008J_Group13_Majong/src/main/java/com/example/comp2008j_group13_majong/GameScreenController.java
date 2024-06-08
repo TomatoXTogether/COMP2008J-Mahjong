@@ -281,20 +281,8 @@ public class GameScreenController implements Initializable {
         pass.setVisible(false);
         passImage.setVisible(false);
         updateOnePlayerHand(playerHandPile, humanPlayer.handTiles);
-        animation("hu",3);
         updateScore();
-
-        Stage currentStage = (Stage) hu.getScene().getWindow();
-        currentStage.close();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
-        Parent root;
-        root = loader.load();
-        EndScreenController controller = loader.getController();
-
-        Stage newStage = new Stage();
-        newStage.setScene(new Scene(root));
-        newStage.show();
+        handleHu(this, humanPlayer);
     }
 
     @FXML
@@ -329,38 +317,28 @@ public class GameScreenController implements Initializable {
             updateInOrderTiles(currentPlayer.getIndex());
             lastPlayer.usedTiles.remove(huTile);
             updateUsedTiles(lastPlayer.getIndex());
-            humanPlayer.notifyHu();
+            currentPlayer.notifyHu();
         }
     }
 
+    public void handleHu(GameScreenController gameScreenController, User currentPlayer) throws IOException {
+        // 播放胡牌动画
+        gameScreenController.animation("hu", currentPlayer.getIndex());
 
-    public boolean huTestAction(ActionEvent event, MahjongTile usedTile, User lastPlayer) {
-        if (lastPlayer instanceof Player) {
-            for (int i = 0; i < gameRules.computers.size(); i++) {
-                Computer computer = gameRules.computers.get(i);
-                ArrayList<MahjongTile> tilesToCheck = computer.ifHu(usedTile);
-                if (tilesToCheck != null) {
-                    huAction(this, computer, lastPlayer);
-                    return true;
-                }
-            }
-        } else if (lastPlayer instanceof Computer) {
-            List<User> players = new ArrayList<>();
-            players.add(humanPlayer);
-            players.add(computer1);
-            players.add(computer2);
-            players.add(computer3);
-            for (User player : players) {
-                if (player != lastPlayer) {
-                    ArrayList<MahjongTile> tilesToCheck = player.ifHu(usedTile);
-                    if (tilesToCheck != null) {
-                        huAction(this, player, lastPlayer);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        // 关闭当前游戏窗口
+        Stage currentStage = (Stage) gameScreenController.hu.getScene().getWindow();
+        currentStage.close();
+
+        // 加载结束界面
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EndScreen.fxml"));
+        Parent root = loader.load();
+        EndScreenController controller = loader.getController();
+
+        // 创建新的结束界面窗口并显示
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/Mahjong icon.jpg")));
+        newStage.show();
     }
 
     private void timeStop(){
