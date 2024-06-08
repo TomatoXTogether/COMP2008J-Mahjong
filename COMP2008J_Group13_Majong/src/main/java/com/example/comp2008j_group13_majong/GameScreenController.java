@@ -264,6 +264,9 @@ public class GameScreenController implements Initializable {
                 updateScore();
 
                 timeStop();
+                timeLine=15;
+                countDown.setVisible(true);
+                timeline.play();
             }
     }
 
@@ -379,6 +382,9 @@ public class GameScreenController implements Initializable {
         setVisible("pass",false);
 
         timeStop();
+        timeLine=15;
+        countDown.setVisible(true);
+        timeline.play();
 
         updateScore();
     }
@@ -397,6 +403,9 @@ public class GameScreenController implements Initializable {
         timeStop();
 
         updateScore();
+        timeLine=15;
+        countDown.setVisible(true);
+        timeline.play();
     }
 
     public void autoPlayAction() throws IOException {
@@ -485,6 +494,7 @@ public class GameScreenController implements Initializable {
             timeStop();
             humanPlayer.notifyPass();
             autoPlayAction();
+
         }
     }
 
