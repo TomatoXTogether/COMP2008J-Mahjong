@@ -51,6 +51,11 @@ public class GameRules implements PlayerActionObserver {
         return gameRules;
     }
 
+    /**
+     * Initializes the players. This method sets up the initial state for the human player and three computer players.
+     * It includes creating tile hand lists for each player, instantiating Player objects, and assigning player directions.
+     * Lastly, it selects the dealer and adds all players to the observer pattern so they can receive game state changes.
+     */
     private void initializePlayers() {
         ArrayList<MahjongTile> humanPlayerHand = new ArrayList<>();
         ArrayList<MahjongTile> computer1Hand = new ArrayList<>();
@@ -85,6 +90,12 @@ public class GameRules implements PlayerActionObserver {
     }
 
 
+    /**
+     * Selects the dealer for the game.
+     * This method is used to determine the dealer, who can be either a human player or a computer player,
+     * randomly at the start of the game or when needed. After selecting the dealer, it sets the current player index
+     * to the dealer's index for the game logic to proceed accordingly.
+     */
     public void selectDealer() {
         Random random = new Random();
         dealerIndex = random.nextInt(4) ; //0-3
@@ -108,6 +119,12 @@ public class GameRules implements PlayerActionObserver {
         return currentPlayerIndex;
     }
 
+
+/**
+ * Deals tiles to players and computers at the start of the game or after a reset.
+ * Shuffles the deck first, then distributes tiles evenly among the players,
+ * including Computer 1, Computer 2, and the Human Player.
+ */
     private void dealTiles() {
         deck.shuffle();
         remainingTiles.addAll(deck.getAllTiles());
@@ -118,9 +135,12 @@ public class GameRules implements PlayerActionObserver {
             computer2.handTiles.add(remainingTiles.remove(0));
             humanPlayer.handTiles.add(remainingTiles.remove(0));
         }
+    }
 
- }
- // Print to test tiles of player and computers
+
+    /**
+     Print to test tiles of player and computers
+     */
     private void printPlayerHands() {
         MahjongTileComparator comparator = new MahjongTileComparator();
         humanPlayer.handTiles.sort(comparator);
@@ -158,6 +178,10 @@ public class GameRules implements PlayerActionObserver {
         }
     }
 
+
+    /**
+     Get computer tiles
+     */
     public ArrayList<MahjongTile> getComputerHand(int index) {
         switch (index) {
             case 0:
@@ -174,6 +198,11 @@ public class GameRules implements PlayerActionObserver {
     public int getRemainingTilesNumber(){return remainingTiles.size();}
 
 
+    /**
+     * Handles the dealer's turn in the next round of the game.
+     * This method determines the game flow based on the current player's status (Hu, Gang, Peng),
+     * and executes the corresponding game logic.
+     */
     public void dealerNextRound(GameScreenController gameScreenController) throws IOException {
         if (!remainingTiles.isEmpty()) {
             lastPlayer = current(currentPlayerIndex);
@@ -322,6 +351,10 @@ public class GameRules implements PlayerActionObserver {
         }
     }
 
+
+    /**
+     Handle the peng action
+     */
     public void pengAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isGang) {
             gangAction(gameScreenController, currentPlayer, lastPlayer);
@@ -365,6 +398,9 @@ public class GameRules implements PlayerActionObserver {
         }
     }
 
+    /**
+     Handle the gang action
+     */
     public void gangAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isGang) {
 
