@@ -354,8 +354,6 @@ public class GameScreenController implements Initializable {
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.gangAction(this,humanPlayer,lastUser);
 
-        animation("gang",3);
-
         setVisible("gang",false);
         setVisible("pass",false);
 
@@ -372,8 +370,6 @@ public class GameScreenController implements Initializable {
         User lastUser = gameRules.current(gameRules.lastPlayerIndex);
         gameRules.currentPlayerIndex = humanPlayer.index;
         gameRules.pengAction(this,humanPlayer,lastUser);
-
-        animation("peng",3);
 
         setVisible("peng",false);
         setVisible("pass",false);
@@ -749,6 +745,7 @@ public class GameScreenController implements Initializable {
         loadTilesFromListsToPaneForComputer(computer3.handTiles,westHandPile);
 
         showDealer();
+        player.setCycleCount(10);
         player.play();
 
         try {

@@ -1,6 +1,5 @@
 package com.example.comp2008j_group13_majong.MasterControll;
 
-import com.example.comp2008j_group13_majong.EndScreenController;
 import com.example.comp2008j_group13_majong.GameScreenController;
 import com.example.comp2008j_group13_majong.Tile.MahjongTileComparator;
 import com.example.comp2008j_group13_majong.User.Computer;
@@ -10,19 +9,10 @@ import com.example.comp2008j_group13_majong.User.User;
 import com.example.comp2008j_group13_majong.Tile.MahjongDeck;
 import com.example.comp2008j_group13_majong.Tile.MahjongTile;
 import javafx.animation.PauseTransition;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.*;
-
-import static com.example.comp2008j_group13_majong.Tile.MahjongTile.Suit.发财;
 
 public class GameRules implements PlayerActionObserver {
     public Player humanPlayer;
@@ -231,10 +221,9 @@ public class GameRules implements PlayerActionObserver {
                     return;
                 } else if (currentPlayer.isGang) {
                     gangAction(gameScreenController, currentPlayer, lastPlayer);
-                    gameScreenController.animation("gang", currentPlayerIndex);
+
                 } else if (currentPlayer.isPeng) {
                     pengAction(gameScreenController, currentPlayer, lastPlayer);
-                    gameScreenController.animation("peng", currentPlayerIndex);
                 } else if (currentPlayer.isChi){
                     User last = last(currentPlayerIndex);
                     gameScreenController.animation("chi", currentPlayer.getIndex());
@@ -333,7 +322,7 @@ public class GameRules implements PlayerActionObserver {
         }
 
         if (currentPlayer.isPeng) {
-            gameScreenController.animation("peng", currentPlayer.getIndex());
+
             MahjongTile pengTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
             MahjongTile[] pengTiles = currentPlayer.ifPeng(pengTile);
             if (pengTiles != null) {
@@ -348,6 +337,7 @@ public class GameRules implements PlayerActionObserver {
                 lastPlayer.usedTiles.remove(pengTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
+                gameScreenController.animation("peng", currentPlayer.getIndex());
                 if (currentPlayer == humanPlayer) {
                     gameScreenController.updateOnePlayerHand(gameScreenController.playerHandPile,currentPlayer.handTiles);
 
@@ -359,7 +349,6 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (lastPlayerIndex + 1)%4;
-                    gameScreenController.animation("peng", currentPlayer.getIndex());
                 }
             } else {
                 System.out.println(currentPlayer.getName() + " does not have valid tiles for peng");
@@ -371,7 +360,7 @@ public class GameRules implements PlayerActionObserver {
 
     public void gangAction(GameScreenController gameScreenController, User currentPlayer, User lastPlayer) {
         if (currentPlayer.isGang) {
-            gameScreenController.animation("gang", currentPlayer.getIndex());
+
             System.out.println(currentPlayer.getName() + " isGang is true");
             System.out.println(currentPlayerIndex);
             MahjongTile gangTile = lastPlayer.usedTiles.get(lastPlayer.usedTiles.size() - 1);
@@ -392,6 +381,7 @@ public class GameRules implements PlayerActionObserver {
                 lastPlayer.usedTiles.remove(gangTile);
                 gameScreenController.updateUsedTiles( lastPlayer.getIndex());
 
+                gameScreenController.animation("gang", currentPlayerIndex);
                 if (currentPlayer == humanPlayer) {
                     // 更新真人玩家手牌
                     MahjongTile tile = remainingTiles.remove(0);
@@ -409,7 +399,6 @@ public class GameRules implements PlayerActionObserver {
                     gameScreenController.updateUsedTiles(currentPlayer.getIndex());
                     gameScreenController.updateUsedTiles(last(currentPlayerIndex).getIndex());
                     currentPlayerIndex = (lastPlayerIndex +1) % 4;
-                    gameScreenController.animation("gang", currentPlayer.getIndex());
                 }
             }
         }
